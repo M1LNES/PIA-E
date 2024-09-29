@@ -85,7 +85,7 @@ export default function PostCreator() {
 							id="category"
 							className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
 							value={category}
-							onChange={(e) => setCategory(e.target.value)}
+							onChange={(e) => setCategory(parseInt(e.target.value))}
 							required
 						>
 							<option value={1}>Omni Cast</option>
