@@ -1,6 +1,4 @@
 import { sql } from '@vercel/postgres'
-
-// import { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -15,7 +13,7 @@ export async function POST(request: Request) {
 	}
 
 	try {
-		const result = await sql`
+		await sql`
 		    INSERT INTO posts (title, description, category, author)
 		    VALUES (${title}, ${description}, ${category}, 1) RETURNING *;
 		  `
