@@ -1,34 +1,52 @@
-// pages/skibidi.tsx
+'use client' // This is a client component 👈🏽
+import { useQuery } from '@tanstack/react-query'
 import Layout from './main-page/main-page-layout'
+import { fetchAllPosts } from './services/data-service'
 
-// Define the type for the items
-interface Item {
+interface Post {
+	username: string
+	role_type: string
+	post_id: number
 	title: string
-	text: string
+	description: string
+	created_at_utc: Date
+	edited_at: Date
+	category_name: string
 }
 
-export default function Skibidi() {
-	// Sample array with 5 items
-	const items: Item[] = [
-		{ title: 'Title 1', text: 'This is the first text.' },
-		{ title: 'Title 2', text: 'This is the second text.' },
-		{ title: 'Title 3', text: 'This is the third text.' },
-		{ title: 'Title 4', text: 'This is the fourth text.' },
-		{ title: 'Title 5', text: 'This is the fifth text.' },
-	]
-
+export default function HomePage() {
+	const { data: posts, isLoading } = useQuery({
+		queryKey: ['posts'],
+		queryFn: fetchAllPosts,
+	})
 	return (
 		<Layout>
-			{/* Map through the items and render each in a "frame" */}
-			{items.map((item, index) => (
-				<div
-					key={index}
-					className="p-4 mb-4 bg-white shadow-lg rounded-md border border-gray-200"
-				>
-					<h2 className="text-xl font-semibold mb-2">{item.title}</h2>
-					<p>{item.text}</p>
-				</div>
-			))}
+			{isLoading ? (
+				<>Loading posts</>
+			) : (
+				posts.map((item: Post, index: number) => (
+					<div
+						key={index}
+						className="p-4 mb-4 bg-white shadow-lg rounded-md border border-gray-200"
+					>
+						<div className="flex justify-between items-center mb-2">
+							<div className="text-2xl font-bold">
+								[{item.category_name}] - {item.title}
+							</div>
+							<div className="text-gray-500 text-sm">
+								{new Date(item.created_at).toLocaleDateString()}{' '}
+								{new Date(item.created_at).toLocaleTimeString()}{' '}
+							</div>
+						</div>
+
+						<div className="text-gray-600 text-sm mb-4">
+							{item.username} - {item.role_type}
+						</div>
+
+						<p className="text-base">{item.description}</p>
+					</div>
+				))
+			)}
 		</Layout>
 	)
 }

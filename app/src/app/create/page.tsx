@@ -1,19 +1,30 @@
 'use client' // This is a client component 👈🏽
-
 import { useState } from 'react'
 import Layout from '../main-page/main-page-layout'
+import { fetchAllCategories } from '../services/data-service'
+import { useQuery } from '@tanstack/react-query'
+
+interface Category {
+	name: string
+	id: number
+}
 
 export default function PostCreator() {
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
-	const [category, setCategory] = useState(1)
+	const [title, setTitle] = useState<string>('')
+	const [description, setDescription] = useState<string>('')
+	const [category, setCategory] = useState<number>(-1)
+
+	const { data, isLoading } = useQuery({
+		queryKey: ['categories'],
+		queryFn: () => fetchAllCategories(setCategory),
+	})
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
 
 		const postData = { title, description, category }
 		try {
-			const response = await fetch('/api/add-post', {
+			const response = await fetch('/api/posts/add-post', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -81,17 +92,23 @@ export default function PostCreator() {
 						>
 							Category
 						</label>
-						<select
-							id="category"
-							className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={category}
-							onChange={(e) => setCategory(parseInt(e.target.value))}
-							required
-						>
-							<option value={1}>Omni Cast</option>
-							<option value={2}>Omni API</option>
-							<option value={3}>Omni Catalog</option>
-						</select>
+						{isLoading ? (
+							<>Loading categories...</>
+						) : (
+							<select
+								id="category"
+								className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+								value={category}
+								onChange={(e) => setCategory(parseInt(e.target.value))}
+								required
+							>
+								{data.map((item: Category) => (
+									<option key={item.id} value={item.id}>
+										{item.name}
+									</option>
+								))}
+							</select>
+						)}
 					</div>
 
 					<button
