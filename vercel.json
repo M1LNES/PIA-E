@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "next-app": {
+      "src": "apps/next-app",
+      "buildCommand": "npm run build",
+      "outputDirectory": "apps/next-app/.next",
+      "framework": "nextjs"
+    },
+    "docs": {
+      "src": "apps/docs",
+      "buildCommand": "npm run build",
+      "outputDirectory": "apps/docs/build",
+      "framework": "docusaurus"
+    }
+  }
+}

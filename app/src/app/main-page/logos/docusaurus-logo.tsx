@@ -8,7 +8,7 @@ export default function DocusaurusLogo() {
 		>
 			<g
 				transform="matrix(.164103 0 0 .164103 -.492307 -.42882)"
-				fill-rule="evenodd"
+				fillRule="evenodd"
 			>
 				<path d="M99 52h84v34H99z" fill="#fff" />
 				<g fill="#3ecc5f">
