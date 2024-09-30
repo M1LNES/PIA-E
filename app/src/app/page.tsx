@@ -9,7 +9,7 @@ interface Post {
 	post_id: number
 	title: string
 	description: string
-	created_at_utc: Date
+	created_at: Date
 	edited_at: Date
 	category_name: string
 }
