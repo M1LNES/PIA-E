@@ -48,7 +48,7 @@ const Layout = ({ children }: LayoutProps) => {
 						<Link href="https://slack.com">
 							<SlackLogo />
 						</Link>
-						<Link href="https://docusaurus.io/">
+						<Link href="https://pia-e-docs.vercel.app/">
 							<DocusaurusLogo />
 						</Link>
 						{/* Add more icons as needed */}
