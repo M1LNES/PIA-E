@@ -1,10 +1,10 @@
-// components/Layout.tsx
 import { ReactNode } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 import SlackLogo from './logos/slack-logo'
 import GitLabLogo from './logos/gitlab-logo'
 import EmplifiLogo from './logos/emplifi-logo'
 import DocusaurusLogo from './logos/docusaurus-logo'
+import LocaleSwitcher from '../components/locale-switcher'
 
 interface LayoutProps {
 	children: ReactNode
@@ -29,11 +29,6 @@ const Layout = ({ children }: LayoutProps) => {
 								Create Post
 							</Link>
 						</li>
-						<li className="mb-2">
-							<Link href="/nic" className="hover:text-gray-400">
-								Lorem Ipsum
-							</Link>
-						</li>
 					</ul>
 				</div>
 
@@ -49,6 +44,11 @@ const Layout = ({ children }: LayoutProps) => {
 						<Link href="https://pia-e-docs.vercel.app/">
 							<DocusaurusLogo />
 						</Link>
+					</div>
+					<div className="border-t border-white my-4"></div>
+					<div className="flex justify-center space-x-4">
+						{' '}
+						<LocaleSwitcher />
 					</div>
 				</div>
 			</nav>

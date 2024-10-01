@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
-import { ReactQueryProvider } from './components/ReactQueryProvider'
+import { ReactQueryProvider } from './components/react-query-provider'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
 
 const geistSans = localFont({
 	src: './fonts/GeistVF.woff',
@@ -19,17 +21,25 @@ export const metadata: Metadata = {
 	description: 'Place for product managers to report features to product teams',
 }
 
-export default function RootLayout({
+export default async function LocaleLayout({
 	children,
-}: Readonly<{
+	params: { locale },
+}: {
 	children: React.ReactNode
-}>) {
+	params: { locale: string }
+}) {
+	// Providing all messages to the client
+	// side is the easiest way to get started
+	const messages = await getMessages()
 	return (
-		<html lang="en">
+		<html lang={locale}>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				<ReactQueryProvider>{children}</ReactQueryProvider>
+				{' '}
+				<NextIntlClientProvider messages={messages}>
+					<ReactQueryProvider>{children}</ReactQueryProvider>
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	)

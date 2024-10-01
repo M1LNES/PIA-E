@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import Layout from './main-page/main-page-layout'
 import { fetchAllPosts } from './services/data-service'
+import { useTranslations } from 'next-intl'
 
 interface Post {
 	username: string
@@ -15,12 +16,15 @@ interface Post {
 }
 
 export default function HomePage() {
+	const t = useTranslations('index')
+
 	const { data: posts, isLoading } = useQuery({
 		queryKey: ['posts'],
 		queryFn: fetchAllPosts,
 	})
 	return (
 		<Layout>
+			{t('title')}
 			{isLoading ? (
 				<>Loading posts</>
 			) : (
