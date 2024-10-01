@@ -21,6 +21,10 @@ function LocaleButton({ locale }: { locale: Locale }) {
 			name="locale"
 			type="submit"
 			value={locale}
+			onClick={(e) => {
+				e.preventDefault()
+				window.location.pathname = `/${locale}` // ugly solution but the only one working
+			}}
 		>
 			{locale.toUpperCase()}
 		</button>
