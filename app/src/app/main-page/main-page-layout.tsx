@@ -12,8 +12,9 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
 	return (
-		<div className="flex min-h-screen">
-			<nav className="w-1/6 bg-gray-800 text-white flex flex-col justify-between p-4">
+		<div className="flex">
+			{/* Left Sidebar */}
+			<nav className="fixed top-0 left-0 h-screen w-1/6 bg-gray-800 text-white flex flex-col justify-between p-4">
 				<div>
 					<EmplifiLogo />
 					<div className="border-t border-white my-4"></div>
@@ -36,11 +37,8 @@ const Layout = ({ children }: LayoutProps) => {
 					</ul>
 				</div>
 
-				{/* Divider Line and Icons Below */}
 				<div className="mt-auto">
-					{/* Divider Line */}
 					<div className="border-t border-white my-4"></div>
-					{/* Lower Part with Icons */}
 					<div className="flex justify-center space-x-4">
 						<Link href="https://gitlab.com">
 							<GitLabLogo />
@@ -51,13 +49,16 @@ const Layout = ({ children }: LayoutProps) => {
 						<Link href="https://pia-e-docs.vercel.app/">
 							<DocusaurusLogo />
 						</Link>
-						{/* Add more icons as needed */}
 					</div>
 				</div>
 			</nav>
 
-			{/* Main Content Area */}
-			<main className="flex-grow bg-gray-100 p-6">{children}</main>
+			<main
+				className="flex-grow bg-gray-100 p-6 ml-4"
+				style={{ paddingLeft: '16.6667%' }}
+			>
+				{children}
+			</main>
 		</div>
 	)
 }

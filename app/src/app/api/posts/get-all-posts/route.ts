@@ -1,6 +1,7 @@
 import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 
+export const revalidate = 1
 export async function GET() {
 	try {
 		const result = await sql`SELECT 
@@ -16,7 +17,8 @@ export async function GET() {
 		JOIN Posts ON Posts.author = Users.id 
 		JOIN Roles ON Users.role = Roles.id  
 		JOIN Category ON Posts.category = Category.id 
-		WHERE Posts.deleted_at IS NULL; 
+		WHERE Posts.deleted_at IS NULL 
+		ORDER BY created_at; 
 		`
 		const posts = result.rows
 		return NextResponse.json({ posts }, { status: 200 })
