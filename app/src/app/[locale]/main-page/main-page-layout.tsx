@@ -5,12 +5,15 @@ import GitLabLogo from './logos/gitlab-logo'
 import EmplifiLogo from './logos/emplifi-logo'
 import DocusaurusLogo from './logos/docusaurus-logo'
 import LocaleSwitcher from '../components/locale-switcher'
+import { useTranslations } from 'next-intl'
 
 interface LayoutProps {
 	children: ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
+	const t = useTranslations('navbar.menu-items')
+
 	return (
 		<div className="flex">
 			{/* Left Sidebar */}
@@ -21,12 +24,12 @@ const Layout = ({ children }: LayoutProps) => {
 					<ul>
 						<li className="mb-2">
 							<Link href="/" className="hover:text-gray-400">
-								Home
+								{t('home')}
 							</Link>
 						</li>
 						<li className="mb-2">
 							<Link href="/create" className="hover:text-gray-400">
-								Create Post
+								{t('create-post')}
 							</Link>
 						</li>
 					</ul>

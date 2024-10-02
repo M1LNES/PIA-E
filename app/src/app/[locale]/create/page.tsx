@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Layout from '../main-page/main-page-layout'
 import { fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 
 interface Category {
 	name: string
@@ -10,6 +11,8 @@ interface Category {
 }
 
 export default function PostCreator() {
+	const t = useTranslations('pages.create-post')
+
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
 	const [category, setCategory] = useState<number>(-1)
@@ -46,7 +49,7 @@ export default function PostCreator() {
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
-				<h2 className="text-2xl font-semibold mb-6">Create a New Post</h2>
+				<h2 className="text-2xl font-semibold mb-6">{t('page-title')}</h2>
 				<form
 					onSubmit={handleSubmit}
 					className="bg-white p-6 shadow-lg rounded-lg"
@@ -56,7 +59,7 @@ export default function PostCreator() {
 							htmlFor="title"
 							className="block text-gray-700 font-semibold mb-2"
 						>
-							Short Title
+							{t('title')}
 						</label>
 						<input
 							type="text"
@@ -73,7 +76,7 @@ export default function PostCreator() {
 							htmlFor="description"
 							className="block text-gray-700 font-semibold mb-2"
 						>
-							Description
+							{t('description')}
 						</label>
 						<textarea
 							id="description"
@@ -90,7 +93,7 @@ export default function PostCreator() {
 							htmlFor="category"
 							className="block text-gray-700 font-semibold mb-2"
 						>
-							Category
+							{t('category')}
 						</label>
 						{isLoading ? (
 							<>Loading categories...</>
@@ -115,7 +118,7 @@ export default function PostCreator() {
 						type="submit"
 						className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
 					>
-						Submit Post
+						{t('submit-post')}
 					</button>
 				</form>
 			</main>

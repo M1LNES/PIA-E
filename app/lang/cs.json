@@ -1,5 +1,17 @@
 {
-	"index": {
-		"title": "cestina"
+	"pages": {
+		"create-post": {
+			"title": "Nadpis",
+			"description": "Popisek",
+			"category": "Kategorie",
+			"submit-post": "Odeslat",
+			"page-title": "Vytvořit nový příspěvek"
+		}
+	},
+	"navbar": {
+		"menu-items": {
+			"home": "Hlavní strana",
+			"create-post": "Vytvořit příspěvek"
+		}
 	}
 }

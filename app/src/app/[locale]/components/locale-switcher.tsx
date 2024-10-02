@@ -2,31 +2,27 @@
 
 import { useLocale } from 'next-intl'
 import { Locale } from '@/i18n/config'
+import { Link } from '@/i18n/routing'
 
 export default function LocaleSwitcher() {
 	return (
-		<form className="flex gap-3">
-			<LocaleButton locale="en" />
-			<LocaleButton locale="cs" />
-		</form>
+		<div className="flex gap-3">
+			<LocaleLink locale="en" />
+			<LocaleLink locale="cs" />
+		</div>
 	)
 }
 
-function LocaleButton({ locale }: { locale: Locale }) {
+function LocaleLink({ locale }: { locale: Locale }) {
 	const curLocale = useLocale()
 
 	return (
-		<button
+		<Link
 			className={curLocale === locale ? 'underline' : undefined}
-			name="locale"
-			type="submit"
-			value={locale}
-			onClick={(e) => {
-				e.preventDefault()
-				window.location.pathname = `/${locale}` // ugly solution but the only one working
-			}}
+			href="/"
+			locale={locale}
 		>
 			{locale.toUpperCase()}
-		</button>
+		</Link>
 	)
 }

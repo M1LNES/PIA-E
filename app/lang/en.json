@@ -1,5 +1,17 @@
 {
-	"index": {
-		"title": "English"
+	"pages": {
+		"create-post": {
+			"title": "Short Title",
+			"description": "Description",
+			"category": "Category",
+			"submit-post": "Submit Post",
+			"page-title": "Create a New Post"
+		}
+	},
+	"navbar": {
+		"menu-items": {
+			"home": "Home",
+			"create-post": "Create"
+		}
 	}
 }
