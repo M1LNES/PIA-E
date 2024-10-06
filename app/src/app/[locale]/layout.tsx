@@ -4,6 +4,8 @@ import './globals.css'
 import { ReactQueryProvider } from './components/react-query-provider'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
+import SessionProvider from './components/session-provider'
+import { getServerSession } from 'next-auth'
 
 const geistSans = localFont({
 	src: './fonts/GeistVF.woff',
@@ -31,15 +33,19 @@ export default async function LocaleLayout({
 	// Providing all messages to the client
 	// side is the easiest way to get started
 	const messages = await getMessages()
+	const session = await getServerSession()
+
 	return (
 		<html lang={locale}>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				{' '}
-				<NextIntlClientProvider messages={messages}>
-					<ReactQueryProvider>{children}</ReactQueryProvider>
-				</NextIntlClientProvider>
+				<SessionProvider session={session}>
+					<NextIntlClientProvider messages={messages}>
+						<ReactQueryProvider>{children}</ReactQueryProvider>
+					</NextIntlClientProvider>
+				</SessionProvider>
 			</body>
 		</html>
 	)

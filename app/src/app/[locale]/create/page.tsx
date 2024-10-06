@@ -1,6 +1,6 @@
 'use client' // This is a client component 👈🏽
 import { useState } from 'react'
-import Layout from '../main-page/main-page-layout'
+import Layout from '../home/main-page-layout'
 import { fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
