@@ -14,11 +14,7 @@ interface Post {
 	category_name: string
 }
 
-interface HomePageClientProps {
-	session: any // Define the type of session according to your setup
-}
-
-export default function HomePageClient({ session }: HomePageClientProps) {
+export default function HomePageClient() {
 	const { data: posts, isLoading } = useQuery({
 		queryKey: ['posts'],
 		queryFn: fetchAllPosts,

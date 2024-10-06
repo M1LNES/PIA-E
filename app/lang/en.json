@@ -6,12 +6,18 @@
 			"category": "Category",
 			"submit-post": "Submit Post",
 			"page-title": "Create a New Post"
+		},
+		"log-in": {
+			"title": "Please log in to access this content",
+			"description": "To view this content, please log in with your Emplifi account.",
+			"sign-in": "Sign In"
 		}
 	},
 	"navbar": {
 		"menu-items": {
-			"home": "Home",
-			"create-post": "Create"
+			"home": "Home page",
+			"create-post": "Create a post",
+			"sign-out": "Sign Out"
 		}
 	}
 }

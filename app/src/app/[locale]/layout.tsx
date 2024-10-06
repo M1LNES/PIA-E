@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import SessionProvider from './components/session-provider'
 import { getServerSession } from 'next-auth'
+import SessionGuard from './components/session-guard'
 
 const geistSans = localFont({
 	src: './fonts/GeistVF.woff',
@@ -30,8 +31,6 @@ export default async function LocaleLayout({
 	children: React.ReactNode
 	params: { locale: string }
 }) {
-	// Providing all messages to the client
-	// side is the easiest way to get started
 	const messages = await getMessages()
 	const session = await getServerSession()
 
@@ -40,10 +39,11 @@ export default async function LocaleLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
-				{' '}
 				<SessionProvider session={session}>
-					<NextIntlClientProvider messages={messages}>
-						<ReactQueryProvider>{children}</ReactQueryProvider>
+					<NextIntlClientProvider locale={locale} messages={messages}>
+						<ReactQueryProvider>
+							<SessionGuard>{children}</SessionGuard>
+						</ReactQueryProvider>
 					</NextIntlClientProvider>
 				</SessionProvider>
 			</body>

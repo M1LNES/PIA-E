@@ -1,3 +1,4 @@
+'use client'
 import { ReactNode } from 'react'
 import { Link } from '@/i18n/routing'
 import SlackLogo from './logos/slack-logo'
@@ -6,6 +7,7 @@ import EmplifiLogo from './logos/emplifi-logo'
 import DocusaurusLogo from './logos/docusaurus-logo'
 import LocaleSwitcher from '../components/locale-switcher'
 import { useTranslations } from 'next-intl'
+import { signOut } from 'next-auth/react'
 
 interface LayoutProps {
 	children: ReactNode
@@ -36,7 +38,18 @@ const Layout = ({ children }: LayoutProps) => {
 				</div>
 
 				<div className="mt-auto">
+					<div className="mb-4">
+						<button
+							className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md"
+							onClick={() => signOut()}
+						>
+							{t('sign-out')}
+						</button>
+					</div>
+
 					<div className="border-t border-white my-4"></div>
+
+					{/* Social Media Links */}
 					<div className="flex justify-center space-x-4">
 						<Link href="https://gitlab.com">
 							<GitLabLogo />
@@ -50,7 +63,6 @@ const Layout = ({ children }: LayoutProps) => {
 					</div>
 					<div className="border-t border-white my-4"></div>
 					<div className="flex justify-center space-x-4">
-						{' '}
 						<LocaleSwitcher />
 					</div>
 				</div>

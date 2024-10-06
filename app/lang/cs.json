@@ -6,12 +6,18 @@
 			"category": "Kategorie",
 			"submit-post": "Odeslat",
 			"page-title": "Vytvořit nový příspěvek"
+		},
+		"log-in": {
+			"title": "Pro přístup k tomuto obsahu se prosím přihlaste",
+			"description": "Pro zobrazení tohoto obsahu se prosím přihlaste pomocí svého účtu Emplifi.",
+			"sign-in": "Přihlásit se"
 		}
 	},
 	"navbar": {
 		"menu-items": {
 			"home": "Hlavní strana",
-			"create-post": "Vytvořit příspěvek"
+			"create-post": "Vytvořit příspěvek",
+			"sign-out": "Odhlásit se"
 		}
 	}
 }
