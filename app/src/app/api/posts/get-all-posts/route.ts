@@ -1,6 +1,5 @@
 import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 
 export const revalidate = 1
 export async function GET() {
