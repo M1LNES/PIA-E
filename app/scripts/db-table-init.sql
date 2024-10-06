@@ -10,7 +10,8 @@ CREATE TABLE Users (
     role SMALLINT REFERENCES Roles(id),
     email VARCHAR(255) UNIQUE NOT NULL,
     hashed_password VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP
 );
 
 

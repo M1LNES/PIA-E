@@ -5,18 +5,26 @@
 			"description": "Popisek",
 			"category": "Kategorie",
 			"submit-post": "Odeslat",
-			"page-title": "Vytvořit nový příspěvek"
+			"page-title": "Vytvořit nový příspěvek",
+			"loading": "Načítání kategorií..."
 		},
 		"log-in": {
 			"title": "Pro přístup k tomuto obsahu se prosím přihlaste",
 			"description": "Pro zobrazení tohoto obsahu se prosím přihlaste pomocí svého účtu Emplifi.",
 			"sign-in": "Přihlásit se"
+		},
+		"create-category": {
+			"title": "Název kategorie",
+			"submit-post": "Odeslat",
+			"loading": "Načítání kategorií...",
+			"page-title": "Vytvořit novou kategoriii"
 		}
 	},
 	"navbar": {
 		"menu-items": {
 			"home": "Hlavní strana",
 			"create-post": "Vytvořit příspěvek",
+			"create-category": "Vytvořit kategorii",
 			"sign-out": "Odhlásit se"
 		}
 	}

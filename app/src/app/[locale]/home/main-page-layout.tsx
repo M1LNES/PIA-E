@@ -30,8 +30,13 @@ const Layout = ({ children }: LayoutProps) => {
 							</Link>
 						</li>
 						<li className="mb-2">
-							<Link href="/create" className="hover:text-gray-400">
+							<Link href="/create-post" className="hover:text-gray-400">
 								{t('create-post')}
+							</Link>
+						</li>
+						<li className="mb-2">
+							<Link href="/create-category" className="hover:text-gray-400">
+								{t('create-category')}
 							</Link>
 						</li>
 					</ul>

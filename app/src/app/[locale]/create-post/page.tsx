@@ -35,7 +35,8 @@ export default function PostCreator() {
 				body: JSON.stringify(postData),
 			})
 
-			if (response.ok) {
+			const result = await response.json()
+			if (result.status === 200) {
 				alert('Post added successfully')
 			} else {
 				alert('Error adding post')
@@ -96,7 +97,7 @@ export default function PostCreator() {
 							{t('category')}
 						</label>
 						{isLoading ? (
-							<>Loading categories...</>
+							<>{t('title')}</>
 						) : (
 							<select
 								id="category"

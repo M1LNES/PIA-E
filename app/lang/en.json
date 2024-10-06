@@ -5,19 +5,27 @@
 			"description": "Description",
 			"category": "Category",
 			"submit-post": "Submit Post",
-			"page-title": "Create a New Post"
+			"page-title": "Create a New Post",
+			"loading": "Loading categories..."
 		},
 		"log-in": {
 			"title": "Please log in to access this content",
 			"description": "To view this content, please log in with your Emplifi account.",
 			"sign-in": "Sign In"
+		},
+		"create-category": {
+			"title": "Category Title",
+			"submit-post": "Submit Post",
+			"loading": "Loading categories...",
+			"page-title": "Create a New Category"
 		}
 	},
 	"navbar": {
 		"menu-items": {
 			"home": "Home page",
-			"create-post": "Create a post",
-			"sign-out": "Sign Out"
+			"create-post": "Create new post",
+			"sign-out": "Sign Out",
+			"create-category": "Create new category"
 		}
 	}
 }
