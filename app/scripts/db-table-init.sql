@@ -8,8 +8,11 @@ CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     role SMALLINT REFERENCES Roles(id),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE Category (
     id SERIAL PRIMARY KEY,
