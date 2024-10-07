@@ -3,7 +3,7 @@ import React from 'react'
 interface ActionButtonProps {
 	label: string
 	color: 'red' | 'green'
-	onClick: () => void
+	onClick: (event: React.FormEvent) => Promise<void>
 }
 
 const UserButton: React.FC<ActionButtonProps> = ({ label, color, onClick }) => {

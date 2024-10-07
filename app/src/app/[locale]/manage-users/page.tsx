@@ -70,6 +70,52 @@ export default function AddingUseer() {
 		}
 	}
 
+	const disableUser = async (event: React.FormEvent, email: string) => {
+		event.preventDefault()
+		try {
+			const response = await fetch('/api/users/disable-user', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email }),
+			})
+
+			const result = await response.json()
+			if (result.status === 200) {
+				alert('User successfuly disabled.')
+			} else {
+				alert('Error during disabling user')
+			}
+		} catch (error) {
+			console.error('Error:', error)
+			alert('Error during disabling user')
+		}
+	}
+
+	const activateUser = async (event: React.FormEvent, email: string) => {
+		event.preventDefault()
+		try {
+			const response = await fetch('/api/users/activate-user', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email }),
+			})
+
+			const result = await response.json()
+			if (result.status === 200) {
+				alert('User successfuly re-activated.')
+			} else {
+				alert('Error during re-activating user.')
+			}
+		} catch (error) {
+			console.error('Error:', error)
+			alert('Error re-activating user')
+		}
+	}
+
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
@@ -236,14 +282,18 @@ export default function AddingUseer() {
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 											{item.deleted_at ? (
 												<UserButton
-													onClick={() => console.log('ACTIVATE')}
-													label="Activate User TODO"
+													onClick={(event: React.FormEvent) =>
+														activateUser(event, item.email)
+													}
+													label="Activate User"
 													color="green"
 												/>
 											) : (
 												<UserButton
-													onClick={() => console.log('DISABLE')}
-													label="Disable User TODO"
+													onClick={(event: React.FormEvent) =>
+														disableUser(event, item.email)
+													}
+													label="Disable User"
 													color="red"
 												/>
 											)}
