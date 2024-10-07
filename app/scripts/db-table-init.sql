@@ -53,3 +53,4 @@ CREATE TABLE PostReactions_M_N (
     post INTEGER REFERENCES Posts(id),
     reaction INTEGER REFERENCES Reaction(id)
 );
+

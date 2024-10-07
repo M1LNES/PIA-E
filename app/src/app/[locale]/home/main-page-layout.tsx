@@ -18,7 +18,6 @@ const Layout = ({ children }: LayoutProps) => {
 
 	return (
 		<div className="flex">
-			{/* Left Sidebar */}
 			<nav className="fixed top-0 left-0 h-screen w-1/6 bg-gray-800 text-white flex flex-col justify-between p-4">
 				<div>
 					<EmplifiLogo />
@@ -37,6 +36,11 @@ const Layout = ({ children }: LayoutProps) => {
 						<li className="mb-2">
 							<Link href="/create-category" className="hover:text-gray-400">
 								{t('create-category')}
+							</Link>
+						</li>
+						<li className="mb-2">
+							<Link href="/manage-users" className="hover:text-gray-400">
+								{t('manage-users')}
 							</Link>
 						</li>
 					</ul>

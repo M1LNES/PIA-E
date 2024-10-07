@@ -17,7 +17,27 @@
 			"title": "Název kategorie",
 			"submit-post": "Odeslat",
 			"loading": "Načítání kategorií...",
-			"page-title": "Vytvořit novou kategoriii"
+			"page-title": "Vytvořit novou kategorii"
+		},
+		"managing-users": {
+			"page-title": "Správa uživatelů",
+			"loading": "Načítání uživatelů...",
+			"available-users": "Všichni uživatelé",
+			"submit-post": "Odeslat",
+			"form": {
+				"username": "Uživatelské jméno",
+				"email": "E-mailová adresa",
+				"role": "Role",
+				"password": "Heslo",
+				"password-confirm": "Potvrdit heslo"
+			},
+			"table": {
+				"username": "Uživatel",
+				"role": "Role",
+				"email": "E-mailová adresa",
+				"deleted-at": "Smazáno",
+				"action": "Akce"
+			}
 		}
 	},
 	"navbar": {
@@ -25,7 +45,8 @@
 			"home": "Hlavní strana",
 			"create-post": "Vytvořit příspěvek",
 			"create-category": "Vytvořit kategorii",
-			"sign-out": "Odhlásit se"
+			"sign-out": "Odhlásit se",
+			"manage-users": "Správa uživatelů"
 		}
 	}
 }

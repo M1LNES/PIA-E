@@ -18,6 +18,26 @@
 			"submit-post": "Submit Post",
 			"loading": "Loading categories...",
 			"page-title": "Create a New Category"
+		},
+		"managing-users": {
+			"page-title": "User Managment",
+			"loading": "Loading available users...",
+			"available-users": "All Users",
+			"submit-post": "Submit Post",
+			"form": {
+				"username": "Username",
+				"email": "Email address",
+				"role": "Role",
+				"password": "Password",
+				"password-confirm": "Confirm password"
+			},
+			"table": {
+				"username": "Username",
+				"role": "Role",
+				"email": "email",
+				"deleted-at": "Deleted at",
+				"action": "Action"
+			}
 		}
 	},
 	"navbar": {
@@ -25,7 +45,8 @@
 			"home": "Home page",
 			"create-post": "Create new post",
 			"sign-out": "Sign Out",
-			"create-category": "Create new category"
+			"create-category": "Create new category",
+			"manage-users": "Manage users"
 		}
 	}
 }

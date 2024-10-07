@@ -1,3 +1,2 @@
 DB migrace
 1. Dodat time stamp do post reakci
-2. Pridat sloupec pro uzivatelske heslo do Users

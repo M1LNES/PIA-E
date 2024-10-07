@@ -28,3 +28,24 @@ export const fetchAllPosts = async () => {
 	const result = (await response.json()).posts
 	return result
 }
+
+export const fetchAllUsers = async () => {
+	const response = await fetch('/api/users/get-all-users')
+	if (!response.ok) {
+		throw new Error('Failed to fetch data')
+	}
+
+	const result = (await response.json()).users
+	return result
+}
+
+export const fetchAllRoles = async (setSelectedRole: (id: number) => void) => {
+	const response = await fetch('/api/roles/get-roles')
+	if (!response.ok) {
+		throw new Error('Failed to fetch data')
+	}
+
+	const result = (await response.json()).roles
+	setSelectedRole(result[0].id || 0)
+	return result
+}
