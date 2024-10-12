@@ -1,7 +1,11 @@
 'use client'
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
-import { fetchAllRoles, fetchAllUsers } from '../services/data-service'
+import {
+	changeUserRole,
+	fetchAllRoles,
+	fetchAllUsers,
+} from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import UserButton from '../components/user-button'
@@ -11,7 +15,7 @@ interface Users {
 	username: string
 	email: string
 	deleted_at: number | null
-	type: string
+	roleid: string
 }
 
 type Role = {
@@ -115,6 +119,34 @@ export default function AddingUseer() {
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error re-activating user')
+		}
+	}
+
+	const changeUsersRole = async (event: React.FormEvent, item: Users) => {
+		event.preventDefault()
+		const confirmText = `Do you really want to switch ${
+			item.username
+		}'s role to ${
+			roles.find(
+				(option: Role) =>
+					option.id === parseInt((event.target as HTMLInputElement).value)
+			).type
+		}?`
+		if (confirm(confirmText)) {
+			const result = await changeUserRole(
+				item.id,
+				parseInt((event.target as HTMLInputElement).value)
+			)
+
+			if (result.status === 200) {
+				alert('User role succesfully updated!')
+				window.location.reload()
+			} else {
+				alert('Error occured during changing users role.')
+			}
+		} else {
+			alert('Aborting role changing...')
+			;(event.target as HTMLInputElement).value = item.roleid
 		}
 	}
 
@@ -276,7 +308,20 @@ export default function AddingUseer() {
 											{item.username}
 										</td>
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.type}
+											{areRolesLoading ? (
+												<>{item.roleid}</>
+											) : (
+												<select
+													value={item.roleid}
+													onChange={(e) => changeUsersRole(e, item)}
+												>
+													{roles.map((role: Role) => (
+														<option key={role.id} value={role.id}>
+															{role.type}
+														</option>
+													))}
+												</select>
+											)}
 										</td>
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 											{item.email}

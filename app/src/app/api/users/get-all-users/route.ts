@@ -7,7 +7,7 @@ export const fetchCache = 'force-no-store'
 export async function GET() {
 	try {
 		const result =
-			await sql`SELECT Users.id, Users.username, Users.deleted_at, Users.email, Roles.type
+			await sql`SELECT Users.id, Users.username, Users.deleted_at, Users.email, Roles.id as roleid
                 FROM Users
                 LEFT JOIN Roles ON Users.role=Roles.id;
 		`

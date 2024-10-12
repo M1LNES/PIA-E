@@ -47,3 +47,20 @@ export const fetchAllRoles = async () => {
 	const result = (await response.json()).roles
 	return result
 }
+
+export const changeUserRole = async (userId: number, roleId: number) => {
+	const response = await fetch('/api/users/change-role', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ userId, roleId }),
+	})
+
+	if (!response.ok) {
+		throw new Error('Failed to fetch data')
+	}
+
+	const result = await response.json()
+	return result
+}
