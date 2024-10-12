@@ -21,7 +21,6 @@ export default function CategoryCreator() {
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
-
 		try {
 			const response = await fetch('/api/category/add-category', {
 				method: 'POST',
@@ -33,6 +32,7 @@ export default function CategoryCreator() {
 			const result = await response.json()
 			if (result.status === 200) {
 				alert('Category added successfully')
+				window.location.reload()
 			} else if (result.status === 409) {
 				alert('This category already exists!')
 			} else {

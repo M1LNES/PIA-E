@@ -24,7 +24,6 @@ export default function PostCreator() {
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
-
 		const postData = { title, description, category }
 		try {
 			const response = await fetch('/api/posts/add-post', {
@@ -38,6 +37,7 @@ export default function PostCreator() {
 			const result = await response.json()
 			if (result.status === 200) {
 				alert('Post added successfully')
+				window.location.reload()
 			} else {
 				alert('Error adding post')
 			}
