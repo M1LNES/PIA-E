@@ -5,6 +5,10 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 
 const authOptions: NextAuthOptions = {
+	session: {
+		strategy: 'jwt',
+		maxAge: 1 * 24 * 60 * 60, // 1 day
+	},
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_ID ?? '',
