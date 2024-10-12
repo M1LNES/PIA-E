@@ -19,7 +19,7 @@ export default function PostCreator() {
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
-		queryFn: () => fetchAllCategories(setCategory),
+		queryFn: () => fetchAllCategories(),
 	})
 
 	const handleSubmit = async (event: React.FormEvent) => {
@@ -106,6 +106,9 @@ export default function PostCreator() {
 								onChange={(e) => setCategory(parseInt(e.target.value))}
 								required
 							>
+								<option key={-1} value={-1}>
+									Please select one of the categories...
+								</option>
 								{data.map((item: Category) => (
 									<option key={item.id} value={item.id}>
 										{item.name}

@@ -36,7 +36,7 @@ export default function AddingUseer() {
 
 	const { data: roles, isLoading: areRolesLoading } = useQuery({
 		queryKey: ['roles'],
-		queryFn: () => fetchAllRoles(setSelectedRole),
+		queryFn: () => fetchAllRoles(),
 	})
 
 	const createNewUser = async (event: React.FormEvent) => {
@@ -175,6 +175,9 @@ export default function AddingUseer() {
 								onChange={(e) => setSelectedRole(parseInt(e.target.value))}
 								required
 							>
+								<option key={-1} value={-1}>
+									Please select a user role
+								</option>
 								{roles.map((role: Role) => (
 									<option key={role.id} value={role.id}>
 										{role.type}

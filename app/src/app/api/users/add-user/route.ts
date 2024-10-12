@@ -7,7 +7,13 @@ export async function POST(request: Request) {
 	const body = await request.json()
 	const { username, email, selectedRole, password, confirmPassword } = body
 
-	if (!username || !email || !selectedRole || !password || !confirmPassword) {
+	if (
+		!username ||
+		!email ||
+		selectedRole === -1 ||
+		!password ||
+		!confirmPassword
+	) {
 		return NextResponse.json({
 			received: true,
 			status: 400,

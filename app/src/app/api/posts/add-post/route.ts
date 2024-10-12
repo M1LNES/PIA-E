@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { title, description, category } = body
-	if (!title || !description || !category) {
+	if (!title || !description || category == -1) {
 		return NextResponse.json({
 			received: true,
 			status: 400,

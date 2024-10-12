@@ -1,11 +1,10 @@
-export const fetchAllCategories = async (setCategory: (id: number) => void) => {
+export const fetchAllCategories = async () => {
 	const response = await fetch('/api/category/get-categories')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}
 
 	const result = (await response.json()).categories
-	setCategory(result[0].id || 0) // setting first category as a default value in select box
 	return result
 }
 
@@ -39,13 +38,12 @@ export const fetchAllUsers = async () => {
 	return result
 }
 
-export const fetchAllRoles = async (setSelectedRole: (id: number) => void) => {
+export const fetchAllRoles = async () => {
 	const response = await fetch('/api/roles/get-roles')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}
 
 	const result = (await response.json()).roles
-	setSelectedRole(result[0].id || 0)
 	return result
 }
