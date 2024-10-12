@@ -40,8 +40,6 @@ export default function AddingUseer() {
 	})
 
 	const createNewUser = async (event: React.FormEvent) => {
-		event.preventDefault()
-
 		const postData = {
 			username,
 			email,
@@ -61,10 +59,13 @@ export default function AddingUseer() {
 			const result = await response.json()
 			if (result.status === 200) {
 				alert('User added successfully')
+				window.location.reload()
 			} else {
+				event.preventDefault()
 				alert('Error adding user')
 			}
 		} catch (error) {
+			event.preventDefault()
 			console.error('Error:', error)
 			alert('Error adding user')
 		}
@@ -84,10 +85,13 @@ export default function AddingUseer() {
 			const result = await response.json()
 			if (result.status === 200) {
 				alert('User successfuly disabled.')
+				window.location.reload()
 			} else {
+				event.preventDefault()
 				alert('Error during disabling user')
 			}
 		} catch (error) {
+			event.preventDefault()
 			console.error('Error:', error)
 			alert('Error during disabling user')
 		}
@@ -107,10 +111,13 @@ export default function AddingUseer() {
 			const result = await response.json()
 			if (result.status === 200) {
 				alert('User successfuly re-activated.')
+				window.location.reload()
 			} else {
+				event.preventDefault()
 				alert('Error during re-activating user.')
 			}
 		} catch (error) {
+			event.preventDefault()
 			console.error('Error:', error)
 			alert('Error re-activating user')
 		}
