@@ -159,3 +159,42 @@ export const addPost = async (postData: {
 	const result = await response.json()
 	return result
 }
+
+export const fetchUserData = async (email: string) => {
+	const response = await fetch('/api/users/get-user', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ email }),
+	})
+
+	if (!response.ok) {
+		throw new Error('Failed to fetch userData')
+	}
+
+	const result = await response.json()
+	return result.user
+}
+
+export const changePassword = async (postData: {
+	email: string
+	oldPassword: string
+	newPassword: string
+	newPasswordConfirm: string
+}) => {
+	const response = await fetch('/api/users/change-password', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	})
+
+	if (!response.ok) {
+		throw new Error('Failed to change password')
+	}
+
+	const result = await response.json()
+	return result
+}

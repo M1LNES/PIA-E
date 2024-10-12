@@ -38,6 +38,19 @@
 				"deleted-at": "Deleted at",
 				"action": "Action"
 			}
+		},
+		"my-account": {
+			"title": "My account",
+			"form-title": "Change password",
+			"email": "E-mail address",
+			"username": "Username",
+			"role": "Role",
+			"changePassword": "Change passsword",
+			"updatePassword": "Update password",
+			"newPassword": "New password",
+			"confirmNewPassword": "Confirm new password",
+			"oldPassword": "Old password",
+			"overview": "Overview"
 		}
 	},
 	"navbar": {
@@ -46,7 +59,8 @@
 			"create-post": "Create new post",
 			"sign-out": "Sign Out",
 			"create-category": "Create new category",
-			"manage-users": "Manage users"
+			"manage-users": "Manage users",
+			"my-account": "My account"
 		}
 	}
 }

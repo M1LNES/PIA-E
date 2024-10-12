@@ -43,6 +43,11 @@ const Layout = ({ children }: LayoutProps) => {
 								{t('manage-users')}
 							</Link>
 						</li>
+						<li className="mb-2">
+							<Link href="/my-account" className="hover:text-gray-400">
+								{t('my-account')}
+							</Link>
+						</li>
 					</ul>
 				</div>
 

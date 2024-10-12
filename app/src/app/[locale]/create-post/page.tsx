@@ -1,4 +1,4 @@
-'use client' // This is a client component 👈🏽
+'use client'
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
 import { addPost, fetchAllCategories } from '../services/data-service'

@@ -38,6 +38,19 @@
 				"deleted-at": "Smazáno",
 				"action": "Akce"
 			}
+		},
+		"my-account": {
+			"title": "Můj účet",
+			"form-title": "Změna hesla",
+			"email": "E-mailová adresa",
+			"username": "Uživatelské jméno",
+			"role": "Role",
+			"changePassword": "Změna hesla",
+			"updatePassword": "Změnit heslo",
+			"newPassword": "Nové heslo",
+			"confirmNewPassword": "Potvrdit heslo",
+			"oldPassword": "Staré heslo",
+			"overview": "Informace o účtu"
 		}
 	},
 	"navbar": {
@@ -46,7 +59,8 @@
 			"create-post": "Vytvořit příspěvek",
 			"create-category": "Vytvořit kategorii",
 			"sign-out": "Odhlásit se",
-			"manage-users": "Správa uživatelů"
+			"manage-users": "Správa uživatelů",
+			"my-account": "Můj účet"
 		}
 	}
 }
