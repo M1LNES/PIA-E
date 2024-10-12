@@ -2,7 +2,10 @@
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
 import {
+	activateUser,
 	changeUserRole,
+	createNewUser,
+	disableUser,
 	fetchAllRoles,
 	fetchAllUsers,
 } from '../services/data-service'
@@ -43,7 +46,7 @@ export default function AddingUseer() {
 		queryFn: () => fetchAllRoles(),
 	})
 
-	const createNewUser = async (event: React.FormEvent) => {
+	const handleCreateNewUser = async (event: React.FormEvent) => {
 		event.preventDefault()
 		const postData = {
 			username,
@@ -53,15 +56,7 @@ export default function AddingUseer() {
 			confirmPassword,
 		}
 		try {
-			const response = await fetch('/api/users/add-user', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(postData),
-			})
-
-			const result = await response.json()
+			const result = await createNewUser(postData)
 			if (result.status === 200) {
 				alert('User added successfully')
 				window.location.reload()
@@ -74,18 +69,10 @@ export default function AddingUseer() {
 		}
 	}
 
-	const disableUser = async (event: React.FormEvent, email: string) => {
+	const handleDisableUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
 		try {
-			const response = await fetch('/api/users/disable-user', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email }),
-			})
-
-			const result = await response.json()
+			const result = await disableUser(email)
 			if (result.status === 200) {
 				alert('User successfuly disabled.')
 				window.location.reload()
@@ -98,18 +85,10 @@ export default function AddingUseer() {
 		}
 	}
 
-	const activateUser = async (event: React.FormEvent, email: string) => {
+	const handleActivateUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
 		try {
-			const response = await fetch('/api/users/activate-user', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email }),
-			})
-
-			const result = await response.json()
+			const result = await activateUser(email)
 			if (result.status === 200) {
 				alert('User successfuly re-activated.')
 				window.location.reload()
@@ -122,7 +101,7 @@ export default function AddingUseer() {
 		}
 	}
 
-	const changeUsersRole = async (event: React.FormEvent, item: Users) => {
+	const handleChangeUserRole = async (event: React.FormEvent, item: Users) => {
 		event.preventDefault()
 		const confirmText = `Do you really want to switch ${
 			item.username
@@ -132,17 +111,21 @@ export default function AddingUseer() {
 					option.id === parseInt((event.target as HTMLInputElement).value)
 			).type
 		}?`
-		if (confirm(confirmText)) {
-			const result = await changeUserRole(
-				item.id,
-				parseInt((event.target as HTMLInputElement).value)
-			)
 
-			if (result.status === 200) {
-				alert('User role succesfully updated!')
-				window.location.reload()
-			} else {
-				alert('Error occured during changing users role.')
+		if (confirm(confirmText)) {
+			try {
+				const result = await changeUserRole(
+					item.id,
+					parseInt((event.target as HTMLInputElement).value)
+				)
+				if (result.status === 200) {
+					alert('User role succesfully updated!')
+					window.location.reload()
+				} else {
+					alert('Error occured during changing users role.')
+				}
+			} catch {
+				alert('Unexpected error occured.')
 			}
 		} else {
 			alert('Aborting role changing...')
@@ -156,7 +139,7 @@ export default function AddingUseer() {
 				<h2 className="text-2xl font-semibold mb-6">{t('page-title')}</h2>
 				<form
 					className="bg-white p-6 shadow-lg rounded-lg"
-					onSubmit={createNewUser}
+					onSubmit={handleCreateNewUser}
 				>
 					<div className="mb-4">
 						<label
@@ -313,7 +296,7 @@ export default function AddingUseer() {
 											) : (
 												<select
 													value={item.roleid}
-													onChange={(e) => changeUsersRole(e, item)}
+													onChange={(e) => handleChangeUserRole(e, item)}
 												>
 													{roles.map((role: Role) => (
 														<option key={role.id} value={role.id}>
@@ -333,7 +316,7 @@ export default function AddingUseer() {
 											{item.deleted_at ? (
 												<UserButton
 													onClick={(event: React.FormEvent) =>
-														activateUser(event, item.email)
+														handleActivateUser(event, item.email)
 													}
 													label="Activate User"
 													color="green"
@@ -341,7 +324,7 @@ export default function AddingUseer() {
 											) : (
 												<UserButton
 													onClick={(event: React.FormEvent) =>
-														disableUser(event, item.email)
+														handleDisableUser(event, item.email)
 													}
 													label="Disable User"
 													color="red"

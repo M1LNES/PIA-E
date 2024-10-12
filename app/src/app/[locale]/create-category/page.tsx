@@ -1,7 +1,10 @@
 'use client'
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
-import { fetchAllCreatedCategories } from '../services/data-service'
+import {
+	createCategory,
+	fetchAllCreatedCategories,
+} from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 
@@ -22,14 +25,7 @@ export default function CategoryCreator() {
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
 		try {
-			const response = await fetch('/api/category/add-category', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ title }),
-			})
-			const result = await response.json()
+			const result = await createCategory(title)
 			if (result.status === 200) {
 				alert('Category added successfully')
 				window.location.reload()

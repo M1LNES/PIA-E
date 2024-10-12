@@ -64,3 +64,77 @@ export const changeUserRole = async (userId: number, roleId: number) => {
 	const result = await response.json()
 	return result
 }
+
+export const activateUser = async (email: string) => {
+	const response = await fetch('/api/users/activate-user', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ email }),
+	})
+
+	const result = await response.json()
+	return result
+}
+
+export const disableUser = async (email: string) => {
+	const response = await fetch('/api/users/disable-user', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ email }),
+	})
+
+	const result = await response.json()
+	return result
+}
+
+export const createNewUser = async (postData: {
+	username: string
+	email: string
+	selectedRole: number
+	password: string
+	confirmPassword: string
+}) => {
+	const response = await fetch('/api/users/add-user', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	})
+
+	const result = await response.json()
+	return result
+}
+
+export const createCategory = async (title: string) => {
+	const response = await fetch('/api/category/add-category', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ title }),
+	})
+	const result = await response.json()
+	return result
+}
+
+export const addPost = async (postData: {
+	title: string
+	description: string
+	category: number
+}) => {
+	const response = await fetch('/api/posts/add-post', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	})
+
+	const result = await response.json()
+	return result
+}
