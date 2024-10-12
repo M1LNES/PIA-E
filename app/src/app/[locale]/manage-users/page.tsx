@@ -71,33 +71,44 @@ export default function AddingUseer() {
 
 	const handleDisableUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
-		try {
-			const result = await disableUser(email)
-			if (result.status === 200) {
-				alert('User successfuly disabled.')
-				window.location.reload()
-			} else {
+		const confirmText = `Do you really want to disable user with e-mail ${email}?`
+		if (confirm(confirmText)) {
+			try {
+				const result = await disableUser(email)
+				if (result.status === 200) {
+					alert('User successfuly disabled.')
+					window.location.reload()
+				} else {
+					alert('Error during disabling user')
+				}
+			} catch (error) {
+				console.error('Error:', error)
 				alert('Error during disabling user')
 			}
-		} catch (error) {
-			console.error('Error:', error)
-			alert('Error during disabling user')
+		} else {
+			alert('Aborting user deactivation...')
 		}
 	}
 
 	const handleActivateUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
-		try {
-			const result = await activateUser(email)
-			if (result.status === 200) {
-				alert('User successfuly re-activated.')
-				window.location.reload()
-			} else {
-				alert('Error during re-activating user.')
+		const confirmText = `Do you really want to activate user with e-mail ${email}?`
+
+		if (confirm(confirmText)) {
+			try {
+				const result = await activateUser(email)
+				if (result.status === 200) {
+					alert('User successfuly re-activated.')
+					window.location.reload()
+				} else {
+					alert('Error during re-activating user.')
+				}
+			} catch (error) {
+				console.error('Error:', error)
+				alert('Error re-activating user')
 			}
-		} catch (error) {
-			console.error('Error:', error)
-			alert('Error re-activating user')
+		} else {
+			alert('Aborting activation...')
 		}
 	}
 

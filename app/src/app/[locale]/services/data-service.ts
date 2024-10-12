@@ -74,6 +74,10 @@ export const activateUser = async (email: string) => {
 		body: JSON.stringify({ email }),
 	})
 
+	if (!response.ok) {
+		throw new Error('Failed to fetch data')
+	}
+
 	const result = await response.json()
 	return result
 }
@@ -86,6 +90,10 @@ export const disableUser = async (email: string) => {
 		},
 		body: JSON.stringify({ email }),
 	})
+
+	if (!response.ok) {
+		throw new Error('Failed to disable user')
+	}
 
 	const result = await response.json()
 	return result
@@ -106,6 +114,10 @@ export const createNewUser = async (postData: {
 		body: JSON.stringify(postData),
 	})
 
+	if (!response.ok) {
+		throw new Error('Failed to create new user')
+	}
+
 	const result = await response.json()
 	return result
 }
@@ -118,6 +130,11 @@ export const createCategory = async (title: string) => {
 		},
 		body: JSON.stringify({ title }),
 	})
+
+	if (!response.ok) {
+		throw new Error('Failed to create category')
+	}
+
 	const result = await response.json()
 	return result
 }
@@ -134,6 +151,10 @@ export const addPost = async (postData: {
 		},
 		body: JSON.stringify(postData),
 	})
+
+	if (!response.ok) {
+		throw new Error('Failed to add post')
+	}
 
 	const result = await response.json()
 	return result
