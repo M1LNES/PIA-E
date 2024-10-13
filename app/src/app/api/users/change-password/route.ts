@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
-const SALT_ROUNDS = 10
+import config from '@/app/config'
 
 export async function POST(request: Request) {
 	const body = await request.json()
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
 	await sql`UPDATE Users SET hashed_password = ${await bcrypt.hash(
 		newPassword,
-		SALT_ROUNDS
+		config.SALT_ROUNDS
 	)} WHERE email=${email}`
 
 	return NextResponse.json({

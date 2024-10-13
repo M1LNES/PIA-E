@@ -24,7 +24,6 @@ interface Users {
 type Role = {
 	id: number
 	type: string
-	permission: number
 }
 
 export default function AddingUseer() {

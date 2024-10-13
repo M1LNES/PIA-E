@@ -1,8 +1,8 @@
 import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
+import config from '@/app/config'
 
-const SALT_ROUNDS = 10
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { username, email, selectedRole, password, confirmPassword } = body
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
 		await sql`INSERT INTO Users (username, role, email, hashed_password) VALUES (${username}, ${selectedRole}, ${email},${await bcrypt.hash(
 			password,
-			SALT_ROUNDS
+			config.SALT_ROUNDS
 		)}) RETURNING *`
 
 		return NextResponse.json({

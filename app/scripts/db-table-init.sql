@@ -1,7 +1,6 @@
 CREATE TABLE Roles (
     id SERIAL PRIMARY KEY,
     type VARCHAR(255),
-    permission SMALLINT
 );
 
 CREATE TABLE Users (
