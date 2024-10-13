@@ -10,9 +10,9 @@ export default function MyAccount() {
 	const t = useTranslations('pages.my-account')
 	const { data: session, status } = useSession() // Get session from NextAuth
 
-	const [oldPassword, setOldPassword] = useState('')
-	const [newPassword, setNewPassword] = useState('')
-	const [newPasswordConfirm, setNewPasswordConfirm] = useState('')
+	const [oldPassword, setOldPassword] = useState<string>('')
+	const [newPassword, setNewPassword] = useState<string>('')
+	const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>('')
 
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['userData', session?.user?.email],
