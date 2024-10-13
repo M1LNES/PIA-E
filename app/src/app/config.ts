@@ -2,6 +2,11 @@
 
 const config = {
 	SALT_ROUNDS: 10,
+	roles: {
+		admin: 'admin',
+		writer: 'writer',
+		reader: 'reader',
+	},
 }
 
 export default config

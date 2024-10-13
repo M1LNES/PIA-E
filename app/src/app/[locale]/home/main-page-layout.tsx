@@ -7,13 +7,24 @@ import EmplifiLogo from './logos/emplifi-logo'
 import DocusaurusLogo from './logos/docusaurus-logo'
 import LocaleSwitcher from '../components/locale-switcher'
 import { useTranslations } from 'next-intl'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
+import { useQuery } from '@tanstack/react-query'
+import { fetchUserData } from '../services/data-service'
+import config from '@/app/config'
 
 interface LayoutProps {
 	children: ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
+	const { data: session } = useSession()
+
+	const { data: user, isLoading } = useQuery({
+		queryKey: ['userData', session?.user?.email],
+		queryFn: () => fetchUserData(session?.user?.email as string),
+		enabled: !!session?.user?.email,
+	})
+
 	const t = useTranslations('navbar.menu-items')
 
 	return (
@@ -22,33 +33,78 @@ const Layout = ({ children }: LayoutProps) => {
 				<div>
 					<EmplifiLogo />
 					<div className="border-t border-white my-4"></div>
-					<ul>
-						<li className="mb-2">
-							<Link href="/" className="hover:text-gray-400">
-								{t('home')}
-							</Link>
-						</li>
-						<li className="mb-2">
-							<Link href="/create-post" className="hover:text-gray-400">
-								{t('create-post')}
-							</Link>
-						</li>
-						<li className="mb-2">
-							<Link href="/create-category" className="hover:text-gray-400">
-								{t('create-category')}
-							</Link>
-						</li>
-						<li className="mb-2">
-							<Link href="/manage-users" className="hover:text-gray-400">
-								{t('manage-users')}
-							</Link>
-						</li>
-						<li className="mb-2">
-							<Link href="/my-account" className="hover:text-gray-400">
-								{t('my-account')}
-							</Link>
-						</li>
-					</ul>
+					{/* By default, I render only pages allowed to everyone who is logged in in application,
+					after loading the user's role, the rest of the navbar is mounted */}
+					{isLoading ? (
+						<ul>
+							<li className="mb-2">
+								<Link href="/" className="hover:text-gray-400">
+									{t('home')}
+								</Link>
+							</li>
+							<li className="mb-2">
+								<Link href="/my-account" className="hover:text-gray-400">
+									{t('my-account')}
+								</Link>
+							</li>
+						</ul>
+					) : (
+						<ul>
+							{/* Common Links for all roles */}
+							<li className="mb-2">
+								<Link href="/" className="hover:text-gray-400">
+									{t('home')}
+								</Link>
+							</li>
+							<li className="mb-2">
+								<Link href="/my-account" className="hover:text-gray-400">
+									{t('my-account')}
+								</Link>
+							</li>
+
+							{/* Role-specific Links */}
+							{user.type === config.roles.admin && (
+								<>
+									<li className="mb-2">
+										<Link href="/create-post" className="hover:text-gray-400">
+											{t('create-post')}
+										</Link>
+									</li>
+									<li className="mb-2">
+										<Link
+											href="/create-category"
+											className="hover:text-gray-400"
+										>
+											{t('create-category')}
+										</Link>
+									</li>
+									<li className="mb-2">
+										<Link href="/manage-users" className="hover:text-gray-400">
+											{t('manage-users')}
+										</Link>
+									</li>
+								</>
+							)}
+
+							{user.type === config.roles.writer && (
+								<>
+									<li className="mb-2">
+										<Link href="/create-post" className="hover:text-gray-400">
+											{t('create-post')}
+										</Link>
+									</li>
+									<li className="mb-2">
+										<Link
+											href="/create-category"
+											className="hover:text-gray-400"
+										>
+											{t('create-category')}
+										</Link>
+									</li>
+								</>
+							)}
+						</ul>
+					)}
 				</div>
 
 				<div className="mt-auto">

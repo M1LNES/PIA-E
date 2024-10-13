@@ -8,7 +8,7 @@ import { useState } from 'react'
 
 export default function MyAccount() {
 	const t = useTranslations('pages.my-account')
-	const { data: session, status } = useSession() // Get session from NextAuth
+	const { data: session } = useSession()
 
 	const [oldPassword, setOldPassword] = useState<string>('')
 	const [newPassword, setNewPassword] = useState<string>('')
@@ -44,7 +44,7 @@ export default function MyAccount() {
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
-				{status === 'loading' || isLoading ? (
+				{isLoading ? (
 					<div>LOADING...</div>
 				) : !session || !user ? (
 					<div>NO ACCESS</div>
