@@ -27,84 +27,68 @@ const Layout = ({ children }: LayoutProps) => {
 
 	const t = useTranslations('navbar.menu-items')
 
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gray-900"></div>
+			</div>
+		)
+	}
 	return (
 		<div className="flex">
 			<nav className="fixed top-0 left-0 h-screen w-1/6 bg-gray-800 text-white flex flex-col justify-between p-4">
 				<div>
 					<EmplifiLogo />
 					<div className="border-t border-white my-4"></div>
-					{/* By default, I render only pages allowed to everyone who is logged in in application,
-					after loading the user's role, the rest of the navbar is mounted */}
-					{isLoading ? (
-						<ul>
-							<li className="mb-2">
-								<Link href="/" className="hover:text-gray-400">
-									{t('home')}
-								</Link>
-							</li>
-							<li className="mb-2">
-								<Link href="/my-account" className="hover:text-gray-400">
-									{t('my-account')}
-								</Link>
-							</li>
-						</ul>
-					) : (
-						<ul>
-							{/* Common Links for all roles */}
-							<li className="mb-2">
-								<Link href="/" className="hover:text-gray-400">
-									{t('home')}
-								</Link>
-							</li>
-							<li className="mb-2">
-								<Link href="/my-account" className="hover:text-gray-400">
-									{t('my-account')}
-								</Link>
-							</li>
+					<ul>
+						{/* Common Links for all roles */}
+						<li className="mb-2">
+							<Link href="/" className="hover:text-gray-400">
+								{t('home')}
+							</Link>
+						</li>
+						<li className="mb-2">
+							<Link href="/my-account" className="hover:text-gray-400">
+								{t('my-account')}
+							</Link>
+						</li>
 
-							{/* Role-specific Links */}
-							{user.type === config.roles.admin && (
-								<>
-									<li className="mb-2">
-										<Link href="/create-post" className="hover:text-gray-400">
-											{t('create-post')}
-										</Link>
-									</li>
-									<li className="mb-2">
-										<Link
-											href="/create-category"
-											className="hover:text-gray-400"
-										>
-											{t('create-category')}
-										</Link>
-									</li>
-									<li className="mb-2">
-										<Link href="/manage-users" className="hover:text-gray-400">
-											{t('manage-users')}
-										</Link>
-									</li>
-								</>
-							)}
+						{/* Role-specific Links */}
+						{user.type === config.roles.admin && (
+							<>
+								<li className="mb-2">
+									<Link href="/create-post" className="hover:text-gray-400">
+										{t('create-post')}
+									</Link>
+								</li>
+								<li className="mb-2">
+									<Link href="/create-category" className="hover:text-gray-400">
+										{t('create-category')}
+									</Link>
+								</li>
+								<li className="mb-2">
+									<Link href="/manage-users" className="hover:text-gray-400">
+										{t('manage-users')}
+									</Link>
+								</li>
+							</>
+						)}
 
-							{user.type === config.roles.writer && (
-								<>
-									<li className="mb-2">
-										<Link href="/create-post" className="hover:text-gray-400">
-											{t('create-post')}
-										</Link>
-									</li>
-									<li className="mb-2">
-										<Link
-											href="/create-category"
-											className="hover:text-gray-400"
-										>
-											{t('create-category')}
-										</Link>
-									</li>
-								</>
-							)}
-						</ul>
-					)}
+						{user.type === config.roles.writer && (
+							<>
+								<li className="mb-2">
+									<Link href="/create-post" className="hover:text-gray-400">
+										{t('create-post')}
+									</Link>
+								</li>
+								<li className="mb-2">
+									<Link href="/create-category" className="hover:text-gray-400">
+										{t('create-category')}
+									</Link>
+								</li>
+							</>
+						)}
+					</ul>
 				</div>
 
 				<div className="mt-auto">
