@@ -12,22 +12,25 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import UserButton from '../components/user-button'
+import { useSession } from 'next-auth/react'
 
 interface Users {
 	id: number
 	username: string
 	email: string
 	deleted_at: number | null
-	roleid: string
+	roleid: number
 }
 
 type Role = {
 	id: number
 	type: string
+	permission: number
 }
 
-export default function AddingUseer() {
+export default function AddingUser() {
 	const t = useTranslations('pages.managing-users')
+	const { data: session } = useSession()
 
 	const [username, setUsername] = useState<string>('')
 	const [email, setEmail] = useState<string>('')
@@ -44,6 +47,21 @@ export default function AddingUseer() {
 		queryKey: ['roles'],
 		queryFn: () => fetchAllRoles(),
 	})
+
+	const { data: userRolePermission, isLoading: isUsersRolePermissionLoading } =
+		useQuery({
+			queryKey: ['user-permissions'],
+			queryFn: () => {
+				const currentUser = data.find(
+					(me: Users) => me.email === session?.user?.email
+				)
+				const permission = roles.find(
+					(role: Role) => role.id === currentUser.roleid
+				).permission
+				return permission
+			},
+			enabled: !areRolesLoading && !isLoading,
+		})
 
 	const handleCreateNewUser = async (event: React.FormEvent) => {
 		event.preventDefault()
@@ -139,7 +157,7 @@ export default function AddingUseer() {
 			}
 		} else {
 			alert('Aborting role changing...')
-			;(event.target as HTMLInputElement).value = item.roleid
+			;(event.target as HTMLInputElement).value = item.roleid.toString()
 		}
 	}
 
@@ -152,6 +170,7 @@ export default function AddingUseer() {
 					onSubmit={handleCreateNewUser}
 				>
 					<div className="mb-4">
+						<h3 className="text-xl font-medium mb-4">{t('creating-user')}</h3>
 						<label
 							htmlFor="username"
 							className="block text-gray-700 font-semibold mb-2"
@@ -192,7 +211,7 @@ export default function AddingUseer() {
 						>
 							{t('form.role')}
 						</label>
-						{areRolesLoading ? (
+						{areRolesLoading || isUsersRolePermissionLoading ? (
 							<>LOADING</>
 						) : (
 							<select
@@ -203,13 +222,15 @@ export default function AddingUseer() {
 								required
 							>
 								<option key={-1} value={-1}>
-									Please select a user role
+									{t('form.select-user-role')}
 								</option>
-								{roles.map((role: Role) => (
-									<option key={role.id} value={role.id}>
-										{role.type}
-									</option>
-								))}
+								{roles
+									.filter((role: Role) => role.permission < userRolePermission)
+									.map((role: Role) => (
+										<option key={role.id} value={role.id}>
+											{role.type}
+										</option>
+									))}
 							</select>
 						)}
 					</div>
@@ -301,21 +322,35 @@ export default function AddingUseer() {
 											{item.username}
 										</td>
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{areRolesLoading ? (
+											{areRolesLoading || isUsersRolePermissionLoading ? (
 												<>{item.roleid}</>
+											) : item.email === session?.user?.email ||
+											  userRolePermission <=
+													roles.find((rItem: Role) => rItem.id === item.roleid)
+														.permission ? (
+												`${
+													roles.find((rItem: Role) => rItem.id === item.roleid)
+														.type
+												}`
 											) : (
 												<select
 													value={item.roleid}
 													onChange={(e) => handleChangeUserRole(e, item)}
 												>
-													{roles.map((role: Role) => (
-														<option key={role.id} value={role.id}>
-															{role.type}
-														</option>
-													))}
+													{roles
+														.filter(
+															(role: Role) =>
+																role.permission < userRolePermission
+														)
+														.map((role: Role) => (
+															<option key={role.id} value={role.id}>
+																{role.type}
+															</option>
+														))}
 												</select>
 											)}
 										</td>
+
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 											{item.email}
 										</td>

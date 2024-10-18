@@ -24,12 +24,14 @@
 			"loading": "Načítání uživatelů...",
 			"available-users": "Všichni uživatelé",
 			"submit-post": "Odeslat",
+			"creating-user": "Vytvořit nového uživatele",
 			"form": {
 				"username": "Uživatelské jméno",
 				"email": "E-mailová adresa",
 				"role": "Role",
 				"password": "Heslo",
-				"password-confirm": "Potvrdit heslo"
+				"password-confirm": "Potvrdit heslo",
+				"select-user-role": "Vyberte prosím uživatelskou roli"
 			},
 			"table": {
 				"username": "Uživatel",

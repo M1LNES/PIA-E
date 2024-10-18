@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
 		await sql`INSERT INTO Users (username, role, email, hashed_password) VALUES (${username}, ${selectedRole}, ${email},${await bcrypt.hash(
 			password,
-			config.SALT_ROUNDS
+			config.saltRounds
 		)}) RETURNING *`
 
 		return NextResponse.json({

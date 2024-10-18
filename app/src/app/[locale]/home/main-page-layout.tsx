@@ -41,52 +41,44 @@ const Layout = ({ children }: LayoutProps) => {
 					<EmplifiLogo />
 					<div className="border-t border-white my-4"></div>
 					<ul>
-						{/* Common Links for all roles */}
-						<li className="mb-2">
-							<Link href="/" className="hover:text-gray-400">
-								{t('home')}
-							</Link>
-						</li>
-						<li className="mb-2">
-							<Link href="/my-account" className="hover:text-gray-400">
-								{t('my-account')}
-							</Link>
-						</li>
-
-						{/* Role-specific Links */}
-						{user.type === config.roles.admin && (
-							<>
-								<li className="mb-2">
-									<Link href="/create-post" className="hover:text-gray-400">
-										{t('create-post')}
-									</Link>
-								</li>
-								<li className="mb-2">
-									<Link href="/create-category" className="hover:text-gray-400">
-										{t('create-category')}
-									</Link>
-								</li>
-								<li className="mb-2">
-									<Link href="/manage-users" className="hover:text-gray-400">
-										{t('manage-users')}
-									</Link>
-								</li>
-							</>
+						{user.permission >= config.pages.home.minPermission && (
+							<li className="mb-2">
+								<Link href="/" className="hover:text-gray-400">
+									{t('home')}
+								</Link>
+							</li>
 						)}
 
-						{user.type === config.roles.writer && (
-							<>
-								<li className="mb-2">
-									<Link href="/create-post" className="hover:text-gray-400">
-										{t('create-post')}
-									</Link>
-								</li>
-								<li className="mb-2">
-									<Link href="/create-category" className="hover:text-gray-400">
-										{t('create-category')}
-									</Link>
-								</li>
-							</>
+						{user.permission >= config.pages.myAccount.minPermission && (
+							<li className="mb-2">
+								<Link href="/my-account" className="hover:text-gray-400">
+									{t('my-account')}
+								</Link>
+							</li>
+						)}
+
+						{user.permission >= config.pages.createPost.minPermission && (
+							<li className="mb-2">
+								<Link href="/create-post" className="hover:text-gray-400">
+									{t('create-post')}
+								</Link>
+							</li>
+						)}
+
+						{user.permission >= config.pages.createCategory.minPermission && (
+							<li className="mb-2">
+								<Link href="/create-category" className="hover:text-gray-400">
+									{t('create-category')}
+								</Link>
+							</li>
+						)}
+
+						{user.permission >= config.pages.manageUsers.minPermission && (
+							<li className="mb-2">
+								<Link href="/manage-users" className="hover:text-gray-400">
+									{t('manage-users')}
+								</Link>
+							</li>
 						)}
 					</ul>
 				</div>

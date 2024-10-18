@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 	}
 
 	const result =
-		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type
+		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
                 FROM Users
                 LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${email}`
 

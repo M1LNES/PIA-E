@@ -24,12 +24,14 @@
 			"loading": "Loading available users...",
 			"available-users": "All Users",
 			"submit-post": "Submit Post",
+			"creating-user": "Create new user",
 			"form": {
 				"username": "Username",
 				"email": "Email address",
 				"role": "Role",
 				"password": "Password",
-				"password-confirm": "Confirm password"
+				"password-confirm": "Confirm password",
+				"select-user-role": "Select a user role"
 			},
 			"table": {
 				"username": "Username",

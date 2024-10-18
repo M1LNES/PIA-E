@@ -2,10 +2,22 @@
 
 const config = {
 	SALT_ROUNDS: 10,
-	roles: {
-		admin: 'admin',
-		writer: 'writer',
-		reader: 'reader',
+	pages: {
+		home: {
+			minPermission: 0,
+		},
+		myAccount: {
+			minPermission: 10,
+		},
+		createPost: {
+			minPermission: 30,
+		},
+		createCategory: {
+			minPermission: 30,
+		},
+		manageUsers: {
+			minPermission: 80,
+		},
 	},
 }
 

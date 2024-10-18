@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
 	await sql`UPDATE Users SET hashed_password = ${await bcrypt.hash(
 		newPassword,
-		config.SALT_ROUNDS
+		config.saltRounds
 	)} WHERE email=${email}`
 
 	return NextResponse.json({
