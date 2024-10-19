@@ -1,10 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
-import {
-	createCategory,
-	fetchAllCreatedCategories,
-} from '../services/data-service'
+import { createCategory, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 
@@ -19,7 +16,7 @@ export default function CategoryCreator() {
 	const [title, setTitle] = useState<string>('')
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
-		queryFn: () => fetchAllCreatedCategories(),
+		queryFn: () => fetchAllCategories(),
 	})
 
 	const handleSubmit = async (event: React.FormEvent) => {

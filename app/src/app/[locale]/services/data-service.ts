@@ -8,16 +8,6 @@ export const fetchAllCategories = async () => {
 	return result
 }
 
-export const fetchAllCreatedCategories = async () => {
-	const response = await fetch('/api/category/get-categories')
-	if (!response.ok) {
-		throw new Error('Failed to fetch data')
-	}
-
-	const result = (await response.json()).categories
-	return result
-}
-
 export const fetchAllPosts = async () => {
 	const response = await fetch('/api/posts/get-all-posts')
 	if (!response.ok) {

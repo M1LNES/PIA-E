@@ -367,13 +367,15 @@ export default function AddingUser() {
 													color="green"
 												/>
 											) : (
-												<UserButton
-													onClick={(event: React.FormEvent) =>
-														handleDisableUser(event, item.email)
-													}
-													label="Disable User"
-													color="red"
-												/>
+												item.email !== session?.user?.email && (
+													<UserButton
+														onClick={(event: React.FormEvent) =>
+															handleDisableUser(event, item.email)
+														}
+														label="Disable User"
+														color="red"
+													/>
+												)
 											)}
 										</td>
 									</tr>

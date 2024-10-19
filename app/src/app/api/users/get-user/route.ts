@@ -19,6 +19,10 @@ export async function POST(request: Request) {
 		})
 	}
 
+	/* Authorization */
+
+	// Allowed to anyone
+
 	const result =
 		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
                 FROM Users

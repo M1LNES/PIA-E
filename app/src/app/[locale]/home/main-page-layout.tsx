@@ -118,6 +118,35 @@ const Layout = ({ children }: LayoutProps) => {
 				className="flex-grow bg-gray-100 p-6 ml-4"
 				style={{ paddingLeft: '16.6667%' }}
 			>
+				<button
+					onClick={async () => {
+						try {
+							const response = await fetch('/api/users/change-role', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify({ userId: 4, roleId: 4 }),
+							})
+
+							const result = await response.json()
+
+							if (!response.ok) {
+								console.error('Error:', result.error)
+								// Handle error in UI (e.g., show a message)
+								return
+							}
+
+							console.log(result.message) // User deleted successfully
+							// Handle success in UI
+						} catch (error) {
+							console.error('Error occurred:', error)
+							// Handle error in UI
+						}
+					}}
+				>
+					TEST MRKO
+				</button>
 				{children}
 			</main>
 		</div>

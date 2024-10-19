@@ -11,6 +11,10 @@ export async function GET() {
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
+	/* Authorization */
+
+	// Posts are visible to anyone, no autorization needed
+
 	try {
 		const result = await sql`SELECT 
 		Users.username, 
