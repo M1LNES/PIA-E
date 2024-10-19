@@ -358,25 +358,35 @@ export default function AddingUser() {
 											{item.deleted_at || 'ACTIVE'}
 										</td>
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.deleted_at ? (
-												<UserButton
-													onClick={(event: React.FormEvent) =>
-														handleActivateUser(event, item.email)
-													}
-													label="Activate User"
-													color="green"
-												/>
-											) : (
-												item.email !== session?.user?.email && (
-													<UserButton
-														onClick={(event: React.FormEvent) =>
-															handleDisableUser(event, item.email)
-														}
-														label="Disable User"
-														color="red"
-													/>
-												)
-											)}
+											{item.deleted_at
+												? !areRolesLoading &&
+												  !isUsersRolePermissionLoading &&
+												  userRolePermission >
+														roles.find(
+															(rItem: Role) => rItem.id === item.roleid
+														).permission && (
+														<UserButton
+															onClick={(event: React.FormEvent) =>
+																handleActivateUser(event, item.email)
+															}
+															label="Activate User"
+															color="green"
+														/>
+												  )
+												: !areRolesLoading &&
+												  !isUsersRolePermissionLoading &&
+												  userRolePermission >
+														roles.find(
+															(rItem: Role) => rItem.id === item.roleid
+														).permission && (
+														<UserButton
+															onClick={(event: React.FormEvent) =>
+																handleDisableUser(event, item.email)
+															}
+															label="Disable User"
+															color="red"
+														/>
+												  )}
 										</td>
 									</tr>
 								))}
