@@ -4,6 +4,10 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
 	const session = await getServerSession()
+	if (!session) {
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
+
 	// Finding user's ID based on his e-mail
 	const result =
 		await sql`SELECT id FROM Users WHERE deleted_at IS NULL AND email=${session?.user?.email}`

@@ -2,10 +2,16 @@ import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 import config from '@/app/config'
+import { getServerSession } from 'next-auth'
 
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { username, email, selectedRole, password, confirmPassword } = body
+
+	const session = await getServerSession()
+	if (!session) {
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
 
 	if (
 		!username ||

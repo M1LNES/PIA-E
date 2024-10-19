@@ -10,6 +10,9 @@ export async function POST(request: Request) {
 	const { email, oldPassword, newPassword, newPasswordConfirm } = body
 
 	const session = await getServerSession()
+	if (!session) {
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
 
 	if (email !== session?.user?.email) {
 		return NextResponse.json({

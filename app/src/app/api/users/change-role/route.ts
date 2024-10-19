@@ -1,9 +1,15 @@
 import { sql } from '@vercel/postgres'
+import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { userId, roleId } = body
+
+	const session = await getServerSession()
+	if (!session) {
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
 
 	if (!userId || !roleId) {
 		return NextResponse.json({
