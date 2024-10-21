@@ -87,7 +87,7 @@ const Layout = ({ children }: LayoutProps) => {
 					<div className="mb-4">
 						<button
 							className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md"
-							onClick={() => signOut()}
+							onClick={() => signOut({ callbackUrl: '/', redirect: true })}
 						>
 							{t('sign-out')}
 						</button>
