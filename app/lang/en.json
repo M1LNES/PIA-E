@@ -6,7 +6,8 @@
 				"no-comments": "No comments available",
 				"add-comment": "Add comment",
 				"show-comments": "Show comments",
-				"hide-comments": "Hide comments"
+				"hide-comments": "Hide comments",
+				"write-comment": "Write a comment"
 			}
 		},
 		"create-post": {

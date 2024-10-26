@@ -171,7 +171,7 @@ export default function HomePageClient() {
 										rows={3}
 										value={newComments[item.post_id] || ''}
 										onChange={(e) => handleNewCommentChange(e, item.post_id)}
-										placeholder="Write a comment..."
+										placeholder={t('comments.write-comment')}
 									></textarea>
 									<button
 										className="px-4 py-2 bg-blue-500 text-white rounded-md"

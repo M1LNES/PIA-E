@@ -6,7 +6,8 @@
 				"no-comments": "Žádné komentáře nejsou k dispozici",
 				"add-comment": "Přidat komentář",
 				"show-comments": "Zobrazit komentáře",
-				"hide-comments": "Skrýt komentáře"
+				"hide-comments": "Skrýt komentáře",
+				"write-comment": "Napsat komentář"
 			}
 		},
 		"create-post": {
