@@ -4,6 +4,7 @@ import Layout from '../home/main-page-layout'
 import { addPost, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
+import LoadingSpinner from '../components/loading-spinner'
 
 interface Category {
 	name: string
@@ -37,6 +38,14 @@ export default function PostCreator() {
 			console.error('Error:', error)
 			alert('Error adding post')
 		}
+	}
+
+	if (isLoading) {
+		return (
+			<Layout>
+				<LoadingSpinner />
+			</Layout>
+		)
 	}
 
 	return (
@@ -88,26 +97,23 @@ export default function PostCreator() {
 						>
 							{t('category')}
 						</label>
-						{isLoading ? (
-							<>{t('title')}</>
-						) : (
-							<select
-								id="category"
-								className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-								value={category}
-								onChange={(e) => setCategory(parseInt(e.target.value))}
-								required
-							>
-								<option key={-1} value={-1}>
-									Please select one of the categories...
+
+						<select
+							id="category"
+							className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={category}
+							onChange={(e) => setCategory(parseInt(e.target.value))}
+							required
+						>
+							<option key={-1} value={-1}>
+								Please select one of the categories...
+							</option>
+							{data.map((item: Category) => (
+								<option key={item.id} value={item.id}>
+									{item.name}
 								</option>
-								{data.map((item: Category) => (
-									<option key={item.id} value={item.id}>
-										{item.name}
-									</option>
-								))}
-							</select>
-						)}
+							))}
+						</select>
 					</div>
 
 					<button

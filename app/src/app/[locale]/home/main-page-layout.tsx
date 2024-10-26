@@ -11,6 +11,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchUserData } from '../services/data-service'
 import config from '@/app/config'
+import LoadingSpinner from '../components/loading-spinner'
 
 interface LayoutProps {
 	children: ReactNode
@@ -28,11 +29,7 @@ const Layout = ({ children }: LayoutProps) => {
 	const t = useTranslations('navbar.menu-items')
 
 	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center h-screen">
-				<div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gray-900"></div>
-			</div>
-		)
+		return <LoadingSpinner />
 	}
 	return (
 		<div className="flex">

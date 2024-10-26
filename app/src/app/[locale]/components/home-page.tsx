@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { fetchAllPosts } from '../services/data-service'
+import LoadingSpinner from './loading-spinner'
 
 interface Post {
 	username: string
@@ -23,7 +24,7 @@ export default function HomePageClient() {
 	return (
 		<>
 			{isLoading ? (
-				<>Loading posts</>
+				<LoadingSpinner />
 			) : (
 				posts.map((item: Post, index: number) => (
 					<div

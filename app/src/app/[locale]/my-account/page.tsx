@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useSession } from 'next-auth/react'
 import { changePassword, fetchUserData } from '../services/data-service'
 import { useState } from 'react'
+import LoadingSpinner from '../components/loading-spinner'
 
 export default function MyAccount() {
 	const t = useTranslations('pages.my-account')
@@ -45,9 +46,7 @@ export default function MyAccount() {
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
 				{isLoading ? (
-					<div>LOADING...</div>
-				) : !session || !user ? (
-					<div>NO ACCESS</div>
+					<LoadingSpinner />
 				) : (
 					<>
 						{/* User Information Overview */}

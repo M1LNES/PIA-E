@@ -13,6 +13,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import UserButton from '../components/user-button'
 import { useSession } from 'next-auth/react'
+import LoadingSpinner from '../components/loading-spinner'
 
 interface Users {
 	id: number
@@ -161,6 +162,14 @@ export default function AddingUser() {
 		}
 	}
 
+	if (isLoading || areRolesLoading || isUsersRolePermissionLoading) {
+		return (
+			<Layout>
+				<LoadingSpinner />
+			</Layout>
+		)
+	}
+
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
@@ -211,28 +220,25 @@ export default function AddingUser() {
 						>
 							{t('form.role')}
 						</label>
-						{areRolesLoading || isUsersRolePermissionLoading ? (
-							<>LOADING</>
-						) : (
-							<select
-								id="role"
-								className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-								value={selectedRole}
-								onChange={(e) => setSelectedRole(parseInt(e.target.value))}
-								required
-							>
-								<option key={-1} value={-1}>
-									{t('form.select-user-role')}
-								</option>
-								{roles
-									.filter((role: Role) => role.permission < userRolePermission)
-									.map((role: Role) => (
-										<option key={role.id} value={role.id}>
-											{role.type}
-										</option>
-									))}
-							</select>
-						)}
+
+						<select
+							id="role"
+							className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={selectedRole}
+							onChange={(e) => setSelectedRole(parseInt(e.target.value))}
+							required
+						>
+							<option key={-1} value={-1}>
+								{t('form.select-user-role')}
+							</option>
+							{roles
+								.filter((role: Role) => role.permission < userRolePermission)
+								.map((role: Role) => (
+									<option key={role.id} value={role.id}>
+										{role.type}
+									</option>
+								))}
+						</select>
 					</div>
 
 					{/* Password */}
@@ -292,107 +298,95 @@ export default function AddingUser() {
 					>
 						{t('available-users')}
 					</label>
-					{isLoading ? (
-						<>{t('loading')}</>
-					) : (
-						<table className="min-w-full bg-white">
-							<thead>
-								<tr>
-									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-										{t('table.username')}
-									</th>
-									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-										{t('table.role')}
-									</th>
-									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-										{t('table.email')}
-									</th>
-									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-										{t('table.deleted-at')}
-									</th>
-									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-										{t('table.action')}
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{data.map((item: Users) => (
-									<tr key={item.id} className="hover:bg-gray-100">
-										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.username}
-										</td>
-										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{areRolesLoading || isUsersRolePermissionLoading ? (
-												<>{item.roleid}</>
-											) : item.email === session?.user?.email ||
-											  userRolePermission <=
-													roles.find((rItem: Role) => rItem.id === item.roleid)
-														.permission ? (
-												`${
-													roles.find((rItem: Role) => rItem.id === item.roleid)
-														.type
-												}`
-											) : (
-												<select
-													value={item.roleid}
-													onChange={(e) => handleChangeUserRole(e, item)}
-												>
-													{roles
-														.filter(
-															(role: Role) =>
-																role.permission < userRolePermission
-														)
-														.map((role: Role) => (
-															<option key={role.id} value={role.id}>
-																{role.type}
-															</option>
-														))}
-												</select>
-											)}
-										</td>
 
-										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.email}
-										</td>
-										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.deleted_at || 'ACTIVE'}
-										</td>
-										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.deleted_at
-												? !areRolesLoading &&
-												  !isUsersRolePermissionLoading &&
-												  userRolePermission >
-														roles.find(
-															(rItem: Role) => rItem.id === item.roleid
-														).permission && (
-														<UserButton
-															onClick={(event: React.FormEvent) =>
-																handleActivateUser(event, item.email)
-															}
-															label="Activate User"
-															color="green"
-														/>
-												  )
-												: !areRolesLoading &&
-												  !isUsersRolePermissionLoading &&
-												  userRolePermission >
-														roles.find(
-															(rItem: Role) => rItem.id === item.roleid
-														).permission && (
-														<UserButton
-															onClick={(event: React.FormEvent) =>
-																handleDisableUser(event, item.email)
-															}
-															label="Disable User"
-															color="red"
-														/>
-												  )}
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					)}
+					<table className="min-w-full bg-white">
+						<thead>
+							<tr>
+								<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+									{t('table.username')}
+								</th>
+								<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+									{t('table.role')}
+								</th>
+								<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+									{t('table.email')}
+								</th>
+								<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+									{t('table.deleted-at')}
+								</th>
+								<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+									{t('table.action')}
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{data.map((item: Users) => (
+								<tr key={item.id} className="hover:bg-gray-100">
+									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+										{item.username}
+									</td>
+									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+										{item.email === session?.user?.email ||
+										userRolePermission <=
+											roles.find((rItem: Role) => rItem.id === item.roleid)
+												.permission ? (
+											`${
+												roles.find((rItem: Role) => rItem.id === item.roleid)
+													.type
+											}`
+										) : (
+											<select
+												value={item.roleid}
+												onChange={(e) => handleChangeUserRole(e, item)}
+											>
+												{roles
+													.filter(
+														(role: Role) => role.permission < userRolePermission
+													)
+													.map((role: Role) => (
+														<option key={role.id} value={role.id}>
+															{role.type}
+														</option>
+													))}
+											</select>
+										)}
+									</td>
+
+									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+										{item.email}
+									</td>
+									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+										{item.deleted_at || 'ACTIVE'}
+									</td>
+									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+										{item.deleted_at
+											? userRolePermission >
+													roles.find((rItem: Role) => rItem.id === item.roleid)
+														.permission && (
+													<UserButton
+														onClick={(event: React.FormEvent) =>
+															handleActivateUser(event, item.email)
+														}
+														label="Activate User"
+														color="green"
+													/>
+											  )
+											: userRolePermission >
+													roles.find((rItem: Role) => rItem.id === item.roleid)
+														.permission && (
+													<UserButton
+														onClick={(event: React.FormEvent) =>
+															handleDisableUser(event, item.email)
+														}
+														label="Disable User"
+														color="red"
+													/>
+											  )}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
 			</main>
 		</Layout>

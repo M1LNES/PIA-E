@@ -4,6 +4,7 @@ import Layout from '../home/main-page-layout'
 import { createCategory, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
+import LoadingSpinner from '../components/loading-spinner'
 
 interface Category {
 	name: string
@@ -37,6 +38,14 @@ export default function CategoryCreator() {
 		}
 	}
 
+	if (isLoading) {
+		return (
+			<Layout>
+				<LoadingSpinner />
+			</Layout>
+		)
+	}
+
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
@@ -63,34 +72,30 @@ export default function CategoryCreator() {
 					</div>
 
 					<div className="mb-4">
-						{isLoading ? (
-							<>{t('loading')}</>
-						) : (
-							<table className="min-w-full bg-white">
-								<thead>
-									<tr>
-										<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-											ID
-										</th>
-										<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
-											Name
-										</th>
+						<table className="min-w-full bg-white">
+							<thead>
+								<tr>
+									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+										ID
+									</th>
+									<th className="py-2 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-700">
+										Name
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{data.map((item: Category) => (
+									<tr key={item.id} className="hover:bg-gray-100">
+										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+											{item.id}
+										</td>
+										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+											{item.name}
+										</td>
 									</tr>
-								</thead>
-								<tbody>
-									{data.map((item: Category) => (
-										<tr key={item.id} className="hover:bg-gray-100">
-											<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-												{item.id}
-											</td>
-											<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-												{item.name}
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						)}
+								))}
+							</tbody>
+						</table>
 					</div>
 
 					<button

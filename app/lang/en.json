@@ -5,8 +5,7 @@
 			"description": "Description",
 			"category": "Category",
 			"submit-post": "Submit Post",
-			"page-title": "Create a New Post",
-			"loading": "Loading categories..."
+			"page-title": "Create a New Post"
 		},
 		"log-in": {
 			"title": "Please log in to access this content",
@@ -16,12 +15,10 @@
 		"create-category": {
 			"title": "Category Title",
 			"submit-post": "Submit Post",
-			"loading": "Loading categories...",
 			"page-title": "Create a New Category"
 		},
 		"managing-users": {
 			"page-title": "User Managment",
-			"loading": "Loading available users...",
 			"available-users": "All Users",
 			"submit-post": "Submit Post",
 			"creating-user": "Create new user",

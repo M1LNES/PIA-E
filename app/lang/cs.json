@@ -5,8 +5,7 @@
 			"description": "Popisek",
 			"category": "Kategorie",
 			"submit-post": "Odeslat",
-			"page-title": "Vytvořit nový příspěvek",
-			"loading": "Načítání kategorií..."
+			"page-title": "Vytvořit nový příspěvek"
 		},
 		"log-in": {
 			"title": "Pro přístup k tomuto obsahu se prosím přihlaste",
@@ -16,12 +15,10 @@
 		"create-category": {
 			"title": "Název kategorie",
 			"submit-post": "Odeslat",
-			"loading": "Načítání kategorií...",
 			"page-title": "Vytvořit novou kategorii"
 		},
 		"managing-users": {
 			"page-title": "Správa uživatelů",
-			"loading": "Načítání uživatelů...",
 			"available-users": "Všichni uživatelé",
 			"submit-post": "Odeslat",
 			"creating-user": "Vytvořit nového uživatele",
