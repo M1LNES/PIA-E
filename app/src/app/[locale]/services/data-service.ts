@@ -188,3 +188,34 @@ export const changePassword = async (postData: {
 	const result = await response.json()
 	return result
 }
+
+export const fetchCommentsByPostId = async (postId: number) => {
+	const response = await fetch(`/api/comments/posts-comments/${postId}`)
+
+	if (!response.ok) {
+		throw new Error('Failed to change password')
+	}
+
+	const result = await response.json()
+	return result
+}
+
+export const addComment = async (postData: {
+	description: string
+	postId: number
+}) => {
+	const response = await fetch('/api/comments/add-comment', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(postData),
+	})
+
+	if (!response.ok) {
+		throw new Error('Failed to add comment')
+	}
+
+	const result = await response.json()
+	return result
+}
