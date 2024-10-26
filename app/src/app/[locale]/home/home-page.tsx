@@ -11,6 +11,7 @@ import LoadingSpinner from '../components/loading-spinner'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import config from '@/app/config'
+import { useTranslations } from 'next-intl'
 
 interface Post {
 	username: string
@@ -29,12 +30,12 @@ interface Comment {
 	post: number
 	description: string
 	created_at: Date
-	edited_at: Date
-	deleted_at: Date
+	username: string
 }
 
 export default function HomePageClient() {
 	const { data: session } = useSession()
+	const t = useTranslations('pages.home')
 
 	const { data: posts, isLoading } = useQuery({
 		queryKey: ['posts'],
@@ -91,20 +92,32 @@ export default function HomePageClient() {
 			queryKey: ['comments', postId],
 			queryFn: () => fetchCommentsByPostId(postId),
 			enabled: showComments[postId],
+			staleTime: 5 * 60 * 1000, // TODO just to avoid a lot of api calls, will be resolved by web sockets
 		})
 
-		if (isCommentsLoading) return <p>Loading comments...</p>
-		if (!comments.length) return <p>No comments available.</p>
+		if (isCommentsLoading) return <p>{t('comments.loading')}</p>
+		if (!comments.length) return <p>{t('comments.no-comments')}</p>
 
 		return (
-			<>
+			<div className="mt-4 space-y-4 mb-4">
 				{comments.map((comment: Comment) => (
-					<p key={comment.comment_id}>
-						<span className="font-semibold">User {comment.author}:</span>{' '}
-						{comment.description}
-					</p>
+					<div
+						key={comment.comment_id}
+						className="p-3 border border-gray-200 rounded-md shadow-sm bg-gray-50"
+					>
+						<div className="flex justify-between items-center mb-1">
+							<div className="font-semibold text-blue-600">
+								{comment.username}
+							</div>
+							<div className="text-gray-500 text-xs">
+								{new Date(comment.created_at).toLocaleDateString()} -{' '}
+								{new Date(comment.created_at).toLocaleTimeString()}
+							</div>
+						</div>
+						<p className="text-gray-700 text-sm">{comment.description}</p>
+					</div>
 				))}
-			</>
+			</div>
 		)
 	}
 
@@ -140,7 +153,9 @@ export default function HomePageClient() {
 						className="text-blue-500 underline text-sm"
 						onClick={() => handleToggleComments(item.post_id)}
 					>
-						{showComments[item.post_id] ? 'Hide Comments' : 'Show Comments'}
+						{showComments[item.post_id]
+							? t('comments.hide-comments')
+							: t('comments.show-comments')}
 					</button>
 
 					{/* Comments section */}
@@ -163,7 +178,7 @@ export default function HomePageClient() {
 										className="px-4 py-2 bg-blue-500 text-white rounded-md"
 										onClick={() => handleAddComment(item.post_id)}
 									>
-										Add Comment
+										{t('comments.add-comment')}
 									</button>
 								</>
 							)}

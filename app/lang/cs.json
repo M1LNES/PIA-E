@@ -1,5 +1,14 @@
 {
 	"pages": {
+		"home": {
+			"comments": {
+				"loading": "Načítání komentářů...",
+				"no-comments": "Žádné komentáře nejsou k dispozici",
+				"add-comment": "Přidat komentář",
+				"show-comments": "Zobrazit komentáře",
+				"hide-comments": "Skrýt komentáře"
+			}
+		},
 		"create-post": {
 			"title": "Nadpis",
 			"description": "Popisek",

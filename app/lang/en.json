@@ -1,5 +1,14 @@
 {
 	"pages": {
+		"home": {
+			"comments": {
+				"loading": "Loading comments...",
+				"no-comments": "No comments available",
+				"add-comment": "Add comment",
+				"show-comments": "Show comments",
+				"hide-comments": "Hide comments"
+			}
+		},
 		"create-post": {
 			"title": "Short Title",
 			"description": "Description",
