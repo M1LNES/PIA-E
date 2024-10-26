@@ -33,7 +33,7 @@ export async function GET(
 				LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`
 
 	const user = dbUser.rows[0]
-	if (user.permission < config.pages.createPost.minPermission) {
+	if (user.permission < config.pages.home.minPermission) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
 			{ status: 401 }

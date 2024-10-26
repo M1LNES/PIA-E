@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 					LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.id=${id}`
 
 	const user = dbUser.rows[0]
-	if (user.permission < config.pages.home.minPermission) {
+	if (user.permission < config.pages.createPost.minPermission) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
 			{ status: 401 }
