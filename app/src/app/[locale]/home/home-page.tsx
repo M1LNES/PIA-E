@@ -22,6 +22,7 @@ interface Post {
 	created_at: Date
 	edited_at: Date
 	category_name: string
+	comment_count: number
 }
 
 interface Comment {
@@ -140,23 +141,23 @@ export default function HomePageClient() {
 							{new Date(item.created_at).toLocaleTimeString()}{' '}
 						</div>
 					</div>
-
 					<div className="text-gray-600 text-sm mb-4">
 						{item.username} - {item.role_type}
 					</div>
-
 					<p className="text-base mb-4">{item.description}</p>
 
 					{/* Button to toggle comments */}
-					<button
-						className="text-blue-500 underline text-sm"
-						onClick={() => handleToggleComments(item.post_id)}
-					>
-						{showComments[item.post_id]
-							? t('comments.hide-comments')
-							: t('comments.show-comments')}
-					</button>
-
+					<div className="text-gray-600 text-sm mb-4">
+						<button
+							className="text-blue-500 underline text-sm"
+							onClick={() => handleToggleComments(item.post_id)}
+						>
+							{showComments[item.post_id]
+								? t('comments.hide-comments')
+								: t('comments.show-comments')}
+						</button>
+						({item.comment_count})
+					</div>
 					{/* Comments section */}
 					{showComments[item.post_id] && (
 						<div className="mt-4 border-t pt-4">
