@@ -25,7 +25,7 @@ interface Post {
 }
 
 interface Comment {
-	comment_id: number
+	id: number
 	author: number
 	post: number
 	description: string
@@ -97,12 +97,11 @@ export default function HomePageClient() {
 
 		if (isCommentsLoading) return <p>{t('comments.loading')}</p>
 		if (!comments.length) return <p>{t('comments.no-comments')}</p>
-
 		return (
 			<div className="mt-4 space-y-4 mb-4">
 				{comments.map((comment: Comment) => (
 					<div
-						key={comment.comment_id}
+						key={comment.id}
 						className="p-3 border border-gray-200 rounded-md shadow-sm bg-gray-50"
 					>
 						<div className="flex justify-between items-center mb-1">
@@ -162,7 +161,7 @@ export default function HomePageClient() {
 					{showComments[item.post_id] && (
 						<div className="mt-4 border-t pt-4">
 							{showComments[item.post_id] && (
-								<CommentsSection postId={item.post_id} />
+								<CommentsSection postId={item.post_id} key={index} />
 							)}
 
 							{user.permission >= config.pages.createPost.minPermission && (
