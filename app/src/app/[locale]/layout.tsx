@@ -20,8 +20,8 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-	title: 'Feature blog',
-	description: 'Place for product managers to report features to product teams',
+	title: 'Emplifi Wishlist',
+	description: 'Place for product owners to report features to product teams',
 }
 
 export default async function LocaleLayout({
