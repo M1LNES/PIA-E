@@ -4,6 +4,11 @@ import { NextResponse } from 'next/server'
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
 
+type RoleUserCountRow = {
+	role_type: string
+	user_count: string
+}
+
 export async function GET() {
 	try {
 		const result = await sql`
@@ -13,8 +18,9 @@ export async function GET() {
             GROUP BY r.id;
         `
 
-		const roleUserCounts = result.rows.reduce(
-			(acc: Record<string, number>, row: any) => {
+		const rows = result.rows as RoleUserCountRow[]
+		const roleUserCounts = rows.reduce(
+			(acc: Record<string, number>, row: RoleUserCountRow) => {
 				acc[row.role_type] = parseInt(row.user_count, 10)
 				return acc
 			},
