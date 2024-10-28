@@ -26,10 +26,6 @@ export async function GET() {
 		// Return the counts as a JSON response
 		return NextResponse.json(categoryPostCounts, { status: 200 })
 	} catch (error) {
-		console.error(error) // Log the error for debugging
-		return NextResponse.json(
-			{ error: 'An error occurred while fetching post counts by category.' },
-			{ status: 500 }
-		)
+		return NextResponse.json({ error }, { status: 500 })
 	}
 }

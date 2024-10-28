@@ -23,10 +23,6 @@ export async function GET() {
 
 		return NextResponse.json(roleUserCounts, { status: 200 })
 	} catch (error) {
-		console.error(error) // Log the error for debugging
-		return NextResponse.json(
-			{ error: 'An error occurred while fetching user counts by role.' },
-			{ status: 500 }
-		)
+		return NextResponse.json({ error }, { status: 500 })
 	}
 }

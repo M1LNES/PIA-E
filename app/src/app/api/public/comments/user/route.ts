@@ -25,9 +25,6 @@ export async function POST(request: Request) {
 
 		return NextResponse.json(commentsByPost, { status: 200 })
 	} catch (error) {
-		return NextResponse.json(
-			{ error: 'An error occurred while fetching comments.' },
-			{ status: 500 }
-		)
+		return NextResponse.json({ error }, { status: 500 })
 	}
 }
