@@ -24,7 +24,6 @@ export async function POST(request: Request) {
 	const id = result.rows[0]?.id
 
 	/* Authorization */
-
 	const dbUser =
 		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
 					FROM Users
@@ -44,26 +43,44 @@ export async function POST(request: Request) {
 		return NextResponse.json({
 			received: true,
 			status: 400,
-			message: 'TODO TODO',
+			message: 'Missing required fields',
 		})
 	}
 
 	try {
-		await sql`
-		    INSERT INTO ThreadComments (author, post, description)
-		    VALUES (${id}, ${postId}, ${description}) RETURNING *;
-		  `
+		const insertResult = await sql`
+		WITH inserted_comment AS (
+			INSERT INTO ThreadComments (author, post, description)
+			VALUES (${id}, ${postId}, ${description})
+			RETURNING id, post, description, created_at, author
+		)
+		SELECT 
+			inserted_comment.id, 
+			inserted_comment.post, 
+			inserted_comment.description, 
+			inserted_comment.created_at, 
+			Users.username
+		FROM inserted_comment
+		JOIN Users ON Users.id = inserted_comment.author;
+	`
+
+		const comment = insertResult.rows[0]
+
+		// Set `created_at` to null as per your requirement
+		comment.created_at = null
+
 		return NextResponse.json({
 			received: true,
 			status: 200,
 			message: 'Comment created',
+			comment,
 		})
 	} catch (error) {
 		console.error('Database error:', error)
 		return NextResponse.json({
 			received: true,
 			status: 500,
-			message: 'Inernal server error',
+			message: 'Internal server error',
 		})
 	}
 }

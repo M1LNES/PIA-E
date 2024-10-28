@@ -7,7 +7,9 @@
 				"add-comment": "Přidat komentář",
 				"show-comments": "Zobrazit komentáře",
 				"hide-comments": "Skrýt komentáře",
-				"write-comment": "Napsat komentář"
+				"write-comment": "Napsat komentář",
+				"just-now": "Právě teď",
+				"new-comment": "Nový komentář!"
 			}
 		},
 		"create-post": {

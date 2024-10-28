@@ -40,10 +40,14 @@ export async function GET(
 		)
 	}
 
-	const result =
-		await sql`SELECT ThreadComments.id, ThreadComments.author, ThreadComments.post, 
-		ThreadComments.id, ThreadComments.description, ThreadComments.created_at,Users.username 
-		FROM ThreadComments JOIN Users ON ThreadComments.author = Users.id WHERE post=${postId}`
+	const result = await sql`
+		SELECT ThreadComments.id, ThreadComments.author, ThreadComments.post, 
+			ThreadComments.description, ThreadComments.created_at, Users.username 
+		FROM ThreadComments 
+		JOIN Users ON ThreadComments.author = Users.id 
+		WHERE post = ${postId} 
+		ORDER BY ThreadComments.created_at ASC
+`
 
 	const comments = result.rows
 	return NextResponse.json(comments, { status: 200 })

@@ -35,7 +35,7 @@ CREATE TABLE ThreadComments (
     id SERIAL PRIMARY KEY,
     author INTEGER REFERENCES Users(id),
     post INTEGER REFERENCES Posts(id),
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     edited_at TIMESTAMP,
     deleted_at TIMESTAMP

@@ -7,7 +7,9 @@
 				"add-comment": "Add comment",
 				"show-comments": "Show comments",
 				"hide-comments": "Hide comments",
-				"write-comment": "Write a comment"
+				"write-comment": "Write a comment",
+				"just-now": "Just now",
+				"new-comment": "New Comment!"
 			}
 		},
 		"create-post": {
