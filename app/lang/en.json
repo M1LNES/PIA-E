@@ -9,7 +9,8 @@
 				"hide-comments": "Hide comments",
 				"write-comment": "Write a comment",
 				"just-now": "Just now",
-				"new-comment": "New Comment!"
+				"new-comment": "New Comment!",
+				"adding-comment": "Adding a comment..."
 			}
 		},
 		"create-post": {

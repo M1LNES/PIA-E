@@ -52,6 +52,9 @@ export default function HomePageClient() {
 
 	const [showComments, setShowComments] = useState<Record<number, boolean>>({})
 	const [newComments, setNewComments] = useState<Record<number, string>>({})
+	const [isAddingComment, setIsAddingComment] = useState<
+		Record<number, boolean>
+	>({})
 	const [ably, setAbly] = useState<Ably.Realtime | null>(null)
 
 	useEffect(() => {
@@ -61,6 +64,7 @@ export default function HomePageClient() {
 
 	const handleToggleComments = (postId: number) => {
 		setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }))
+		queryClient.invalidateQueries({ queryKey: ['comments', postId] }) // TODO is this wanted state? fetching current data after rolling down the toggle
 	}
 
 	const handleNewCommentChange = (
@@ -71,6 +75,8 @@ export default function HomePageClient() {
 	}
 
 	const handleAddComment = async (postId: number) => {
+		setIsAddingComment((prev) => ({ ...prev, [postId]: true }))
+
 		const postData = { postId, description: newComments[postId] }
 		try {
 			const result = await addComment(postData)
@@ -89,6 +95,8 @@ export default function HomePageClient() {
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error adding comment')
+		} finally {
+			setIsAddingComment((prev) => ({ ...prev, [postId]: false }))
 		}
 	}
 
@@ -102,8 +110,7 @@ export default function HomePageClient() {
 
 		useEffect(() => {
 			// Subscribe to Ably channel when comments are shown
-			// console.log('SKIBIDI GYAT', showComments[postId])
-			if (showComments[postId] && ably) {
+			if (ably) {
 				const channel = ably.channels.get(`post-comments-${postId}`)
 				// Listen for new comments
 				channel.subscribe('new-comment', (message) => {
@@ -115,7 +122,6 @@ export default function HomePageClient() {
 						]
 					)
 				})
-
 				// Cleanup on component unmount
 				return () => channel.unsubscribe()
 			}
@@ -217,8 +223,11 @@ export default function HomePageClient() {
 									<button
 										className="px-4 py-2 bg-blue-500 text-white rounded-md"
 										onClick={() => handleAddComment(item.post_id)}
+										disabled={isAddingComment[item.post_id]}
 									>
-										{t('comments.add-comment')}
+										{isAddingComment[item.post_id]
+											? t('comments.adding-comment')
+											: t('comments.add-comment')}
 									</button>
 								</>
 							)}
