@@ -83,8 +83,6 @@ export default function HomePageClient() {
 
 				// Refresh comments locally
 				queryClient.invalidateQueries({ queryKey: ['comments', postId] })
-
-				// alert('Comment added successfully')
 			} else {
 				alert('Error adding comment')
 			}
@@ -104,6 +102,7 @@ export default function HomePageClient() {
 
 		useEffect(() => {
 			// Subscribe to Ably channel when comments are shown
+			// console.log('SKIBIDI GYAT', showComments[postId])
 			if (showComments[postId] && ably) {
 				const channel = ably.channels.get(`post-comments-${postId}`)
 				// Listen for new comments
@@ -122,8 +121,8 @@ export default function HomePageClient() {
 			}
 		}, [postId])
 
-		if (isCommentsLoading) return <p>{t('comments.loading')}</p>
-		if (!comments.length) return <p>{t('comments.no-comments')}</p>
+		if (isCommentsLoading) return <p>{t('comments.loading') as string}</p>
+		if (!comments.length) return <p>{t('comments.no-comments') as string}</p>
 
 		return (
 			<div className="mt-4 space-y-4 mb-4">
