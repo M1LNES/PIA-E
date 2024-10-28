@@ -19,4 +19,3 @@ Author: Milan Janoch, Team X
 - [API Routes](/api/public)
 - [Usage Tutorial](/usage/init)
 - [Local Development Setup](/dev/init)
-- [Project Structure](/project-strucutre)
