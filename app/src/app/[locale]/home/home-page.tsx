@@ -55,12 +55,22 @@ export default function HomePageClient() {
 	const [isAddingComment, setIsAddingComment] = useState<
 		Record<number, boolean>
 	>({})
+	const [typingUsers, setTypingUsers] = useState<Record<number, Set<string>>>(
+		{}
+	)
 	const [ably, setAbly] = useState<Ably.Realtime | null>(null)
 
 	useEffect(() => {
 		const client = new Ably.Realtime({ authUrl: '/api/live' })
 		setAbly(client)
 	}, [])
+
+	const sendTypingNotification = (postId: number) => {
+		if (ably) {
+			const channel = ably.channels.get(`post-comments-${postId}`)
+			channel.publish('typing', { username: user.username, postId })
+		}
+	}
 
 	const handleToggleComments = (postId: number) => {
 		setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }))
@@ -71,7 +81,14 @@ export default function HomePageClient() {
 		e: React.ChangeEvent<HTMLTextAreaElement>,
 		postId: number
 	) => {
-		setNewComments((prev) => ({ ...prev, [postId]: e.target.value }))
+		const newComment = e.target.value
+		setNewComments((prev) => ({ ...prev, [postId]: newComment }))
+
+		const length = newComment.length
+
+		if (length === 1 || length % config.everyXthChar === 0) {
+			sendTypingNotification(postId) // Notify server
+		}
 	}
 
 	const handleAddComment = async (postId: number) => {
@@ -83,7 +100,6 @@ export default function HomePageClient() {
 			if (result.status === 200) {
 				setNewComments((prev) => ({ ...prev, [postId]: '' }))
 
-				// Publish the new comment to the Ably channel
 				const channel = ably?.channels.get(`post-comments-${postId}`)
 				channel?.publish('new-comment', result.comment)
 
@@ -122,6 +138,35 @@ export default function HomePageClient() {
 						]
 					)
 				})
+
+				channel.subscribe('typing', (message) => {
+					const { username } = message.data
+					if (username !== user.username) {
+						// Only add if it's not the current user's username
+						setTypingUsers((prev) => {
+							const users = prev[postId] || new Set()
+							users.add(username)
+							return { ...prev, [postId]: users }
+						})
+
+						// Remove typing user after a certain period
+						setTimeout(() => {
+							setTypingUsers((prev) => {
+								const users = prev[postId]
+								if (users) {
+									users.delete(username)
+									if (users.size === 0) {
+										const newTypingUsers = { ...prev }
+										delete newTypingUsers[postId]
+										return newTypingUsers
+									}
+								}
+								return prev
+							})
+						}, config.typingTextDuration) // Adjust the timeout as necessary
+					}
+				})
+
 				// Cleanup on component unmount
 				return () => channel.unsubscribe()
 			}
@@ -211,6 +256,12 @@ export default function HomePageClient() {
 					{showComments[item.post_id] && (
 						<div className="mt-4 border-t pt-4">
 							<CommentsSection postId={item.post_id} />
+							{typingUsers[item.post_id]?.size > 0 && (
+								<div className="text-gray-500 text-sm">
+									{Array.from(typingUsers[item.post_id]).join(', ')}{' '}
+									{t('comments.typing')}
+								</div>
+							)}
 							{user.permission >= config.pages.createPost.minPermission && (
 								<>
 									<textarea

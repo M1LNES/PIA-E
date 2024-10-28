@@ -10,7 +10,8 @@
 				"write-comment": "Napsat komentář",
 				"just-now": "Právě teď",
 				"new-comment": "Nový komentář!",
-				"adding-comment": "Přidávání komentáře..."
+				"adding-comment": "Přidávání komentáře...",
+				"typing": "píše..."
 			}
 		},
 		"create-post": {

@@ -10,7 +10,8 @@
 				"write-comment": "Write a comment",
 				"just-now": "Just now",
 				"new-comment": "New Comment!",
-				"adding-comment": "Adding a comment..."
+				"adding-comment": "Adding a comment...",
+				"typing": "is typing..."
 			}
 		},
 		"create-post": {
