@@ -86,7 +86,7 @@ export default function HomePageClient() {
 
 		const length = newComment.length
 
-		if (length === 1 || length % config.everyXthChar === 0) {
+		if ((length - 1) % config.everyXthChar === 0) {
 			sendTypingNotification(postId) // Notify server
 		}
 	}

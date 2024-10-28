@@ -1,6 +1,6 @@
 ---
 title: Api 1 jeeej
-sidebar_position: 1
+sidebar_position: 2
 slug: /api/init
 ---
 
