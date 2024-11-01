@@ -14,7 +14,7 @@ import config from '@/app/config'
 import { useTranslations } from 'next-intl'
 import Ably from 'ably'
 
-interface Post {
+type Post = {
 	username: string
 	role_type: string
 	post_id: number
@@ -26,7 +26,7 @@ interface Post {
 	comment_count: number
 }
 
-interface Comment {
+type Comment = {
 	id: number
 	author: number
 	post: number

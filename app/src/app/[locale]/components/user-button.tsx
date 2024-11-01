@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface ActionButtonProps {
+type ActionButtonProps = {
 	label: string
 	color: 'red' | 'green'
 	onClick: (event: React.FormEvent) => Promise<void>

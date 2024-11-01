@@ -4,7 +4,7 @@ import SignInButton from './sign-in-button'
 import EmplifiLogo from '../home/logos/emplifi-logo'
 import { getTranslations } from 'next-intl/server'
 
-interface SessionGuardProps {
+type SessionGuardProps = {
 	children: ReactNode
 }
 

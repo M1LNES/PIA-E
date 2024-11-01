@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import LoadingSpinner from '../components/loading-spinner'
 
-interface Category {
+type Category = {
 	name: string
 	id: number
 }

@@ -15,7 +15,7 @@ import UserButton from '../components/user-button'
 import { useSession } from 'next-auth/react'
 import LoadingSpinner from '../components/loading-spinner'
 
-interface Users {
+type Users = {
 	id: number
 	username: string
 	email: string
@@ -291,14 +291,13 @@ export default function AddingUser() {
 					</button>
 				</form>
 
-				<div className="mb-4">
+				<div className="mb-4 overflow-x-scroll">
 					<label
 						htmlFor="category"
 						className="block text-gray-700 font-semibold mb-2"
 					>
 						{t('available-users')}
 					</label>
-
 					<table className="min-w-full bg-white">
 						<thead>
 							<tr>
