@@ -59,6 +59,7 @@ export default function HomePageClient() {
 		{}
 	)
 	const [ably, setAbly] = useState<Ably.Realtime | null>(null)
+	const [meTyping, setMeTyping] = useState<boolean>(false)
 
 	useEffect(() => {
 		const client = new Ably.Realtime({ authUrl: '/api/live' })
@@ -69,6 +70,8 @@ export default function HomePageClient() {
 		if (ably) {
 			const channel = ably.channels.get(`post-comments-${postId}`)
 			channel.publish('typing', { username: user.username, postId })
+			setMeTyping(true)
+			setTimeout(() => setMeTyping(false), config.typingDurationForResend)
 		}
 	}
 
@@ -81,12 +84,8 @@ export default function HomePageClient() {
 		e: React.ChangeEvent<HTMLTextAreaElement>,
 		postId: number
 	) => {
-		const newComment = e.target.value
-		setNewComments((prev) => ({ ...prev, [postId]: newComment }))
-
-		const length = newComment.length
-
-		if ((length - 1) % config.everyXthChar === 0) {
+		setNewComments((prev) => ({ ...prev, [postId]: e.target.value }))
+		if (!meTyping) {
 			sendTypingNotification(postId) // Notify server
 		}
 	}
