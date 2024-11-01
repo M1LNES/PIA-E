@@ -3,6 +3,7 @@
 const config = {
 	saltRounds: 10,
 	typingTextDuration: 5000,
+	typingDurationForResend: 7000,
 	pages: {
 		home: {
 			minPermission: 0,
