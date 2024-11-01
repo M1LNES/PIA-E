@@ -136,6 +136,7 @@ export default function HomePageClient() {
 							message.data,
 						]
 					)
+					queryClient.invalidateQueries({ queryKey: ['posts'] })
 				})
 
 				channel.subscribe('typing', (message) => {

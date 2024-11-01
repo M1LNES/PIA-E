@@ -3,18 +3,18 @@ export default function ClosingIcon() {
 		<div className="h-6 w-6">
 			<svg
 				viewBox="0 0 12 12"
-				enable-background="new 0 0 12 12"
+				enableBackground="new 0 0 12 12"
 				version="1.1"
 				xmlSpace="preserve"
 				xmlns="http://www.w3.org/2000/svg"
 				xmlnsXlink="http://www.w3.org/1999/xlink"
 				fill="#000000"
 			>
-				<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+				<g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
 				<g
 					id="SVGRepo_tracerCarrier"
-					stroke-linecap="round"
-					stroke-linejoin="round"
+					strokeLinecap="round"
+					strokeLinejoin="round"
 				></g>
 				<g id="SVGRepo_iconCarrier">
 					<polygon
