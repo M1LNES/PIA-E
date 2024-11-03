@@ -1,7 +1,11 @@
 import config from '@/app/config'
-import { sql } from '@vercel/postgres'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
+import {
+	getUserByEmail,
+	checkDuplicateCategory,
+	createCategory,
+} from '@/app/api/queries'
 
 export async function POST(request: Request) {
 	const body = await request.json()
@@ -21,14 +25,8 @@ export async function POST(request: Request) {
 	}
 
 	/* Authorization */
-
-	const dbUser =
-		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-					FROM Users
-					LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`
-
-	const user = dbUser.rows[0]
-	if (user.permission < config.pages.createCategory.minPermission) {
+	const user = await getUserByEmail(session.user?.email as string)
+	if (!user || user.permission < config.pages.createCategory.minPermission) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
 			{ status: 401 }
@@ -36,12 +34,9 @@ export async function POST(request: Request) {
 	}
 
 	try {
-		const duplicate = await sql`
-		    SELECT * FROM Category WHERE name=${title};
-		  `
-		const result = duplicate.rows
+		const existingCategory = await checkDuplicateCategory(title)
 
-		if (result.length > 0) {
+		if (existingCategory.length > 0) {
 			return NextResponse.json({
 				received: true,
 				status: 409,
@@ -49,21 +44,18 @@ export async function POST(request: Request) {
 			})
 		}
 
-		await sql`
-		    INSERT INTO Category (name)
-		    VALUES (${title}) RETURNING *;
-		  `
+		const newCategory = await createCategory(title)
 		return NextResponse.json({
 			received: true,
 			status: 200,
-			message: 'Category created',
+			category: newCategory,
 		})
 	} catch (error) {
 		console.error('Database error:', error)
 		return NextResponse.json({
 			received: true,
 			status: 500,
-			message: 'Inernal server error',
+			message: 'Internal server error',
 		})
 	}
 }

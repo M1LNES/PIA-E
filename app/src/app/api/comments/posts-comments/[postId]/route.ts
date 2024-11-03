@@ -1,5 +1,5 @@
+import { getCommentsByPostId, getUserWithPermissions } from '@/app/api/queries'
 import config from '@/app/config'
-import { sql } from '@vercel/postgres'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
@@ -27,12 +27,7 @@ export async function GET(
 
 	/* Authorization */
 
-	const dbUser =
-		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-				FROM Users
-				LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`
-
-	const user = dbUser.rows[0]
+	const user = await getUserWithPermissions(session.user?.email as string)
 	if (user.permission < config.pages.home.minPermission) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
@@ -40,15 +35,7 @@ export async function GET(
 		)
 	}
 
-	const result = await sql`
-		SELECT ThreadComments.id, ThreadComments.author, ThreadComments.post, 
-			ThreadComments.description, ThreadComments.created_at, Users.username 
-		FROM ThreadComments 
-		JOIN Users ON ThreadComments.author = Users.id 
-		WHERE post = ${postId} 
-		ORDER BY ThreadComments.created_at ASC
-`
+	const comments = await getCommentsByPostId(postId) // Call the new function
 
-	const comments = result.rows
 	return NextResponse.json(comments, { status: 200 })
 }

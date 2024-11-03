@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
-import { sql } from '@vercel/postgres'
 import createMiddleware from 'next-intl/middleware'
 import { routing } from './i18n/routing'
 import appConfig from './app/config'
+import { getUserWithPermissions } from '@/app/api/queries'
 
 const secret = process.env.NEXTAUTH_SECRET
 const intlMiddleware = createMiddleware(routing)
@@ -33,12 +33,7 @@ export default async function middleware(req: NextRequest) {
 	}
 
 	// Step 3: Validate session (check if the user is still active)
-	const result =
-		await sql`SELECT Users.email, Users.role, Roles.permission FROM Users 
-              LEFT JOIN Roles ON Users.role=Roles.id 
-              WHERE Users.email = ${token.email} AND Users.deleted_at IS NULL`
-
-	const user = result.rows[0]
+	const user = await getUserWithPermissions(token.email as string)
 
 	if (!user) {
 		// If the user is disabled or not found, redirect to login and clear the session
@@ -48,7 +43,6 @@ export default async function middleware(req: NextRequest) {
 		})
 		return response
 	}
-
 	// Step 4 - validating url
 	const pagePath = req.nextUrl.pathname.replace(/^\/(cs|en)\//, '/')
 	const pageConfig = appConfig.pages[urlMatcher[pagePath]]

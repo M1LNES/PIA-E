@@ -1,7 +1,11 @@
-import { sql } from '@vercel/postgres'
+import config from '@/app/config'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import config from '@/app/config'
+import {
+	getUserWithPermissions,
+	getDeletedUserByEmail,
+	disableUserByEmail,
+} from '@/app/api/queries'
 
 export async function PUT(request: Request) {
 	const body = await request.json()
@@ -14,22 +18,13 @@ export async function PUT(request: Request) {
 
 	/* Authorization */
 
-	const [dbUser, dbDeletedUser] = await Promise.all([
-		sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-		FROM Users
-		LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`,
-
-		sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-		FROM Users
-		LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${email}`,
-	])
-
-	const user = dbUser.rows[0]
-	const deletedUser = dbDeletedUser.rows[0]
+	const user = await getUserWithPermissions(session.user?.email as string)
+	const deletedUser = await getDeletedUserByEmail(email)
 
 	if (
+		!user ||
 		user.permission < config.pages.manageUsers.minPermission ||
-		deletedUser.permission >= user.permission
+		(deletedUser && deletedUser.permission >= user.permission)
 	) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
@@ -45,7 +40,7 @@ export async function PUT(request: Request) {
 		})
 	}
 
-	await sql`UPDATE Users SET deleted_at = NOW() WHERE email = ${email}`
+	await disableUserByEmail(email)
 
 	return NextResponse.json({
 		received: true,

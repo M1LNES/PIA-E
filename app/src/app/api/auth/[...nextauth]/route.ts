@@ -1,8 +1,8 @@
-import { sql } from '@vercel/postgres'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
+import { getAllActiveUsers, getUserByEmailAndNotDeleted } from '../../queries'
 
 const authOptions: NextAuthOptions = {
 	session: {
@@ -28,19 +28,21 @@ const authOptions: NextAuthOptions = {
 				if (!credentials) return null
 				const { email, password } = credentials
 
-				const result =
-					await sql`SELECT * FROM Users WHERE email = ${email} AND deleted_at IS NULL;`
-				const row = result.rows
+				const row = await getUserByEmailAndNotDeleted(email)
+
+				if (!row) {
+					return null
+				}
 
 				const user = {
-					id: row[0].id,
-					name: row[0].username,
-					email: row[0].email,
+					id: row.id,
+					name: row.username,
+					email: row.email,
 				}
 
 				const arePasswordsSame = bcrypt.compareSync(
 					password,
-					row[0].hashed_password
+					row.hashed_password
 				)
 				return arePasswordsSame ? user : null
 			},
@@ -54,9 +56,7 @@ const authOptions: NextAuthOptions = {
 
 			if (account?.provider === 'google') {
 				try {
-					const result =
-						await sql`SELECT * FROM Users WHERE deleted_at IS NULL;`
-					const users = result.rows
+					const users = await getAllActiveUsers()
 					return users.some((user) => user.email === profile?.email) // checking if user is in DB
 				} catch {
 					return false

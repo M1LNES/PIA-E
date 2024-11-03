@@ -1,8 +1,13 @@
-import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 import config from '@/app/config'
 import { getServerSession } from 'next-auth'
+import {
+	isEmailUsed,
+	createUser,
+	getUserByEmail,
+	getRolePermission,
+} from '@/app/api/queries'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -46,20 +51,14 @@ export async function POST(request: Request) {
 	}
 
 	/* Authorization */
-
-	const [dbUser, rolePermission] = await Promise.all([
-		sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-		FROM Users
-		LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`,
-		sql`SELECT permission FROM Roles WHERE id = ${selectedRole}`,
+	const [user, rolePermission] = await Promise.all([
+		getUserByEmail(session.user?.email as string),
+		getRolePermission(selectedRole),
 	])
-
-	const user = dbUser.rows[0]
-	const rolePerm = rolePermission.rows[0].permission
 
 	if (
 		user.permission < config.pages.manageUsers.minPermission ||
-		user.permission <= rolePerm
+		user.permission <= rolePermission
 	) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
@@ -68,11 +67,8 @@ export async function POST(request: Request) {
 	}
 
 	try {
-		const existingUsersQuery = await sql`SELECT email FROM Users`
-		const existingUsers = existingUsersQuery.rows
-
-		const isEmailUsed = existingUsers.some((user) => user.email === email)
-		if (isEmailUsed) {
+		const isUsed = await isEmailUsed(email)
+		if (isUsed) {
 			return NextResponse.json({
 				received: true,
 				status: 409,
@@ -80,22 +76,20 @@ export async function POST(request: Request) {
 			})
 		}
 
-		await sql`INSERT INTO Users (username, role, email, hashed_password) VALUES (${username}, ${selectedRole}, ${email},${await bcrypt.hash(
-			password,
-			config.saltRounds
-		)}) RETURNING *`
+		const hashedPassword = await bcrypt.hash(password, config.saltRounds)
+		await createUser(username, selectedRole, email, hashedPassword)
 
 		return NextResponse.json({
 			received: true,
 			status: 200,
-			message: 'Post created',
+			message: 'User created successfully',
 		})
 	} catch (error) {
 		console.error('Database error:', error)
 		return NextResponse.json({
 			received: true,
 			status: 500,
-			message: 'Inernal server error',
+			message: 'Internal server error',
 		})
 	}
 }

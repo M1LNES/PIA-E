@@ -1,9 +1,9 @@
-import { sql } from '@vercel/postgres'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
 import config from '@/app/config'
+import { getHashedPasswordByEmail, updateUserPassword } from '@/app/api/queries'
 
 export async function POST(request: Request) {
 	const body = await request.json()
@@ -15,7 +15,6 @@ export async function POST(request: Request) {
 	}
 
 	/* Authorization */
-
 	if (email !== session?.user?.email) {
 		return NextResponse.json({
 			received: true,
@@ -24,11 +23,15 @@ export async function POST(request: Request) {
 		})
 	}
 
-	const userPasswordReq =
-		await sql`SELECT hashed_password from Users WHERE email=${email}`
-	const row = userPasswordReq.rows
+	const hashedPassword = await getHashedPasswordByEmail(email)
 
-	const hashedPassword = row[0]?.hashed_password
+	if (!hashedPassword) {
+		return NextResponse.json({
+			received: true,
+			status: 404,
+			message: 'User not found!',
+		})
+	}
 
 	const isPreviousPasswordSame = bcrypt.compareSync(oldPassword, hashedPassword)
 
@@ -36,7 +39,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({
 			received: true,
 			status: 422,
-			message: 'You provided wrong old password!',
+			message: 'You provided the wrong old password!',
 		})
 	}
 
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({
 			received: true,
 			status: 422,
-			message: 'New password and confirm password are not same!',
+			message: 'New password and confirm password are not the same!',
 		})
 	}
 
@@ -52,14 +55,12 @@ export async function POST(request: Request) {
 		return NextResponse.json({
 			received: true,
 			status: 422,
-			message: 'New password is same as the old password!',
+			message: 'New password is the same as the old password!',
 		})
 	}
 
-	await sql`UPDATE Users SET hashed_password = ${await bcrypt.hash(
-		newPassword,
-		config.saltRounds
-	)} WHERE email=${email}`
+	const newHashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
+	await updateUserPassword(email, newHashedPassword)
 
 	return NextResponse.json({
 		received: true,

@@ -1,7 +1,7 @@
 import config from '@/app/config'
-import { sql } from '@vercel/postgres'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
+import { getAllUsersWithRoles, getUserWithPermissions } from '../../queries'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -12,14 +12,8 @@ export async function GET() {
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
-	/* Authorization */
-	const dbUser =
-		await sql`SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
-					FROM Users
-					LEFT JOIN Roles ON Users.role=Roles.id WHERE Users.email=${session.user?.email}`
-
-	const user = dbUser.rows[0]
-	if (user.permission < config.pages.manageUsers.minPermission) {
+	const user = await getUserWithPermissions(session.user?.email as string)
+	if (user?.permission < config.pages.manageUsers.minPermission) {
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
 			{ status: 401 }
@@ -27,12 +21,7 @@ export async function GET() {
 	}
 
 	try {
-		const result =
-			await sql`SELECT Users.id, Users.username, Users.deleted_at, Users.email, Roles.id as roleid
-                FROM Users
-                LEFT JOIN Roles ON Users.role=Roles.id;
-		`
-		const users = result.rows
+		const users = await getAllUsersWithRoles()
 		return NextResponse.json({ users }, { status: 200 })
 	} catch (error) {
 		return NextResponse.json({ error }, { status: 500 })
