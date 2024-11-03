@@ -57,7 +57,7 @@ export const changeUserRole = async (userId: number, roleId: number) => {
 
 export const activateUser = async (email: string) => {
 	const response = await fetch('/api/users/activate-user', {
-		method: 'POST',
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 		},
@@ -74,7 +74,7 @@ export const activateUser = async (email: string) => {
 
 export const disableUser = async (email: string) => {
 	const response = await fetch('/api/users/disable-user', {
-		method: 'POST',
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 		},

@@ -54,3 +54,19 @@ CREATE TABLE PostReactions_M_N (
     reaction INTEGER REFERENCES Reaction(id)
 );
 
+INSERT INTO Roles (type, permission) VALUES
+('superadmin', 100),
+('admin', 80),
+('writer', 40),
+('reader', 20);
+
+INSERT INTO Users (username, role, email, hashed_password) VALUES
+('Milan Janoch', 1, 'milan.janoch@emplifi.io', '$2b$10$fb2T0kZq55PD6GlFd1IaFOY2sdS.F0qUhRAhOU7X2m2tl2eR8NVda');
+
+INSERT INTO Category (name) VALUES
+('Omni Cast'),
+('Omni API'),
+('Omni Catalog'),
+('Omni Studio'),
+('Omni Studio Plugins');
+
