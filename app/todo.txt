@@ -1,2 +1,12 @@
 DB migrace
 1. Dodat time stamp do post reakci
+2. Logy
+3. Testy
+4. Komentare
+5. Dokumentace - doc + api
+6. Osetrit vstupy u formularu
+
+Nice to have:
+
+1. Udelat vic server side
+2. Interfaci do jednoho filu

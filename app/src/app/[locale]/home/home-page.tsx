@@ -137,6 +137,21 @@ export default function HomePageClient() {
 						]
 					)
 					queryClient.invalidateQueries({ queryKey: ['posts'] })
+
+					// Remove that user from typing users
+					const { username } = message.data
+					setTypingUsers((prev) => {
+						const users = prev[postId]
+						if (users) {
+							users.delete(username)
+							if (users.size === 0) {
+								const newTypingUsers = { ...prev }
+								delete newTypingUsers[postId]
+								return newTypingUsers
+							}
+						}
+						return prev
+					})
 				})
 
 				channel.subscribe('typing', (message) => {
