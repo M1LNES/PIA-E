@@ -9,8 +9,6 @@ import {
 	getRolePermission,
 } from '@/app/api/queries'
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { username, email, selectedRole, password, confirmPassword } = body
@@ -42,7 +40,7 @@ export async function POST(request: Request) {
 		})
 	}
 
-	if (!emailRegex.test(email)) {
+	if (!config.validation.emailRegex.test(email)) {
 		return NextResponse.json({
 			received: true,
 			status: 400,

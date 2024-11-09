@@ -6,7 +6,8 @@ const config = {
 	typingDurationForResend: 7000,
 	pages: {
 		home: {
-			minPermission: 0,
+			minPermission: 5,
+			commentStaleTime: 5 * 60 * 1000,
 		},
 		myAccount: {
 			minPermission: 10,
@@ -20,6 +21,20 @@ const config = {
 		manageUsers: {
 			minPermission: 80,
 		},
+	},
+	jwtTokenExpiration: 1 * 24 * 60 * 60, // 1 day
+	placeholder: {
+		credentials: {
+			email: {
+				label: 'Email',
+				type: 'email',
+				placeholder: 'shahar@emplifi.io',
+			},
+			password: { label: 'Password', type: 'password' },
+		},
+	},
+	validation: {
+		emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 	},
 }
 

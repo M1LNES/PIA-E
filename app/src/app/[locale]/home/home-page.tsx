@@ -77,7 +77,7 @@ export default function HomePageClient() {
 
 	const handleToggleComments = (postId: number) => {
 		setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }))
-		queryClient.invalidateQueries({ queryKey: ['comments', postId] }) // TODO is this wanted state? fetching current data after rolling down the toggle
+		queryClient.invalidateQueries({ queryKey: ['comments', postId] })
 	}
 
 	const handleNewCommentChange = (
@@ -120,7 +120,7 @@ export default function HomePageClient() {
 			queryKey: ['comments', postId],
 			queryFn: () => fetchCommentsByPostId(postId),
 			enabled: showComments[postId],
-			staleTime: 5 * 60 * 1000,
+			staleTime: config.pages.home.commentStaleTime,
 		})
 
 		useEffect(() => {

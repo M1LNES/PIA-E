@@ -129,13 +129,8 @@ export async function disableUserByEmail(email: string) {
  * @throws Will throw an error if there is a problem with the database query.
  */
 export async function getAllCategories() {
-	try {
-		const result = await sql`SELECT * FROM Category;`
-		return result.rows
-	} catch (error) {
-		console.error('Error fetching categories:', error)
-		throw new Error('Failed to fetch categories from the database')
-	}
+	const result = await sql`SELECT * FROM Category;`
+	return result.rows
 }
 
 /**
@@ -243,7 +238,7 @@ export async function getUserDetailsById(userId: string) {
 			Roles.permission
 		FROM Users
 		LEFT JOIN Roles ON Users.role = Roles.id 
-		WHERE Users.id = ${userId}
+		WHERE Users.id = ${userId} AND deleted_at IS NULL
 	`
 	return result.rows[0] // Return user details
 }

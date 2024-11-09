@@ -18,7 +18,7 @@ export async function GET() {
 		},
 	]
 
-	log('info', 'GET api/public/authors', 'Authors fetched', { authors })
+	log('info', 'GET api/public/authors', 'Authors fetched')
 
 	return NextResponse.json(authors, { status: 200 })
 }

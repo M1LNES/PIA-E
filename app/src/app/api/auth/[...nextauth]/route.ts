@@ -3,11 +3,12 @@ import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
 import { getAllActiveUsers, getUserByEmailAndNotDeleted } from '../../queries'
+import config from '@/app/config'
 
 const authOptions: NextAuthOptions = {
 	session: {
 		strategy: 'jwt',
-		maxAge: 1 * 24 * 60 * 60, // 1 day
+		maxAge: config.jwtTokenExpiration,
 	},
 	providers: [
 		GoogleProvider({
@@ -16,14 +17,7 @@ const authOptions: NextAuthOptions = {
 		}),
 		CredentialsProvider({
 			name: 'Credentials',
-			credentials: {
-				email: {
-					label: 'Email',
-					type: 'email',
-					placeholder: 'shahar@emplifi.io',
-				},
-				password: { label: 'Password', type: 'password' },
-			},
+			credentials: config.placeholder.credentials,
 			async authorize(credentials) {
 				if (!credentials) return null
 				const { email, password } = credentials

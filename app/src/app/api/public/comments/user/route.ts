@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getCommentsByPost } from '@/app/api/queries' // Adjust the import path as necessary
+import { getCommentsByPost } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
 const route = 'POST /api/public/comments/user'
@@ -24,6 +24,12 @@ export async function POST(request: Request) {
 				return acc
 			},
 			{}
+		)
+		log(
+			'info',
+			route,
+			'Comments succesfully fetched, the returned result',
+			commentsByPost
 		)
 
 		return NextResponse.json(commentsByPost, { status: 200 })
