@@ -68,7 +68,7 @@ const config: Config = {
 					sidebarId: 'tutorialSidebar',
 					position: 'left',
 					label: 'API docs',
-					href: '/api/init',
+					href: '/api/about',
 				},
 			],
 		},
