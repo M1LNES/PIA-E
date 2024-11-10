@@ -18,8 +18,9 @@
 			"title": "Short Title",
 			"description": "Description",
 			"category": "Category",
-			"submit-post": "Submit Post",
-			"page-title": "Create a New Post"
+			"submit-post": "Submit",
+			"page-title": "Create a New Post",
+			"select-category": "Please select one of the categories..."
 		},
 		"log-in": {
 			"title": "Please log in to access this content",
@@ -28,13 +29,13 @@
 		},
 		"create-category": {
 			"title": "Category Title",
-			"submit-post": "Submit Post",
+			"submit-post": "Submit",
 			"page-title": "Create a New Category"
 		},
 		"managing-users": {
 			"page-title": "User Managment",
 			"available-users": "All Users",
-			"submit-post": "Submit Post",
+			"submit-post": "Submit",
 			"creating-user": "Create new user",
 			"form": {
 				"username": "Username",
@@ -49,7 +50,10 @@
 				"role": "Role",
 				"email": "email",
 				"deleted-at": "Deleted at",
-				"action": "Action"
+				"action": "Action",
+				"activate": "Activate User",
+				"disable": "Disable User",
+				"active": "Active"
 			}
 		},
 		"my-account": {

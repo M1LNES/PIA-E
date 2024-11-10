@@ -111,7 +111,7 @@ export default function PostCreator() {
 							required
 						>
 							<option key={-1} value={-1}>
-								Please select one of the categories...
+								{t('select-category')}
 							</option>
 							{data.map((item: Category) => (
 								<option key={item.id} value={item.id}>

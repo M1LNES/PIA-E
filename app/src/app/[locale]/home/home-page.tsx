@@ -91,11 +91,6 @@ export default function HomePageClient() {
 	}
 
 	const handleAddComment = async (postId: number) => {
-		if (!newComments[postId]) {
-			alert('Comment cannot be empty')
-			return
-		}
-
 		setIsAddingComment((prev) => ({ ...prev, [postId]: true }))
 
 		const postData = { postId, description: newComments[postId] }
@@ -292,9 +287,18 @@ export default function HomePageClient() {
 										placeholder={t('comments.write-comment')}
 									></textarea>
 									<button
-										className="px-4 py-2 bg-blue-500 text-white rounded-md"
+										className={`px-4 py-2 rounded-md text-white 
+													${
+														!newComments[item.post_id] ||
+														isAddingComment[item.post_id]
+															? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+															: 'bg-blue-500 hover:bg-blue-600'
+													}`}
 										onClick={() => handleAddComment(item.post_id)}
-										disabled={isAddingComment[item.post_id]}
+										disabled={
+											!newComments[item.post_id] ||
+											isAddingComment[item.post_id]
+										}
 									>
 										{isAddingComment[item.post_id]
 											? t('comments.adding-comment')

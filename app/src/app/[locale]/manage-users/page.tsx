@@ -14,6 +14,7 @@ import { useTranslations } from 'next-intl'
 import UserButton from '../components/user-button'
 import { useSession } from 'next-auth/react'
 import LoadingSpinner from '../components/loading-spinner'
+import config from '@/app/config'
 
 type Users = {
 	id: number
@@ -167,6 +168,7 @@ export default function AddingUser() {
 		const isFormInvalid = () => {
 			return (
 				!email ||
+				!config.validation.emailRegex.test(email) ||
 				!username ||
 				!password ||
 				password !== confirmPassword ||
@@ -376,7 +378,7 @@ export default function AddingUser() {
 										{item.email}
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-										{item.deleted_at || 'ACTIVE'}
+										{item.deleted_at || t('table.active')}
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.deleted_at
@@ -387,7 +389,7 @@ export default function AddingUser() {
 														onClick={(event: React.FormEvent) =>
 															handleActivateUser(event, item.email)
 														}
-														label="Activate User"
+														label={t('table.activate')}
 														color="green"
 													/>
 											  )
@@ -398,7 +400,7 @@ export default function AddingUser() {
 														onClick={(event: React.FormEvent) =>
 															handleDisableUser(event, item.email)
 														}
-														label="Disable User"
+														label={t('table.disable')}
 														color="red"
 													/>
 											  )}
