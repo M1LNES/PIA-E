@@ -32,7 +32,7 @@ export default function MyAccount() {
 		try {
 			const result = await changePassword(postData)
 			if (result.status === 200) {
-				alert('Password succesfully changed!')
+				alert('Password successfully changed!')
 				window.location.reload()
 			} else {
 				alert(`Error during changing password. Status: ${result.status}`)

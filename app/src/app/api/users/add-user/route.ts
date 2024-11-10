@@ -8,15 +8,19 @@ import {
 	getUserByEmail,
 	getRolePermission,
 } from '@/app/api/queries'
+import { log } from '@/app/api/logger'
+
+const route = 'POST /api/users/add-user'
 
 export async function POST(request: Request) {
-	const body = await request.json()
-	const { username, email, selectedRole, password, confirmPassword } = body
-
 	const session = await getServerSession()
 	if (!session) {
+		log('warn', route, 'Someone accessed without session.')
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
+
+	const body = await request.json()
+	const { username, email, selectedRole, password, confirmPassword } = body
 
 	if (
 		!username ||
@@ -25,27 +29,46 @@ export async function POST(request: Request) {
 		!password ||
 		!confirmPassword
 	) {
-		return NextResponse.json({
-			received: true,
-			status: 400,
-			message: 'All fields are required',
-		})
+		log(
+			'warn',
+			route,
+			`User ${session.user?.email} did not specified all the required fields`,
+			body
+		)
+		return NextResponse.json(
+			{
+				error: 'All fields are required',
+			},
+			{ status: 400 }
+		)
 	}
 
 	if (password !== confirmPassword) {
-		return NextResponse.json({
-			received: true,
-			status: 400,
-			message: 'Passwords are not same!',
-		})
+		log(
+			'info',
+			route,
+			`User ${session.user?.email} provided two different passwords`
+		)
+		return NextResponse.json(
+			{
+				error: 'Passwords are not same!',
+			},
+			{ status: 400 }
+		)
 	}
 
 	if (!config.validation.emailRegex.test(email)) {
-		return NextResponse.json({
-			received: true,
-			status: 400,
-			message: 'Invalid e-mail address',
-		})
+		log(
+			'info',
+			route,
+			`User ${session.user?.email} provided invalid email address`
+		)
+		return NextResponse.json(
+			{
+				error: 'Invalid e-mail address',
+			},
+			{ status: 400 }
+		)
 	}
 
 	/* Authorization */
@@ -58,6 +81,11 @@ export async function POST(request: Request) {
 		user.permission < config.pages.manageUsers.minPermission ||
 		user.permission <= rolePermission
 	) {
+		log(
+			'warn',
+			route,
+			`User ${session.user?.email} does not have enough permissions.`
+		)
 		return NextResponse.json(
 			{ error: 'Not enough permissions!' },
 			{ status: 403 }
@@ -67,27 +95,42 @@ export async function POST(request: Request) {
 	try {
 		const isUsed = await isEmailUsed(email)
 		if (isUsed) {
-			return NextResponse.json({
-				received: true,
-				status: 409,
-				message: 'Email is already being used',
-			})
+			log(
+				'info',
+				route,
+				`User ${session.user?.email} provided email that is already being used`
+			)
+			return NextResponse.json(
+				{
+					error: 'Email is already being used',
+				},
+				{ status: 409 }
+			)
 		}
 
 		const hashedPassword = await bcrypt.hash(password, config.saltRounds)
 		await createUser(username, selectedRole, email, hashedPassword)
-
-		return NextResponse.json({
-			received: true,
-			status: 200,
-			message: 'User created successfully',
-		})
+		log(
+			'info',
+			route,
+			`User ${session.user?.email} created new user - ${email}`
+		)
+		return NextResponse.json(
+			{
+				message: 'User created successfully',
+				status: 200,
+			},
+			{ status: 200 }
+		)
 	} catch (error) {
-		console.error('Database error:', error)
-		return NextResponse.json({
-			received: true,
-			status: 500,
-			message: 'Internal server error',
+		log('error', route, 'Failed to add user', {
+			error: (error as Error).message,
 		})
+		return NextResponse.json(
+			{
+				error: 'Internal server error',
+			},
+			{ status: 500 }
+		)
 	}
 }

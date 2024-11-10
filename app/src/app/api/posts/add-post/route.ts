@@ -66,6 +66,7 @@ export async function POST(request: Request) {
 		return NextResponse.json(
 			{
 				error: 'Post created',
+				status: 200,
 			},
 			{ status: 200 }
 		)

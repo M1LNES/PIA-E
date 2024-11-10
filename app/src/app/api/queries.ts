@@ -323,7 +323,7 @@ export async function updateUserRole(userId: string, roleId: string) {
  */
 export async function getHashedPasswordByEmail(email: string) {
 	const result =
-		await sql`SELECT hashed_password FROM Users WHERE email = ${email}`
+		await sql`SELECT hashed_password FROM Users WHERE email = ${email} AND deleted_at IS NULL`
 	return result.rows[0]?.hashed_password // Return the hashed password or undefined
 }
 

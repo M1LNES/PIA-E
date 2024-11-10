@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 		log(
 			'info',
 			route,
-			'Comments succesfully fetched, the returned result',
+			'Comments successfully fetched, the returned result',
 			commentsByPost
 		)
 

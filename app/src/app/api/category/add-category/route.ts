@@ -15,6 +15,7 @@ export async function POST(request: Request) {
 	const { title } = body
 
 	const session = await getServerSession()
+
 	if (!session) {
 		log('warn', route, 'Someone accessed without session.')
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
@@ -46,6 +47,12 @@ export async function POST(request: Request) {
 		const user = await getUserByEmail(session.user?.email as string)
 
 		if (!user || user.permission < config.pages.createCategory.minPermission) {
+			log(
+				'warn',
+				route,
+				`User ${session.user?.email} tried to call endpoint, but did not have enough permissions!`,
+				user
+			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
 				{ status: 401 }
@@ -55,10 +62,16 @@ export async function POST(request: Request) {
 		const existingCategory = await checkDuplicateCategory(title)
 
 		if (existingCategory.length > 0) {
+			log(
+				'warn',
+				route,
+				`User ${session.user?.email} wanted to create category with already used name!`,
+				user
+			)
 			return NextResponse.json(
 				{
-					received: true,
 					message: 'Category with this title already exists!',
+					status: 409,
 				},
 				{ status: 409 }
 			)

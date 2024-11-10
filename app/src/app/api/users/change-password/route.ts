@@ -1,70 +1,119 @@
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
-
 import config from '@/app/config'
 import { getHashedPasswordByEmail, updateUserPassword } from '@/app/api/queries'
+import { log } from '@/app/api/logger'
+
+const route = 'POST /api/users/change-password'
 
 export async function POST(request: Request) {
-	const body = await request.json()
-	const { email, oldPassword, newPassword, newPasswordConfirm } = body
-
 	const session = await getServerSession()
+
 	if (!session) {
+		log('warn', route, 'Someone accessed without session.')
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
+	const body = await request.json()
+	const { email, oldPassword, newPassword, newPasswordConfirm } = body
+
 	/* Authorization */
 	if (email !== session?.user?.email) {
-		return NextResponse.json({
-			received: true,
-			status: 401,
-			message: 'Unauthorized to change password!!!',
-		})
+		log(
+			'warn',
+			route,
+			`User ${session.user?.email} tried to access other user's (${email}) data!`
+		)
+		return NextResponse.json(
+			{
+				error: 'Unauthorized to change password!!!',
+			},
+			{ status: 401 }
+		)
 	}
 
-	const hashedPassword = await getHashedPasswordByEmail(email)
+	try {
+		const hashedPassword = await getHashedPasswordByEmail(email)
 
-	if (!hashedPassword) {
-		return NextResponse.json({
-			received: true,
-			status: 404,
-			message: 'User not found!',
+		if (!hashedPassword) {
+			log(
+				'warn',
+				route,
+				`User ${session.user?.email} was not found in DB! Most likely he is deactivated.`
+			)
+			return NextResponse.json(
+				{
+					error: 'User not found!',
+				},
+				{ status: 404 }
+			)
+		}
+
+		const isPreviousPasswordSame = bcrypt.compareSync(
+			oldPassword,
+			hashedPassword
+		)
+
+		if (!isPreviousPasswordSame) {
+			log(
+				'info',
+				route,
+				`User ${session.user?.email} provided wrong old password.`
+			)
+			return NextResponse.json(
+				{
+					error: 'You provided the wrong old password!',
+				},
+				{ status: 422 }
+			)
+		}
+
+		if (newPasswordConfirm !== newPassword) {
+			log('info', route, `${session.user?.email}'s password were not same.`)
+			return NextResponse.json(
+				{
+					error: 'New password and confirm password are not the same!',
+				},
+				{ status: 422 }
+			)
+		}
+
+		if (oldPassword === newPassword) {
+			log(
+				'info',
+				route,
+				`${session.user?.email}'s new and old passwords were same.`
+			)
+			return NextResponse.json(
+				{
+					error: 'New password is the same as the old password!',
+				},
+				{ status: 422 }
+			)
+		}
+
+		const newHashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
+		await updateUserPassword(email, newHashedPassword)
+		log(
+			'info',
+			route,
+			`${session.user?.email} successfully changed his password`
+		)
+		return NextResponse.json(
+			{
+				message: 'Password successfully changed!',
+				status: 200,
+			},
+			{ status: 200 }
+		)
+	} catch (error) {
+		log('error', route, 'Failed to change password', {
+			error: (error as Error).message,
 		})
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
+			{ status: 500 }
+		)
 	}
-
-	const isPreviousPasswordSame = bcrypt.compareSync(oldPassword, hashedPassword)
-
-	if (!isPreviousPasswordSame) {
-		return NextResponse.json({
-			received: true,
-			status: 422,
-			message: 'You provided the wrong old password!',
-		})
-	}
-
-	if (newPasswordConfirm !== newPassword) {
-		return NextResponse.json({
-			received: true,
-			status: 422,
-			message: 'New password and confirm password are not the same!',
-		})
-	}
-
-	if (oldPassword === newPassword) {
-		return NextResponse.json({
-			received: true,
-			status: 422,
-			message: 'New password is the same as the old password!',
-		})
-	}
-
-	const newHashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
-	await updateUserPassword(email, newHashedPassword)
-
-	return NextResponse.json({
-		received: true,
-		status: 200,
-		message: 'Password successfully changed!',
-	})
 }

@@ -58,7 +58,6 @@ describe('GET /api/live', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({ method: 'GET' })
 
-				console.log('Response Status:', response.status)
 				const textResponse = await response.text() // Get raw response text
 
 				const result = JSON.parse(textResponse)

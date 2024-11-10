@@ -12,7 +12,7 @@ export async function GET() {
 
 	try {
 		const totalComments = await getTotalComments()
-		log('info', route, 'All categories successfuly fetched', { totalComments })
+		log('info', route, 'All categories successfully fetched', { totalComments })
 		return NextResponse.json({ totalComments }, { status: 200 })
 	} catch (error) {
 		log('error', route, 'Failed to fetch total comments', {

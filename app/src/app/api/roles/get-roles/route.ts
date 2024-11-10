@@ -28,6 +28,12 @@ export async function GET() {
 		)
 		const user = await getUserWithPermissions(session.user?.email as string)
 		if (user.permission < config.pages.manageUsers.minPermission) {
+			log(
+				'warn',
+				route,
+				`User ${session.user?.email} tried to call endpoint, but did not have enough permissions!`,
+				user
+			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
 				{ status: 401 }

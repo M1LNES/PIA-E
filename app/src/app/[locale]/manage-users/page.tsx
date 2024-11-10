@@ -94,7 +94,7 @@ export default function AddingUser() {
 			try {
 				const result = await disableUser(email)
 				if (result.status === 200) {
-					alert('User successfuly disabled.')
+					alert('User successfully disabled.')
 					window.location.reload()
 				} else {
 					alert('Error during disabling user')
@@ -116,7 +116,7 @@ export default function AddingUser() {
 			try {
 				const result = await activateUser(email)
 				if (result.status === 200) {
-					alert('User successfuly re-activated.')
+					alert('User successfully re-activated.')
 					window.location.reload()
 				} else {
 					alert('Error during re-activating user.')
@@ -148,7 +148,7 @@ export default function AddingUser() {
 					parseInt((event.target as HTMLInputElement).value)
 				)
 				if (result.status === 200) {
-					alert('User role succesfully updated!')
+					alert('User role successfully updated!')
 					window.location.reload()
 				} else {
 					alert('Error occured during changing users role.')

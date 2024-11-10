@@ -12,7 +12,7 @@ export async function GET() {
 	try {
 		const result = await getAllCategories()
 
-		log('info', route, 'All categories successfuly fetched', { result })
+		log('info', route, 'All categories successfully fetched', { result })
 
 		return NextResponse.json(result, { status: 200 })
 	} catch (error) {

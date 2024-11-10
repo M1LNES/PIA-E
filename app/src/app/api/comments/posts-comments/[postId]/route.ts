@@ -36,7 +36,11 @@ export async function GET(
 
 		const user = await getUserWithPermissions(session.user?.email as string)
 		if (user.permission < config.pages.home.minPermission) {
-			log('warn', route, `User ${session.user?.email} did not specify postId`)
+			log(
+				'warn',
+				route,
+				`User ${session.user?.email} does not have permission to access this route!`
+			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
 				{ status: 401 }
