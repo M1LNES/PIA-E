@@ -72,7 +72,13 @@ In the table, you can modify a user's role using a select box. However, you can 
 ### Creating new user
 
 If you want to add new user, you can do it via the form. The form also validates if the user already does exists and won't allow you to create already
-existing user. Remember - you can only create user with **lower permissions** than you.
+existing user.
+
+:::warning
+
+Remember - you can only create or modify user with **lower permissions** than you.
+
+:::
 
 ### Deactivating / reactivating user
 

@@ -17,5 +17,5 @@ Author: Milan Janoch, Team X
 ## Table of Contents
 
 - [API Routes documentation](/api/about)
-- [Usage Tutorial](/usage/log-in)
-- [Local Development Setup](/dev/init)
+- [Usage Tutorial](/usage/features)
+- [Local Development Setup](/dev/setup)
