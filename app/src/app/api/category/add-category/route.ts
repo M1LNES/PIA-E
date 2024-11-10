@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
-				{ status: 401 }
+				{ status: 403 }
 			)
 		}
 

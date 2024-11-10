@@ -59,7 +59,7 @@ describe('POST /api/category/add-category', () => {
 		})
 	})
 
-	it('should return 401 if the user has insufficient permissions', async () => {
+	it('should return 403 if the user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = {
 			id: 1,
@@ -83,7 +83,7 @@ describe('POST /api/category/add-category', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})
@@ -191,7 +191,7 @@ describe('POST /api/category/add-category', () => {
 		})
 	})
 
-	it('Should return 500 when user is disabled', async () => {
+	it('Should return 403 when user is disabled', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const newCategory = { id: 1, name: 'New Category' }
 
@@ -211,7 +211,7 @@ describe('POST /api/category/add-category', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})

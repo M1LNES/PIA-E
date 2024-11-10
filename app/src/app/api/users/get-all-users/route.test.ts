@@ -33,7 +33,7 @@ describe('GET /api/users/get-all-users', () => {
 		})
 	})
 
-	it('should return 401 if user has insufficient permissions', async () => {
+	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = { permission: 40, role: 2, email: 'user@example.com' } // writer
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -47,7 +47,7 @@ describe('GET /api/users/get-all-users', () => {
 				const response = await fetch({ method: 'GET' })
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})

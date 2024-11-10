@@ -59,7 +59,7 @@ describe('POST /api/users/get-user', () => {
 		})
 	})
 
-	it('should return 401 if email does not match session user email', async () => {
+	it('should return 403 if email does not match session user email', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockEmail = 'anotheruser@example.com'
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -76,7 +76,7 @@ describe('POST /api/users/get-user', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Unauthorized to get user info')
 			},
 		})

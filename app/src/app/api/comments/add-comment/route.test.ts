@@ -53,7 +53,7 @@ describe('POST /api/comments/add-comment', () => {
 		})
 	})
 
-	it('should return 401 if user has insufficient permissions', async () => {
+	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = { permission: 10 } // insufficient permissions
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -68,7 +68,7 @@ describe('POST /api/comments/add-comment', () => {
 				const response = await fetch({ method: 'POST' })
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 			{
 				error: 'Unauthorized to get user info',
 			},
-			{ status: 401 }
+			{ status: 403 }
 		)
 	}
 	try {

@@ -126,7 +126,6 @@ export async function disableUserByEmail(email: string) {
 /**
  * Fetches all categories from the database.
  * @returns An array of categories.
- * @throws Will throw an error if there is a problem with the database query.
  */
 export async function getAllCategories() {
 	const result = await sql`SELECT * FROM Category;`
