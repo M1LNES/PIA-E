@@ -1,7 +1,5 @@
-DB migrace
-4. Komentare
-5. Dokumentace - doc + api
-6. Osetrit vstupy u formularu
+Must have:
+1. Komentare
 
 Nice to have:
 

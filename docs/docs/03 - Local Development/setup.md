@@ -42,6 +42,14 @@ Install all neccessary dependencies:
 npm i
 ```
 
+### Use supported node version
+
+Install all neccessary dependencies:
+
+```cmd title="Switch to node version in .nvmrc"
+nvm use
+```
+
 ### Running application
 
 Run application
