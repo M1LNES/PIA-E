@@ -91,6 +91,11 @@ export default function HomePageClient() {
 	}
 
 	const handleAddComment = async (postId: number) => {
+		if (!newComments[postId]) {
+			alert('Comment cannot be empty')
+			return
+		}
+
 		setIsAddingComment((prev) => ({ ...prev, [postId]: true }))
 
 		const postData = { postId, description: newComments[postId] }

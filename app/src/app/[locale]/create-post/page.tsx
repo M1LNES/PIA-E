@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '../home/main-page-layout'
 import { addPost, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
@@ -17,6 +17,7 @@ export default function PostCreator() {
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
 	const [category, setCategory] = useState<number>(-1)
+	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
@@ -39,6 +40,10 @@ export default function PostCreator() {
 			alert('Error adding post')
 		}
 	}
+
+	useEffect(() => {
+		setIsButtonDisabled(!title || !description || category == -1)
+	}, [title, description, category])
 
 	if (isLoading) {
 		return (
@@ -117,8 +122,13 @@ export default function PostCreator() {
 					</div>
 
 					<button
+						disabled={isButtonDisabled}
 						type="submit"
-						className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className={`w-full py-2 rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+							isButtonDisabled
+								? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+								: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
+						}`}
 					>
 						{t('submit-post')}
 					</button>

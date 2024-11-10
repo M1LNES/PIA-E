@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '../home/main-page-layout'
 import {
 	activateUser,
@@ -38,6 +38,7 @@ export default function AddingUser() {
 	const [selectedRole, setSelectedRole] = useState<number>(-1)
 	const [password, setPassword] = useState<string>('')
 	const [confirmPassword, setConfirmPassword] = useState<string>('')
+	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
 	const { data, isLoading } = useQuery({
 		queryKey: ['users'],
@@ -162,6 +163,21 @@ export default function AddingUser() {
 		}
 	}
 
+	useEffect(() => {
+		const isFormInvalid = () => {
+			return (
+				!email ||
+				!username ||
+				!password ||
+				password !== confirmPassword ||
+				selectedRole === -1 ||
+				data.some((item: Users) => item.email === email)
+			)
+		}
+
+		setIsButtonDisabled(isFormInvalid())
+	}, [email, username, password, confirmPassword, selectedRole, data])
+
 	if (isLoading || areRolesLoading || isUsersRolePermissionLoading) {
 		return (
 			<Layout>
@@ -285,7 +301,12 @@ export default function AddingUser() {
 
 					<button
 						type="submit"
-						className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className={`w-full py-2 rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+							isButtonDisabled
+								? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+								: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
+						}`}
+						disabled={isButtonDisabled}
 					>
 						{t('submit-post')}
 					</button>

@@ -15,6 +15,8 @@ export default function CategoryCreator() {
 	const t = useTranslations('pages.create-category')
 
 	const [title, setTitle] = useState<string>('')
+	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
+
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
 		queryFn: () => fetchAllCategories(),
@@ -27,8 +29,6 @@ export default function CategoryCreator() {
 			if (result.status === 200) {
 				alert('Category added successfully')
 				window.location.reload()
-			} else if (result.status === 409) {
-				alert('This category already exists!')
 			} else {
 				alert('Error adding category')
 			}
@@ -36,6 +36,12 @@ export default function CategoryCreator() {
 			console.error('Error:', error)
 			alert('Error adding category...')
 		}
+	}
+
+	const shouldButtonBeDisabled = (newValue: string) => {
+		setIsButtonDisabled(
+			!newValue || data.some((item: Category) => item.name === newValue)
+		)
 	}
 
 	if (isLoading) {
@@ -66,7 +72,10 @@ export default function CategoryCreator() {
 							id="title"
 							className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
 							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							onChange={(e) => {
+								setTitle(e.target.value)
+								shouldButtonBeDisabled(e.target.value)
+							}}
 							required
 						/>
 					</div>
@@ -100,7 +109,12 @@ export default function CategoryCreator() {
 
 					<button
 						type="submit"
-						className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className={`w-full py-2 rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+							isButtonDisabled
+								? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+								: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
+						}`}
+						disabled={isButtonDisabled}
 					>
 						{t('submit-post')}
 					</button>

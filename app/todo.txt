@@ -1,7 +1,4 @@
 DB migrace
-1. Dodat time stamp do post reakci
-2. Logy
-3. Testy
 4. Komentare
 5. Dokumentace - doc + api
 6. Osetrit vstupy u formularu

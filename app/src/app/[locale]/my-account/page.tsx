@@ -4,7 +4,7 @@ import Layout from '../home/main-page-layout'
 import { useTranslations } from 'next-intl'
 import { useSession } from 'next-auth/react'
 import { changePassword, fetchUserData } from '../services/data-service'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/loading-spinner'
 
 export default function MyAccount() {
@@ -14,6 +14,7 @@ export default function MyAccount() {
 	const [oldPassword, setOldPassword] = useState<string>('')
 	const [newPassword, setNewPassword] = useState<string>('')
 	const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>('')
+	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['userData', session?.user?.email],
@@ -42,6 +43,13 @@ export default function MyAccount() {
 			alert('Error during changing password.')
 		}
 	}
+
+	useEffect(() => {
+		setIsButtonDisabled(
+			!oldPassword || !newPassword || newPassword !== newPasswordConfirm
+		)
+	}, [oldPassword, newPassword, newPasswordConfirm])
+
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
@@ -135,8 +143,13 @@ export default function MyAccount() {
 									/>
 								</div>
 								<button
+									disabled={isButtonDisabled}
 									type="submit"
-									className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
+									className={`w-full py-2 rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+										isButtonDisabled
+											? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+											: 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
+									}`}
 								>
 									{t('updatePassword')}
 								</button>
