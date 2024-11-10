@@ -48,7 +48,7 @@ For credentials authentication:
 
 ```json
 {
-  "image": "link-to-google-image",
+  "image": undefined,
   "name": "User Name",
   "email": "user@example.com"
 }
