@@ -349,6 +349,7 @@ export default function AddingUser() {
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.email === session?.user?.email ||
+										item.deleted_at ||
 										userRolePermission <=
 											roles.find((rItem: Role) => rItem.id === item.roleid)
 												.permission ? (
