@@ -10,10 +10,19 @@ import { log } from '@/app/api/logger'
 
 const route = 'POST /api/category/add-category'
 
+/**
+ * Handles the creation of a new category.
+ * Verifies session and permissions, checks for duplicate category titles,
+ * and logs activity and any errors encountered during execution.
+ *
+ * @param {Request} request - The incoming request object.
+ * @returns {NextResponse} - JSON response with status and details of the operation.
+ */
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { title } = body
 
+	// Retrieve session data and validate user authorization
 	const session = await getServerSession()
 
 	if (!session) {
@@ -21,6 +30,7 @@ export async function POST(request: Request) {
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
+	// Validate presence of title field in request body
 	if (!title) {
 		log(
 			'warn',
@@ -37,7 +47,7 @@ export async function POST(request: Request) {
 	}
 
 	try {
-		/* Authorization */
+		// Log debug information for permission and duplication check
 		log(
 			'debug',
 			route,
@@ -46,6 +56,7 @@ export async function POST(request: Request) {
 
 		const user = await getUserByEmail(session.user?.email as string)
 
+		// Check if user has sufficient permissions to create a category
 		if (!user || user.permission < config.pages.createCategory.minPermission) {
 			log(
 				'warn',
@@ -59,6 +70,7 @@ export async function POST(request: Request) {
 			)
 		}
 
+		// Check for duplicate category title
 		const existingCategory = await checkDuplicateCategory(title)
 
 		if (existingCategory.length > 0) {
@@ -77,6 +89,7 @@ export async function POST(request: Request) {
 			)
 		}
 
+		// Create the new category and log success
 		const newCategory = await createCategory(title)
 
 		log(
@@ -92,6 +105,7 @@ export async function POST(request: Request) {
 			category: newCategory,
 		})
 	} catch (error) {
+		// Log any errors that occur during the process
 		log('error', route, 'Failure while adding category', {
 			error: (error as Error).message,
 		})

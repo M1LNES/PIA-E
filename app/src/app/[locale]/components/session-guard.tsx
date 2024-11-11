@@ -8,6 +8,14 @@ type SessionGuardProps = {
 	children: ReactNode
 }
 
+/**
+ * `SessionGuard` is a component that ensures users are authenticated before accessing the wrapped content.
+ * If the user is not signed in, it displays a login screen with a title, description, and a sign-in button.
+ *
+ * @param {ReactNode} children - The content to render if the user is authenticated.
+ * @returns {JSX.Element} - A login screen or the wrapped content based on authentication.
+ */
+
 export default async function SessionGuard({ children }: SessionGuardProps) {
 	const session = await getServerSession()
 	const t = await getTranslations('pages.log-in')

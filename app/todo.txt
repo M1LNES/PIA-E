@@ -1,5 +1,5 @@
-Must have:
-1. Komentare
+Should have
+1. E2E tests
 
 Nice to have:
 

@@ -7,18 +7,27 @@ import { log } from '@/app/api/logger'
 
 const route = 'POST /api/users/change-password'
 
+/**
+ * API route handler for changing the user's password.
+ *
+ * @param request - The incoming HTTP request object.
+ * @returns The response with status and message indicating the result of the password change.
+ */
 export async function POST(request: Request) {
+	// Get the session of the current user
 	const session = await getServerSession()
 
+	// Check if the session exists. If not, return unauthorized response.
 	if (!session) {
 		log('warn', route, 'Someone accessed without session.')
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
+	// Parse the request body to extract the necessary fields
 	const body = await request.json()
 	const { email, oldPassword, newPassword, newPasswordConfirm } = body
 
-	/* Authorization */
+	/* Authorization: Ensure the request is coming from the logged-in user */
 	if (email !== session?.user?.email) {
 		log(
 			'warn',
@@ -34,13 +43,15 @@ export async function POST(request: Request) {
 	}
 
 	try {
+		// Fetch the hashed password of the user from the database
 		const hashedPassword = await getHashedPasswordByEmail(email)
 
+		// If no user is found, log the event and return an error response
 		if (!hashedPassword) {
 			log(
 				'warn',
 				route,
-				`User ${session.user?.email} was not found in DB! Most likely he is deactivated.`
+				`User ${session.user?.email} was not found in DB! Most likely they are deactivated.`
 			)
 			return NextResponse.json(
 				{
@@ -50,11 +61,13 @@ export async function POST(request: Request) {
 			)
 		}
 
-		const isPreviousPasswordSame = bcrypt.compareSync(
+		// Compare the provided old password with the stored hashed password
+		const isPreviousPasswordSame = await bcrypt.compare(
 			oldPassword,
 			hashedPassword
 		)
 
+		// If the old password does not match, log the event and return an error response
 		if (!isPreviousPasswordSame) {
 			log(
 				'info',
@@ -69,8 +82,13 @@ export async function POST(request: Request) {
 			)
 		}
 
+		// Check if the new password and confirmation password match
 		if (newPasswordConfirm !== newPassword) {
-			log('info', route, `${session.user?.email}'s password were not same.`)
+			log(
+				'info',
+				route,
+				`${session.user?.email}'s password confirmation does not match.`
+			)
 			return NextResponse.json(
 				{
 					error: 'New password and confirm password are not the same!',
@@ -79,6 +97,7 @@ export async function POST(request: Request) {
 			)
 		}
 
+		// Ensure that the new password is not the same as the old password
 		if (oldPassword === newPassword) {
 			log(
 				'info',
@@ -93,12 +112,15 @@ export async function POST(request: Request) {
 			)
 		}
 
+		// Hash the new password and update it in the database
 		const newHashedPassword = await bcrypt.hash(newPassword, config.saltRounds)
 		await updateUserPassword(email, newHashedPassword)
+
+		// Log the successful password change and return a success message
 		log(
 			'info',
 			route,
-			`${session.user?.email} successfully changed his password`
+			`${session.user?.email} successfully changed their password.`
 		)
 		return NextResponse.json(
 			{
@@ -108,6 +130,7 @@ export async function POST(request: Request) {
 			{ status: 200 }
 		)
 	} catch (error) {
+		// In case of any error, log the details and return a server error response
 		log('error', route, 'Failed to change password', {
 			error: (error as Error).message,
 		})

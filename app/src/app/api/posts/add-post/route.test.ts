@@ -124,7 +124,7 @@ describe('POST /api/posts/add-post', () => {
 				const result = await response.json()
 
 				expect(response.status).toBe(200)
-				expect(result.error).toBe('Post created')
+				expect(result.message).toBe('Post created successfully')
 			},
 		})
 	})

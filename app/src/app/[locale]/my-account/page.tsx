@@ -7,43 +7,74 @@ import { changePassword, fetchUserData } from '../services/data-service'
 import { useEffect, useState } from 'react'
 import LoadingSpinner from '../components/loading-spinner'
 
+/**
+ * MyAccount Component:
+ *
+ * This component provides an interface for users to view their account details (username, email, role)
+ * and allows them to change their password. The form includes fields to input the old password, new password,
+ * and confirm the new password. The component fetches the user data via a query based on the current session
+ * (user's email) and displays a loading spinner while the data is being fetched. The change password form is
+ * validated to ensure the new password and confirmation match before the form can be submitted.
+ *
+ * The component is built using React hooks, React Query, and NextAuth for authentication and session management.
+ */
 export default function MyAccount() {
+	// Translate the page text using next-intl
 	const t = useTranslations('pages.my-account')
+
+	// Get the current session data using next-auth
 	const { data: session } = useSession()
 
+	// State variables to hold form values and button disabled state
 	const [oldPassword, setOldPassword] = useState<string>('')
 	const [newPassword, setNewPassword] = useState<string>('')
 	const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>('')
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
+	// Fetch user data using react-query, triggered by the user's email
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['userData', session?.user?.email],
 		queryFn: () => fetchUserData(session?.user?.email as string),
-		enabled: !!session?.user?.email,
+		enabled: !!session?.user?.email, // Only fetch if the email exists
 	})
 
+	/**
+	 * Handles password change form submission.
+	 * It sends the old and new passwords to the server for validation and update.
+	 *
+	 * @param {React.FormEvent} event - The form submission event.
+	 */
 	const handleChangePassword = async (event: React.FormEvent) => {
 		event.preventDefault()
+
+		// Prepare data for password change request
 		const postData = {
 			email: user.email,
 			oldPassword,
 			newPassword,
 			newPasswordConfirm,
 		}
+
 		try {
+			// Call the changePassword function to update the password
 			const result = await changePassword(postData)
+
+			// If the result status is 200, password change is successful
 			if (result.status === 200) {
 				alert('Password successfully changed!')
-				window.location.reload()
+				window.location.reload() // Reload the page to reflect the changes
 			} else {
+				// Handle error if the status is not 200
 				alert(`Error during changing password. Status: ${result.status}`)
 			}
 		} catch (error) {
+			// Handle any errors during the password change request
 			console.error('Error:', error)
 			alert('Error during changing password.')
 		}
 	}
 
+	// Effect hook to disable the submit button if password fields are not valid
 	useEffect(() => {
 		setIsButtonDisabled(
 			!oldPassword || !newPassword || newPassword !== newPasswordConfirm
@@ -54,6 +85,7 @@ export default function MyAccount() {
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
 				{isLoading ? (
+					// Show loading spinner while data is being fetched
 					<LoadingSpinner />
 				) : (
 					<>
@@ -87,6 +119,7 @@ export default function MyAccount() {
 								{t('changePassword')}
 							</h3>
 							<form onSubmit={handleChangePassword}>
+								{/* Old Password Input */}
 								<div className="mb-4">
 									<label
 										htmlFor="oldPassword"
@@ -104,6 +137,8 @@ export default function MyAccount() {
 										onChange={(e) => setOldPassword(e.target.value)}
 									/>
 								</div>
+
+								{/* New Password Input */}
 								<div className="mb-4">
 									<label
 										htmlFor="newPassword"
@@ -121,6 +156,8 @@ export default function MyAccount() {
 										onChange={(e) => setNewPassword(e.target.value)}
 									/>
 								</div>
+
+								{/* Confirm New Password Input */}
 								<div className="mb-4">
 									<label
 										htmlFor="confirmNewPassword"
@@ -142,6 +179,8 @@ export default function MyAccount() {
 										onChange={(e) => setNewPasswordConfirm(e.target.value)}
 									/>
 								</div>
+
+								{/* Submit Button */}
 								<button
 									disabled={isButtonDisabled}
 									type="submit"

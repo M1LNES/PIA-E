@@ -30,10 +30,18 @@ type Role = {
 	permission: number
 }
 
+/**
+ * A component for adding new users and managing existing users.
+ * It allows for creating new users, disabling, reactivating users,
+ * and changing their roles. Displays a list of users with their
+ * respective roles and actions (enable, disable, change role).
+ */
 export default function AddingUser() {
+	// Translations for the page
 	const t = useTranslations('pages.managing-users')
 	const { data: session } = useSession()
 
+	// State variables for form fields and button state
 	const [username, setUsername] = useState<string>('')
 	const [email, setEmail] = useState<string>('')
 	const [selectedRole, setSelectedRole] = useState<number>(-1)
@@ -41,6 +49,7 @@ export default function AddingUser() {
 	const [confirmPassword, setConfirmPassword] = useState<string>('')
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
+	// Fetch data for users and roles
 	const { data, isLoading } = useQuery({
 		queryKey: ['users'],
 		queryFn: () => fetchAllUsers(),
@@ -51,10 +60,12 @@ export default function AddingUser() {
 		queryFn: () => fetchAllRoles(),
 	})
 
+	// Fetch the user's role permission
 	const { data: userRolePermission, isLoading: isUsersRolePermissionLoading } =
 		useQuery({
 			queryKey: ['user-permissions'],
 			queryFn: () => {
+				// Find the current user based on session email
 				const currentUser = data.find(
 					(me: Users) => me.email === session?.user?.email
 				)
@@ -66,6 +77,11 @@ export default function AddingUser() {
 			enabled: !areRolesLoading && !isLoading,
 		})
 
+	/**
+	 * Handles form submission to create a new user.
+	 * Validates the form fields and sends the data to the backend service.
+	 * @param event - The form submit event.
+	 */
 	const handleCreateNewUser = async (event: React.FormEvent) => {
 		event.preventDefault()
 		const postData = {
@@ -89,6 +105,12 @@ export default function AddingUser() {
 		}
 	}
 
+	/**
+	 * Handles disabling a user account.
+	 * Prompts the user for confirmation and then disables the account via the backend service.
+	 * @param event - The form submit event.
+	 * @param email - The email address of the user to disable.
+	 */
 	const handleDisableUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
 		const confirmText = `Do you really want to disable user with e-mail ${email}?`
@@ -110,6 +132,12 @@ export default function AddingUser() {
 		}
 	}
 
+	/**
+	 * Handles reactivating a user account.
+	 * Prompts the user for confirmation and then reactivates the account via the backend service.
+	 * @param event - The form submit event.
+	 * @param email - The email address of the user to activate.
+	 */
 	const handleActivateUser = async (event: React.FormEvent, email: string) => {
 		event.preventDefault()
 		const confirmText = `Do you really want to activate user with e-mail ${email}?`
@@ -132,6 +160,12 @@ export default function AddingUser() {
 		}
 	}
 
+	/**
+	 * Handles changing a user's role.
+	 * Prompts the user for confirmation and then updates the role via the backend service.
+	 * @param event - The form submit event.
+	 * @param item - The user whose role will be changed.
+	 */
 	const handleChangeUserRole = async (event: React.FormEvent, item: Users) => {
 		event.preventDefault()
 		const confirmText = `Do you really want to switch ${
@@ -164,6 +198,10 @@ export default function AddingUser() {
 		}
 	}
 
+	/**
+	 * Checks if the form is valid based on the input fields.
+	 * Updates the button's disabled state accordingly.
+	 */
 	useEffect(() => {
 		const isFormInvalid = () => {
 			return (
@@ -180,6 +218,7 @@ export default function AddingUser() {
 		setIsButtonDisabled(isFormInvalid())
 	}, [email, username, password, confirmPassword, selectedRole, data])
 
+	// Loading state while data is being fetched
 	if (isLoading || areRolesLoading || isUsersRolePermissionLoading) {
 		return (
 			<Layout>

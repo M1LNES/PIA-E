@@ -9,7 +9,15 @@ export const fetchCache = 'force-no-store'
 
 const route = 'GET /api/category/get-categories'
 
+/**
+ * Handles fetching all categories.
+ * Checks for user session and authorization, then retrieves all categories if permitted.
+ * Logs the process and any errors encountered during execution.
+ *
+ * @returns {NextResponse} - JSON response containing categories or error details.
+ */
 export async function GET() {
+	// Retrieve session data and validate user authentication
 	const session = await getServerSession()
 
 	if (!session) {
@@ -19,6 +27,7 @@ export async function GET() {
 
 	/* Authorization */
 	try {
+		// Log debug information for permission check and data fetching
 		log(
 			'debug',
 			route,
@@ -27,6 +36,7 @@ export async function GET() {
 
 		const user = await getUserByEmail(session.user?.email as string)
 
+		// Ensure user has sufficient permissions to fetch categories
 		if (
 			user.permission < config.pages.createPost.minPermission ||
 			user.permission < config.pages.createCategory.minPermission
@@ -42,6 +52,8 @@ export async function GET() {
 				{ status: 401 }
 			)
 		}
+
+		// Fetch and return all categories
 		const categories = await getAllCategories()
 
 		log('info', route, `Returning categories for user ${session.user?.email}`, {
@@ -50,6 +62,7 @@ export async function GET() {
 
 		return NextResponse.json({ categories }, { status: 200 })
 	} catch (error) {
+		// Log any errors encountered during data fetching
 		log('error', route, 'Failed to fetch categories', {
 			error: (error as Error).message,
 		})

@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server'
 import { Author } from '../test-interface'
 import { log } from '@/app/api/logger'
 
+/**
+ * GET /api/public/authors
+ * Fetches a list of authors and returns it in JSON format.
+ *
+ * @returns {Response} - JSON response containing the list of authors.
+ */
 export async function GET() {
 	const authors: Author[] = [
 		{
@@ -18,7 +24,9 @@ export async function GET() {
 		},
 	]
 
+	// Log the retrieval of authors
 	log('info', 'GET api/public/authors', 'Authors fetched')
 
+	// Return the authors as a JSON response
 	return NextResponse.json(authors, { status: 200 })
 }

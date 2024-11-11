@@ -1,3 +1,10 @@
+/**
+ * `LoadingSpinner` is a simple loading indicator that displays a spinning circle.
+ * It centers the spinner on the screen and animates it with a spinning effect.
+ *
+ * @returns {JSX.Element} - A loading spinner centered on the screen.
+ */
+
 const LoadingSpinner = () => {
 	return (
 		<div className="flex justify-center items-center h-screen">

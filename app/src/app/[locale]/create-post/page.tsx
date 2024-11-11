@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 import Layout from '../home/main-page-layout'
 import { addPost, fetchAllCategories } from '../services/data-service'
@@ -11,40 +12,70 @@ type Category = {
 	id: number
 }
 
+/**
+ * `PostCreator` Component
+ *
+ * This component allows users to create a new post by providing a title, description, and category.
+ * It fetches the list of available categories and enables users to choose one for their post.
+ * The submit button is disabled if any of the required fields (title, description, or category) are empty.
+ *
+ * - Displays a form to create a new post.
+ * - Fetches available categories from the server and populates the category dropdown.
+ * - Ensures the submit button is disabled until all required fields are filled.
+ * - Submits the form and creates a new post via an API call when the submit button is clicked.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component
+ */
 export default function PostCreator() {
+	// Translation hook for localized text
 	const t = useTranslations('pages.create-post')
 
-	const [title, setTitle] = useState<string>('')
-	const [description, setDescription] = useState<string>('')
-	const [category, setCategory] = useState<number>(-1)
-	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
+	// State variables to manage form data
+	const [title, setTitle] = useState<string>('') // Post title input value
+	const [description, setDescription] = useState<string>('') // Post description input value
+	const [category, setCategory] = useState<number>(-1) // Selected category ID
+	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true) // Button disabled state
 
+	// Fetch categories using React Query
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
 		queryFn: () => fetchAllCategories(),
 	})
 
+	/**
+	 * Handles the form submission event to create a new post.
+	 * Sends the post data to the API and provides feedback based on the result.
+	 *
+	 * @param {React.FormEvent} event - The form submit event
+	 */
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
 		const postData = { title, description, category }
 		try {
+			// Attempt to create the post using the API
 			const result = await addPost(postData)
 			if (result.status === 200) {
 				alert('Post added successfully')
-				window.location.reload()
+				window.location.reload() // Reload the page to show the new post
 			} else {
-				alert('Error adding post')
+				alert('Error adding post') // Show error if the post creation fails
 			}
 		} catch (error) {
 			console.error('Error:', error)
-			alert('Error adding post')
+			alert('Error adding post') // Show error if the API call fails
 		}
 	}
 
+	/**
+	 * React hook to enable/disable the submit button based on the form fields.
+	 * The button is disabled if the title, description, or category is empty.
+	 */
 	useEffect(() => {
-		setIsButtonDisabled(!title || !description || category == -1)
+		setIsButtonDisabled(!title || !description || category === -1)
 	}, [title, description, category])
 
+	// Show loading spinner while categories are being fetched
 	if (isLoading) {
 		return (
 			<Layout>
@@ -53,6 +84,7 @@ export default function PostCreator() {
 		)
 	}
 
+	// Render the form once the categories have been loaded
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">

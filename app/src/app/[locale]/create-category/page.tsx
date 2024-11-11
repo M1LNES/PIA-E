@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import Layout from '../home/main-page-layout'
 import { createCategory, fetchAllCategories } from '../services/data-service'
@@ -11,24 +12,48 @@ type Category = {
 	id: number
 }
 
+/**
+ * `CategoryCreator` Component
+ *
+ * This component allows the user to create a new category. It fetches the list of existing categories,
+ * displays them in a table, and allows the user to input a category name to create a new category.
+ * The submit button is disabled if the input title is empty or if the title already exists in the category list.
+ *
+ * - Displays a list of existing categories.
+ * - Allows the user to create a new category.
+ * - Disables the submit button when the category name already exists.
+ * - Shows a loading spinner while the category data is being fetched.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component
+ */
 export default function CategoryCreator() {
+	// Internationalization hook to translate text for this page
 	const t = useTranslations('pages.create-category')
 
+	// State hooks for category title input and button disabled state
 	const [title, setTitle] = useState<string>('')
 	const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true)
 
+	// Fetch existing categories using React Query
 	const { data, isLoading } = useQuery({
 		queryKey: ['categories'],
 		queryFn: () => fetchAllCategories(),
 	})
 
+	/**
+	 * Handles form submission when the user submits the new category form.
+	 *
+	 * @param {React.FormEvent} event - The form submission event
+	 */
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault()
 		try {
+			// Attempt to create the category via the API
 			const result = await createCategory(title)
 			if (result.status === 200) {
 				alert('Category added successfully')
-				window.location.reload()
+				window.location.reload() // Reloads the page to show the newly created category
 			} else {
 				alert('Error adding category')
 			}
@@ -38,12 +63,19 @@ export default function CategoryCreator() {
 		}
 	}
 
+	/**
+	 * Checks if the submit button should be enabled or disabled based on the input value.
+	 * The button is disabled if the title is empty or the category already exists.
+	 *
+	 * @param {string} newValue - The new value of the title input
+	 */
 	const shouldButtonBeDisabled = (newValue: string) => {
 		setIsButtonDisabled(
 			!newValue || data.some((item: Category) => item.name === newValue)
 		)
 	}
 
+	// Display a loading spinner while the categories are being fetched
 	if (isLoading) {
 		return (
 			<Layout>
@@ -52,6 +84,7 @@ export default function CategoryCreator() {
 		)
 	}
 
+	// Render the form and category list once the data is available
 	return (
 		<Layout>
 			<main className="flex-grow bg-gray-100 p-6">
@@ -74,7 +107,7 @@ export default function CategoryCreator() {
 							value={title}
 							onChange={(e) => {
 								setTitle(e.target.value)
-								shouldButtonBeDisabled(e.target.value)
+								shouldButtonBeDisabled(e.target.value) // Update button disabled state
 							}}
 							required
 						/>

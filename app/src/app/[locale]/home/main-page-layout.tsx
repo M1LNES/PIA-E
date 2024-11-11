@@ -20,39 +20,52 @@ type LayoutProps = {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+	// Fetch session data from next-auth
 	const { data: session } = useSession()
+
+	// Fetch user data from the backend using the session's email
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['userData', session?.user?.email],
 		queryFn: () => fetchUserData(session?.user?.email as string),
-		enabled: !!session?.user?.email,
+		enabled: !!session?.user?.email, // Query is only enabled if the email exists
 	})
 
+	// Load translations for the navbar menu
 	const t = useTranslations('navbar.menu-items')
+
+	// Manage state for the sidebar visibility
 	const [isSidebarOpen, setSidebarOpen] = useState(false)
 
+	// If user data is still loading, show a loading spinner
 	if (isLoading) {
 		return <LoadingSpinner />
 	}
 
 	return (
 		<div className="flex h-screen overflow-hidden">
-			{/* Mobile menu button */}
+			{/* Mobile menu button: Toggles sidebar visibility on smaller screens */}
 			<button
 				className="lg:hidden fixed bottom-4 right-4 z-20 p-2 bg-slate-50 border-solid border-black border-2 rounded-full shadow-lg"
 				onClick={() => setSidebarOpen(!isSidebarOpen)}
 			>
+				{/* Show the appropriate icon based on sidebar state */}
 				{isSidebarOpen ? <ClosingIcon /> : <MenuIcon />}
 			</button>
 
-			{/* Sidebar */}
+			{/* Sidebar: Contains navigation links based on user permissions */}
 			<nav
 				className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white flex flex-col justify-between p-6 transition-transform transform ${
 					isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
 				} lg:translate-x-0 lg:flex`}
 			>
 				<div>
+					{/* Logo */}
 					<EmplifiLogo />
+
+					{/* Divider between logo and links */}
 					<div className="border-t border-white my-4"></div>
+
+					{/* Menu Items: Conditional rendering based on user permissions */}
 					<ul>
 						{user.permission >= config.pages.home.minPermission && (
 							<li className="mb-2">
@@ -92,8 +105,10 @@ const Layout = ({ children }: LayoutProps) => {
 					</ul>
 				</div>
 
+				{/* Footer section of the sidebar */}
 				<div className="mt-auto">
 					<div className="mb-4">
+						{/* Sign-out button */}
 						<button
 							className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md"
 							onClick={() => signOut({ callbackUrl: '/', redirect: true })}
@@ -102,6 +117,7 @@ const Layout = ({ children }: LayoutProps) => {
 						</button>
 					</div>
 
+					{/* Divider */}
 					<div className="border-t border-white my-4"></div>
 
 					{/* Social Media Links */}
@@ -116,19 +132,24 @@ const Layout = ({ children }: LayoutProps) => {
 							<DocusaurusLogo />
 						</Link>
 					</div>
+
+					{/* Divider */}
 					<div className="border-t border-white my-4"></div>
+
+					{/* Locale Switcher */}
 					<div className="flex justify-center space-x-4">
 						<LocaleSwitcher />
 					</div>
 				</div>
 			</nav>
 
-			{/* Main Content Area */}
+			{/* Main Content Area: The area that contains the children components */}
 			<main
 				className={`flex-grow bg-gray-100 p-6 transition-all ${
 					isSidebarOpen ? 'ml-0' : 'w-full'
 				} lg:ml-64 overflow-y-auto`}
 			>
+				{/* Render the children passed to this component */}
 				{children}
 			</main>
 		</div>

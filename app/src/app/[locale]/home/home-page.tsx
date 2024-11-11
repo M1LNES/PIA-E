@@ -35,6 +35,18 @@ type Comment = {
 	username: string
 }
 
+/**
+ * HomePageClient Component
+ *
+ * This component renders the homepage for displaying posts along with their associated comments.
+ * It fetches the posts data and user data using React Query and displays them, allowing users to
+ * toggle visibility of comments, add new comments, and show typing notifications for real-time interaction.
+ *
+ * It also integrates with Ably for real-time updates, including subscribing to channels for new comments and typing notifications.
+ * The component manages multiple states for showing comments, handling new comment input, managing typing users, and handling comment submission.
+ *
+ * @returns {JSX.Element} The rendered homepage with posts and their respective comment sections.
+ */
 export default function HomePageClient() {
 	const { data: session } = useSession()
 	const t = useTranslations('pages.home')
