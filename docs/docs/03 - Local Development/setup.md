@@ -25,12 +25,12 @@ cd app
 To do that, use command:
 
 ```cmd title="Pulling environmental variables from Vercel"
-vercel env.local.development pull
+vercel env pull
 ```
 
 :::info
 
-If you do not have access to that, create `.env.development.local` file (or just `.env` should be enough as well) and insert environment variables.
+If you do not have access to that, create `.env` fileand insert environment variables.
 
 :::
 
@@ -60,16 +60,10 @@ npm run dev
 
 ### Running UNIT tests
 
-To run UNIT test, use command
+To run UNIT tests, use command
 
 ```cmd title="Run tests"
 npm run test
-```
-
-### Checking for lint errors
-
-```cmd title="Run lint to prevent type errors"
-npm run lint
 ```
 
 :::tip
@@ -80,6 +74,39 @@ npm run test:coverage
 ```
 
 :::
+
+:::info
+
+Each route has its own `route.test.ts` file that tests the functionality of the API endpoint.
+
+:::
+
+### Running End 2 End tests
+
+To run e2e tests, use command
+
+```cmd title="Run tests"
+npm run test:e2e
+```
+
+After that, you can see the result by using command:
+
+```cmd title="E2E test result"
+npx playwright show-report
+```
+
+:::info For mr teacher
+
+I wanted to provide some context regarding the E2E tests I included in my project. I understand that there are more efficient and optimized ways to handle scenarios like session management, such as mocking the session or using more advanced techniques. However, my goal with these tests was to demonstrate that the application supports E2E testing and that the process is straightforward and easy to use.
+
+By avoiding approaches like mocking sessions or introducing additional configuration files, I was able to simplify the setup and minimize the risk of forgetting to include important files when submitting the project. This ensures the testing process remains accessible and clear, while still validating key aspects of the application’s functionality.
+:::
+
+### Checking for lint errors
+
+```cmd title="Run lint to prevent type errors"
+npm run lint
+```
 
 ## Documentation
 
