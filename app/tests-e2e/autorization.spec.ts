@@ -18,6 +18,7 @@ test.beforeEach(async ({ page }) => {
 test('Accessing "My account" - public to everyone', async ({ page }) => {
 	await page.getByRole('link', { name: 'My account' }).click()
 	await expect(page).toHaveTitle('Emplifi Wishlist')
+	await expect(page.getByRole('heading', { name: 'My account' })).toBeVisible()
 })
 
 test('Accessing "Create post" - not available to readers', async ({ page }) => {
