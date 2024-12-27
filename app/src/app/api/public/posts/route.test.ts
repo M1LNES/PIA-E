@@ -9,7 +9,7 @@ jest.mock('@/app/api/queries', () => ({
 	getCategoryPostCounts: jest.fn(),
 }))
 
-describe('GET /api/public/posts/by-category', () => {
+describe('GET /api/public/posts', () => {
 	it('should return category post count when getCategoryPostCounts succeeds', async () => {
 		const mockResponse = [
 			{ ProjectA: 10 },

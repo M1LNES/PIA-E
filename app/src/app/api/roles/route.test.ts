@@ -3,7 +3,7 @@ import * as queries from '@/app/api/queries'
 import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { AppHandlerType } from '../../public/test-interface'
+import { AppHandlerType } from '../public/test-interface'
 
 jest.mock('@/app/api/queries', () => ({
 	__esModule: true,
@@ -15,7 +15,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('GET /api/roles/get-roles', () => {
+describe('GET /api/roles', () => {
 	it('should return roles when user has sufficient permissions', async () => {
 		// Mock session and user permissions
 		const mockSession = {

@@ -49,7 +49,7 @@ export const fetchAllUsers = async () => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllRoles = async () => {
-	const response = await fetch('/api/roles/get-roles')
+	const response = await fetch('/api/roles')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}

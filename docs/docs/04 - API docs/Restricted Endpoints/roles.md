@@ -6,7 +6,7 @@ slug: /api/rest/roles
 
 This documentation page provides details on the routes prefixed with `/api/roles`.
 
-## **GET** `/api/roles/get-roles`
+## **GET** `/api/roles`
 
 This endpoint allows authorized users with sufficient permissions to retrieve a list of all available roles in the system.
 
@@ -15,7 +15,7 @@ This endpoint allows authorized users with sufficient permissions to retrieve a 
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/roles/get-roles`
+- **URL**: `/api/roles`
 
 ### Response
 

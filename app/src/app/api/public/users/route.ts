@@ -3,7 +3,7 @@ import { getRoleUserCounts } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
 /**
- * API Route: GET /api/public/users/by-category
+ * API Route: GET /api/public/users
  *
  * This route retrieves the count of users grouped by their roles.
  * It returns the data in JSON format or an error message if the operation fails.
@@ -11,7 +11,7 @@ import { log } from '@/app/api/logger'
 export const revalidate = 1 // Cache revalidation time in seconds
 export const fetchCache = 'force-no-store' // Disables caching for this request
 
-const route = 'GET /api/public/users/by-category'
+const route = 'GET /api/public/users'
 
 /**
  * Handles the GET request to fetch the user counts by role.
