@@ -1,10 +1,15 @@
 import config from '@/app/config'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { getUserDetailsById, getUserIdByEmail, insertPost } from '../../queries'
+import {
+	getPostsWithDetails,
+	getUserDetailsById,
+	getUserIdByEmail,
+	insertPost,
+} from '../queries'
 import { log } from '@/app/api/logger'
 
-const route = 'POST /api/posts/add-post'
+const route = '/api/posts'
 
 /**
  * Adds a new post by the authenticated user if they have sufficient permissions.
@@ -27,12 +32,12 @@ export async function POST(request: Request) {
 		if (!userId) {
 			log(
 				'warn',
-				route,
+				`${route} - POST`,
 				`User ${session.user?.email} was not found in DB! Most likely they are deactivated.`
 			)
 			return NextResponse.json(
-				{ error: 'User not found in DB!' },
-				{ status: 422 }
+				{ error: 'Not enough permissions!' },
+				{ status: 403 }
 			)
 		}
 
@@ -43,13 +48,13 @@ export async function POST(request: Request) {
 		if (user.permission < config.pages.createPost.minPermission) {
 			log(
 				'warn',
-				route,
+				`${route} - POST`,
 				`User ${session.user?.email} tried to add posts but lacked permission.`,
 				user
 			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
-				{ status: 401 }
+				{ status: 403 }
 			)
 		}
 
@@ -59,7 +64,7 @@ export async function POST(request: Request) {
 		if (!title || !description || category == -1) {
 			log(
 				'warn',
-				route,
+				`${route} - POST`,
 				`User ${session.user?.email} did not specify all required fields.`,
 				body
 			)
@@ -71,19 +76,61 @@ export async function POST(request: Request) {
 
 		// Insert the new post into the database
 		await insertPost(title, description, category, userId)
-		log('info', route, `User ${session.user?.email} created a new post!`)
+		log(
+			'info',
+			`${route} - POST`,
+			`User ${session.user?.email} created a new post!`
+		)
 
 		return NextResponse.json(
-			{ message: 'Post created successfully', status: 200 },
-			{ status: 200 }
+			{ message: 'Post created successfully' },
+			{ status: 201 }
 		)
 	} catch (error) {
 		// Log any errors that occur during post creation
-		log('error', route, 'Failure while adding new post', {
+		log('error', `${route} - POST`, 'Failure while adding new post', {
 			error: (error as Error).message,
 		})
 		return NextResponse.json(
 			{ error: 'Internal server error' },
+			{ status: 500 }
+		)
+	}
+}
+
+/**
+ * Retrieves all posts with additional details.
+ * Requires a valid session but does not enforce specific authorization.
+ *
+ * @returns {Response} - JSON response containing posts or an error message.
+ */
+export async function GET() {
+	const session = await getServerSession()
+
+	// Check if session exists
+	if (!session) {
+		log('warn', `${route} - GET`, 'Someone accessed without session.')
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
+
+	// Posts are accessible to any authenticated user, no further authorization needed
+
+	try {
+		// Fetch all posts with details
+		const posts = await getPostsWithDetails()
+		log(
+			'info',
+			`${route} - GET`,
+			`Returning all posts to user ${session.user?.email}`
+		)
+		return NextResponse.json({ posts }, { status: 200 })
+	} catch (error) {
+		// Handle any errors during the data fetching process
+		log('error', `${route} - GET`, 'Failure while fetching posts', {
+			error: (error as Error).message,
+		})
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
 			{ status: 500 }
 		)
 	}

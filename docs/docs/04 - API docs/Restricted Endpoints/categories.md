@@ -4,9 +4,9 @@ sidebar_position: 2
 slug: /api/rest/categories
 ---
 
-This documentation page provides details on the routes prefixed with `/api/category`.
+This documentation page provides details on the routes prefixed with `/api/categories`.
 
-## **GET** `/api/category`
+## **GET** `/api/categories`
 
 This endpoint allows authorized users to retrieve a list of all categories available in the system.
 
@@ -15,7 +15,7 @@ This endpoint allows authorized users to retrieve a list of all categories avail
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/category`
+- **URL**: `/api/categories`
 
 ### Response
 
@@ -78,7 +78,7 @@ The response includes an array of category objects, where each object represents
 
 ---
 
-## **POST** `/api/category`
+## **POST** `/api/categories`
 
 This endpoint allows authorized users to create a new category in the system.
 
@@ -87,7 +87,7 @@ This endpoint allows authorized users to create a new category in the system.
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/category`
+- **URL**: `/api/categories`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -102,7 +102,7 @@ The request body must include a `title` field representing the category's name.
 
 ### Response
 
-- **Status Code**: `200 OK`
+- **Status Code**: `201 Created`
 - **Content-Type**: `application/json`
 
 #### Successful Response

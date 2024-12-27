@@ -4,7 +4,7 @@
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllCategories = async () => {
-	const response = await fetch('/api/category')
+	const response = await fetch('/api/categories')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}
@@ -19,7 +19,7 @@ export const fetchAllCategories = async () => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllPosts = async () => {
-	const response = await fetch('/api/posts/get-all-posts')
+	const response = await fetch('/api/posts')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}
@@ -169,7 +169,7 @@ export const createNewUser = async (postData: {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const createCategory = async (title: string) => {
-	const response = await fetch('/api/category', {
+	const response = await fetch('/api/categories', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ export const addPost = async (postData: {
 	description: string
 	category: number
 }) => {
-	const response = await fetch('/api/posts/add-post', {
+	const response = await fetch('/api/posts', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ slug: /api/rest/posts
 
 This documentation page provides details on the routes prefixed with `/api/posts`.
 
-## **POST** `/api/posts/add-post`
+## **POST** `/api/posts`
 
 This endpoint allows authorized users to create a new post in the system. The user must have sufficient permissions and all required fields must be provided.
 
@@ -15,7 +15,7 @@ This endpoint allows authorized users to create a new post in the system. The us
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/posts/add-post`
+- **URL**: `/api/posts`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -38,7 +38,7 @@ Example Request Body:
 
 ### Response
 
-- **Status Code**: `200 OK`
+- **Status Code**: `201 Created`
 - **Content-Type**: `application/json`
 
 #### Successful Response
@@ -47,28 +47,11 @@ A successful response indicates that the post was successfully created.
 
 ```json
 {
-  "error": "Post created",
-  "status": 200
+  "message": "Post created"
 }
 ```
 
 ### Error Responses
-
-- **401 Unauthorized**: Returned if the request is made without an active session or if the user lacks the required permissions.
-
-```json
-{
-  "error": "Unauthorized!"
-}
-```
-
-- **422 Unprocessable Entity**: Returned if the user does not exist in the database or is deactivated.
-
-```json
-{
-  "error": "User not found in DB!"
-}
-```
 
 - **400 Bad Request**: Returned if any required fields are missing or invalid (e.g., category is `-1`).
 
@@ -78,7 +61,15 @@ A successful response indicates that the post was successfully created.
 }
 ```
 
-- **401 Unauthorized**: Returned if the user does not have the necessary permissions to create a post.
+- **401 Unauthorized**: Returned if the request is made without an active session or if the user lacks the required permissions.
+
+```json
+{
+  "error": "Unauthorized!"
+}
+```
+
+- **403 Forbidden**: Returned if the user does not have the necessary permissions to create a post.
 
 ```json
 {
@@ -96,7 +87,7 @@ A successful response indicates that the post was successfully created.
 
 ---
 
-## **GET** `/api/posts/get-all-posts`
+## **GET** `/api/posts`
 
 This endpoint allows users to retrieve all posts available in the system. The posts are publicly accessible, and no authentication is required to fetch them.
 
@@ -105,7 +96,7 @@ This endpoint allows users to retrieve all posts available in the system. The po
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/posts/get-all-posts`
+- **URL**: `/api/posts`
 
 ### Response
 

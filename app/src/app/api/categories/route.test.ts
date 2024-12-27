@@ -17,7 +17,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('POST /api/category', () => {
+describe('POST /api/categories', () => {
 	it('should return 401 if the user is not authenticated', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null) // Mocking an unauthenticated user
 
@@ -218,7 +218,7 @@ describe('POST /api/category', () => {
 	})
 })
 
-describe('GET /api/category', () => {
+describe('GET /api/categories', () => {
 	it('should return categories when user has sufficient permissions', async () => {
 		// Mock session and user permissions
 		const mockSession = {
