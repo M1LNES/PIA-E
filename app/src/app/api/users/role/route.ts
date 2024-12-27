@@ -9,7 +9,7 @@ import {
 } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = '/api/users/change-role'
+const route = 'PATCH /api/users/role'
 
 /**
  * API route handler for changing the user's role.
@@ -17,7 +17,7 @@ const route = '/api/users/change-role'
  * @param request - The incoming HTTP request object.
  * @returns The response with status and message indicating the result of the role change.
  */
-export async function POST(request: Request) {
+export async function PATCH(request: Request) {
 	// Get the session of the current user
 	const session = await getServerSession()
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 			{
 				error: 'Required values are invalid',
 			},
-			{ status: 422 }
+			{ status: 400 }
 		)
 	}
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 				{
 					error: 'User or role not found',
 				},
-				{ status: 404 }
+				{ status: 400 }
 			)
 		}
 
@@ -100,7 +100,6 @@ export async function POST(request: Request) {
 		return NextResponse.json(
 			{
 				message: 'Role successfully changed!',
-				status: 200,
 			},
 			{ status: 200 }
 		)

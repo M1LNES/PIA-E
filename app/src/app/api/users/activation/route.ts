@@ -8,10 +8,10 @@ import {
 } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = 'PUT /api/users/active-user'
+const route = 'PUT /api/users/activation'
 
 /**
- * API Route: PUT /api/users/active-user
+ * API Route: PUT /api/users/activation
  *
  * This route allows an authenticated user with the necessary permissions to reactivate a user
  * by their email address. The function first checks if the requester is authenticated,
@@ -77,7 +77,6 @@ export async function PUT(request: Request) {
 		return NextResponse.json(
 			{
 				message: 'User activated',
-				status: 200,
 			},
 			{ status: 200 }
 		)

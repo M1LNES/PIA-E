@@ -63,7 +63,7 @@ The response includes an array of roles available in the system.
 }
 ```
 
-- **401 Not enough permissions**: Returned if the user’s permissions are insufficient to access the route.
+- **403 Forbidden**: Returned if the user’s permissions are insufficient to access the route.
 
 ```json
 {

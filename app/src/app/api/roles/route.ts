@@ -54,7 +54,7 @@ export async function GET() {
 			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
-				{ status: 401 }
+				{ status: 403 }
 			)
 		}
 

@@ -5,7 +5,7 @@ import config from '@/app/config'
 import { getHashedPasswordByEmail, updateUserPassword } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = 'POST /api/users/change-password'
+const route = 'PATCH /api/users/password'
 
 /**
  * API route handler for changing the user's password.
@@ -13,7 +13,7 @@ const route = 'POST /api/users/change-password'
  * @param request - The incoming HTTP request object.
  * @returns The response with status and message indicating the result of the password change.
  */
-export async function POST(request: Request) {
+export async function PATCH(request: Request) {
 	// Get the session of the current user
 	const session = await getServerSession()
 
@@ -36,9 +36,9 @@ export async function POST(request: Request) {
 		)
 		return NextResponse.json(
 			{
-				error: 'Unauthorized to change password!!!',
+				error: 'Not enough permissions!',
 			},
-			{ status: 401 }
+			{ status: 403 }
 		)
 	}
 
@@ -55,9 +55,9 @@ export async function POST(request: Request) {
 			)
 			return NextResponse.json(
 				{
-					error: 'User not found!',
+					error: 'Not enough permissions!',
 				},
-				{ status: 404 }
+				{ status: 403 }
 			)
 		}
 
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
 				{
 					error: 'You provided the wrong old password!',
 				},
-				{ status: 422 }
+				{ status: 400 }
 			)
 		}
 
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 				{
 					error: 'New password and confirm password are not the same!',
 				},
-				{ status: 422 }
+				{ status: 400 }
 			)
 		}
 
@@ -108,7 +108,7 @@ export async function POST(request: Request) {
 				{
 					error: 'New password is the same as the old password!',
 				},
-				{ status: 422 }
+				{ status: 400 }
 			)
 		}
 
@@ -125,7 +125,6 @@ export async function POST(request: Request) {
 		return NextResponse.json(
 			{
 				message: 'Password successfully changed!',
-				status: 200,
 			},
 			{ status: 200 }
 		)

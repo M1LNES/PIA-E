@@ -17,7 +17,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('POST /api/users/change-role', () => {
+describe('PATCH /api/users/role', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -26,7 +26,7 @@ describe('POST /api/users/change-role', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'POST' })
+				const response = await fetch({ method: 'PATCH' })
 				const result = await response.json()
 
 				expect(response.status).toBe(401)
@@ -35,7 +35,7 @@ describe('POST /api/users/change-role', () => {
 		})
 	})
 
-	it('should return 422 if required values are invalid', async () => {
+	it('should return 400 if required values are invalid', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 
@@ -45,18 +45,18 @@ describe('POST /api/users/change-role', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({ userId: null, roleId: null }), // Invalid values
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(422)
+				expect(response.status).toBe(400)
 				expect(result.error).toBe('Required values are invalid')
 			},
 		})
 	})
 
-	it('should return 404 if user or role is not found', async () => {
+	it('should return 400 if user or role is not found', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue({ permission: 80 })
@@ -69,12 +69,12 @@ describe('POST /api/users/change-role', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({ userId: 1, roleId: 2 }), // User or role not found
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(404)
+				expect(response.status).toBe(400)
 				expect(result.error).toBe('User or role not found')
 			},
 		})
@@ -105,7 +105,7 @@ describe('POST /api/users/change-role', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({ userId: 1, roleId: 2 }),
 				})
 				const result = await response.json()
@@ -142,7 +142,7 @@ describe('POST /api/users/change-role', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({ userId: 1, roleId: 2 }), // Successful role change
 				})
 				const result = await response.json()
@@ -181,7 +181,7 @@ describe('POST /api/users/change-role', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({ userId: 1, roleId: 2 }), // Trigger internal server error
 				})
 				const result = await response.json()

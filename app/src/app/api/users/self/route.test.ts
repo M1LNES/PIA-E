@@ -14,7 +14,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('POST /api/users/get-user', () => {
+describe('POST /api/users/self', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -77,7 +77,7 @@ describe('POST /api/users/get-user', () => {
 				const result = await response.json()
 
 				expect(response.status).toBe(403)
-				expect(result.error).toBe('Unauthorized to get user info')
+				expect(result.error).toBe('Not enough permissions')
 			},
 		})
 	})

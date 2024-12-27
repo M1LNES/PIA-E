@@ -50,13 +50,9 @@ export default function CategoryCreator() {
 		event.preventDefault()
 		try {
 			// Attempt to create the category via the API
-			const result = await createCategory(title)
-			if (result.status === 200) {
-				alert('Category added successfully')
-				window.location.reload() // Reloads the page to show the newly created category
-			} else {
-				alert('Error adding category')
-			}
+			await createCategory(title)
+			alert('Category added successfully')
+			window.location.reload() // Reloads the page to show the newly created category
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error adding category...')

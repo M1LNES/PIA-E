@@ -57,16 +57,10 @@ export default function MyAccount() {
 
 		try {
 			// Call the changePassword function to update the password
-			const result = await changePassword(postData)
+			await changePassword(postData)
 
-			// If the result status is 200, password change is successful
-			if (result.status === 200) {
-				alert('Password successfully changed!')
-				window.location.reload() // Reload the page to reflect the changes
-			} else {
-				// Handle error if the status is not 200
-				alert(`Error during changing password. Status: ${result.status}`)
-			}
+			alert('Password successfully changed!')
+			window.location.reload() // Reload the page to reflect the changes
 		} catch (error) {
 			// Handle any errors during the password change request
 			console.error('Error:', error)

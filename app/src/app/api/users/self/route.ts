@@ -3,7 +3,7 @@ import { getUserByEmail } from '@/app/api/queries'
 import { getServerSession } from 'next-auth'
 import { log } from '@/app/api/logger'
 
-const route = 'POST /api/users/get-user'
+const route = 'POST /api/users/self'
 
 /**
  * API route handler for fetching user data by email.
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
 		)
 		return NextResponse.json(
 			{
-				error: 'Unauthorized to get user info',
+				error: 'Not enough permissions',
 			},
 			{ status: 403 }
 		)

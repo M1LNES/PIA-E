@@ -7,16 +7,16 @@ import { AppHandlerType } from '../../public/test-interface'
 
 jest.mock('@/app/api/queries', () => ({
 	__esModule: true,
-	getUserWithPermissions: jest.fn(),
+	getUserByEmail: jest.fn(),
 	getDeletedUserByEmail: jest.fn(),
-	disableUserByEmail: jest.fn(),
+	activateUserByEmail: jest.fn(),
 }))
 
 jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('PUT /api/users/disabled-user', () => {
+describe('PUT /api/users/activation', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -27,7 +27,8 @@ describe('PUT /api/users/disabled-user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'anotheruser@example.com' }),
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
@@ -37,19 +38,9 @@ describe('PUT /api/users/disabled-user', () => {
 		})
 	})
 
-	it('should return 403 if user has insufficient permissions', async () => {
-		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockDeletedUser = {
-			permission: 80,
-			role: 1,
-			email: 'user2@example.com',
-		} // permission higher than current user
+	it('should return 400 if email is missing in the request body', async () => {
+		const mockSession = { user: { email: 'user@domain.com' } }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
-		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
-		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
-			mockDeletedUser
-		)
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -58,30 +49,8 @@ describe('PUT /api/users/disabled-user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'anotheruser@example.com' }),
-				})
-				const result = await response.json()
-
-				expect(response.status).toBe(403)
-				expect(result.error).toBe('Not enough permissions!')
-			},
-		})
-	})
-
-	it('should return 400 if email is not specified', async () => {
-		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
-		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
-		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
-
-		await testApiHandler({
-			appHandler: appHandler as unknown as {
-				[key: string]: (req: NextRequest) => AppHandlerType
-			},
-			test: async ({ fetch }) => {
-				const response = await fetch({
-					method: 'PUT',
-					body: JSON.stringify({}), // No email provided
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({}), // Missing email
 				})
 				const result = await response.json()
 
@@ -91,20 +60,16 @@ describe('PUT /api/users/disabled-user', () => {
 		})
 	})
 
-	it('should return 200 and disable user successfully', async () => {
-		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
-			permission: 100,
-			role: 4,
-			email: 'super-admin-borec@example.com',
-		}
-		const mockDeletedUser = null // No deleted user
+	it('should return 403 if user does not have enough permissions', async () => {
+		const mockSession = { user: { email: 'user@domain.com' } }
+		const mockUser = { email: 'user@domain.com', permission: 50 }
+		const mockDeletedUser = { email: 'inactive@domain.com', permission: 80 }
+
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
-		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
 			mockDeletedUser
 		)
-		;(queries.disableUserByEmail as jest.Mock).mockResolvedValue(null)
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -113,26 +78,54 @@ describe('PUT /api/users/disabled-user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'userToDisable@example.com' }),
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: 'inactive@domain.com' }),
+				})
+				const result = await response.json()
+
+				expect(response.status).toBe(403)
+				expect(result.error).toBe('Not enough permissions!')
+			},
+		})
+	})
+
+	it('should return 200 and activate user if permissions are sufficient', async () => {
+		const mockSession = { user: { email: 'admin@domain.com' } }
+		const mockUser = { email: 'admin@domain.com', permission: 100 }
+		const mockDeletedUser = { email: 'inactive@domain.com', permission: 50 }
+
+		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
+		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
+			mockDeletedUser
+		)
+		;(queries.activateUserByEmail as jest.Mock).mockResolvedValue(true)
+
+		await testApiHandler({
+			appHandler: appHandler as unknown as {
+				[key: string]: (req: NextRequest) => AppHandlerType
+			},
+			test: async ({ fetch }) => {
+				const response = await fetch({
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
 				expect(response.status).toBe(200)
-				expect(result.message).toBe('User disabled')
+				expect(result.message).toBe('User activated')
 			},
 		})
 	})
 
 	it('should return 500 on internal server error', async () => {
-		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 } // sufficient permissions
-		const mockDeletedUser = null // No deleted user
+		const mockSession = { user: { email: 'admin@domain.com' } }
+		const mockUser = { email: 'admin@domain.com', permission: 100 }
+
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
-		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
-		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
-			mockDeletedUser
-		)
-		;(queries.disableUserByEmail as jest.Mock).mockRejectedValue(
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
+		;(queries.getDeletedUserByEmail as jest.Mock).mockRejectedValue(
 			new Error('Database error')
 		)
 
@@ -143,12 +136,13 @@ describe('PUT /api/users/disabled-user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'userToDisable@example.com' }),
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
 				expect(response.status).toBe(500)
-				expect(result.error).toBe('Internal Server Error')
+				expect(result.error).toBe('Internal server error')
 			},
 		})
 	})

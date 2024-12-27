@@ -108,17 +108,13 @@ export default function HomePageClient() {
 		const postData = { postId, description: newComments[postId] }
 		try {
 			const result = await addComment(postData)
-			if (result.status === 200) {
-				setNewComments((prev) => ({ ...prev, [postId]: '' }))
+			setNewComments((prev) => ({ ...prev, [postId]: '' }))
 
-				const channel = ably?.channels.get(`post-comments-${postId}`)
-				channel?.publish('new-comment', result.comment)
+			const channel = ably?.channels.get(`post-comments-${postId}`)
+			channel?.publish('new-comment', result.comment)
 
-				// Refresh comments locally
-				queryClient.invalidateQueries({ queryKey: ['comments', postId] })
-			} else {
-				alert('Error adding comment')
-			}
+			// Refresh comments locally
+			queryClient.invalidateQueries({ queryKey: ['comments', postId] })
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error adding comment')

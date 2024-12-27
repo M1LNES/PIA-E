@@ -6,7 +6,7 @@ slug: /api/rest/users
 
 This documentation page provides details on the routes prefixed with `/api/users`.
 
-## **PUT** `/api/users/active-user`
+## **PUT** `/api/users/activation`
 
 This endpoint allows authorized users to activate a previously deactivated user.
 
@@ -15,7 +15,7 @@ This endpoint allows authorized users to activate a previously deactivated user.
 ### Request
 
 - **Method**: `PUT`
-- **URL**: `/api/users/active-user`
+- **URL**: `/api/users/activation`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -43,8 +43,7 @@ Example:
 
 ```json
 {
-  "message": "User activated",
-  "status": 200
+  "message": "User activated"
 }
 ```
 
@@ -92,7 +91,7 @@ Example:
 
 ---
 
-## **POST** `/api/users/add-user`
+## **POST** `/api/users`
 
 This endpoint allows an authorized user to create a new user with the provided details, including username, email, role, and password.
 
@@ -101,7 +100,7 @@ This endpoint allows an authorized user to create a new user with the provided d
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/users/add-user`
+- **URL**: `/api/users`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -128,7 +127,7 @@ Example:
 
 ### Response
 
-- **Status Code**: `200 OK`
+- **Status Code**: `201 OK`
 - **Content-Type**: `application/json`
 
 #### Successful Response
@@ -139,24 +138,13 @@ Example:
 
 ```json
 {
-  "message": "User created successfully",
-  "status": 200
+  "message": "User created successfully"
 }
 ```
 
 ### Error Responses
 
-- **401 Unauthorized**: Returned if the request is made without an active session.
-
-Example:
-
-```json
-{
-  "error": "Unauthorized!"
-}
-```
-
-- **400 Bad Request**: Returned if any required fields are missing or if the passwords do not match.
+- **400 Bad Request**: Returned if any required fields are missing or if the passwords do not match or if the email is invalid.
 
 Example:
 
@@ -166,13 +154,29 @@ Example:
 }
 ```
 
-- **400 Bad Request**: Returned if the email address is invalid.
+or
+
+```json
+{
+  "error": "Invalid e-mail address"
+}
+```
+
+or
+
+```json
+{
+  "error": "Passwords are not same!"
+}
+```
+
+- **401 Unauthorized**: Returned if the request is made without an active session.
 
 Example:
 
 ```json
 {
-  "error": "Invalid e-mail address"
+  "error": "Unauthorized!"
 }
 ```
 
@@ -208,7 +212,7 @@ Example:
 
 ---
 
-## **POST** `/api/users/change-password`
+## **PATCH** `/api/users/password`
 
 This endpoint allows an authenticated user to change their password by providing the old password, a new password, and confirming the new password.
 
@@ -216,8 +220,8 @@ This endpoint allows an authenticated user to change their password by providing
 
 ### Request
 
-- **Method**: `POST`
-- **URL**: `/api/users/change-password`
+- **Method**: `PATCH`
+- **URL**: `/api/users/password`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -253,12 +257,37 @@ Example:
 
 ```json
 {
-  "message": "Password successfully changed!",
-  "status": 200
+  "message": "Password successfully changed!"
 }
 ```
 
 ### Error Responses
+
+- **400 Bad Request**: Returned if the passwords are not same, new password is same as the old one or the current password is invalid.
+
+Example:
+
+```json
+{
+  "error": "You provided the wrong old password!"
+}
+```
+
+or
+
+```json
+{
+  "error": "New password and confirm password are not the same!"
+}
+```
+
+or
+
+```json
+{
+  "error": "New password is the same as the old password!"
+}
+```
 
 - **401 Unauthorized**: Returned if the request is made without an active session or if the user tries to change another user's password.
 
@@ -266,27 +295,17 @@ Example:
 
 ```json
 {
-  "error": "Unauthorized to change password!!!"
+  "error": "Unauthorized!"
 }
 ```
 
-- **404 Not Found**: Returned if the user is not found in the database (e.g., deactivated user).
+- **403 Forbidden**: Returned if user wants to change password of someone else.
 
 Example:
 
 ```json
 {
-  "error": "User not found!"
-}
-```
-
-- **422 Unprocessable Entity**: Returned if the old password is incorrect, the new password and confirmation do not match, or the new password is the same as the old password.
-
-Example:
-
-```json
-{
-  "error": "You provided the wrong old password!"
+  "error": "Not enough permissions!"
 }
 ```
 
@@ -302,7 +321,7 @@ Example:
 
 ---
 
-## **POST** `/api/users/change-role`
+## **PATCH** `/api/users/role`
 
 This endpoint allows an authenticated user with sufficient permissions to change the role of another user.
 
@@ -310,8 +329,8 @@ This endpoint allows an authenticated user with sufficient permissions to change
 
 ### Request
 
-- **Method**: `POST`
-- **URL**: `/api/users/change-role`
+- **Method**: `PATCH`
+- **URL**: `/api/users/role`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -343,12 +362,21 @@ Example:
 
 ```json
 {
-  "message": "Role successfully changed!",
-  "status": 200
+  "message": "Role successfully changed!"
 }
 ```
 
 ### Error Responses
+
+- **400 Bad request**: Returned if the `userId` or `roleId` is invalid or missing.
+
+Example:
+
+```json
+{
+  "error": "Required values are invalid"
+}
+```
 
 - **401 Unauthorized**: Returned if the request is made without an active session.
 
@@ -360,16 +388,6 @@ Example:
 }
 ```
 
-- **422 Unprocessable Entity**: Returned if the `userId` or `roleId` is invalid or missing.
-
-Example:
-
-```json
-{
-  "error": "Required values are invalid"
-}
-```
-
 - **403 Forbidden**: Returned if the user does not have sufficient permissions to change the role.
 
 Example:
@@ -377,16 +395,6 @@ Example:
 ```json
 {
   "error": "Not enough permissions!"
-}
-```
-
-- **404 Not Found**: Returned if the user or role is not found in the database.
-
-Example:
-
-```json
-{
-  "error": "User or role not found"
 }
 ```
 
@@ -402,7 +410,7 @@ Example:
 
 ---
 
-## **PUT** `/api/users/disabled-user`
+## **PUT** `/api/users/deactivation`
 
 This endpoint allows an authenticated user with sufficient permissions to disable another user by email.
 
@@ -411,7 +419,7 @@ This endpoint allows an authenticated user with sufficient permissions to disabl
 ### Request
 
 - **Method**: `PUT`
-- **URL**: `/api/users/disabled-user`
+- **URL**: `/api/users/deactivation`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -441,22 +449,11 @@ Example:
 
 ```json
 {
-  "message": "User disabled",
-  "status": 200
+  "message": "User disabled"
 }
 ```
 
 ### Error Responses
-
-- **401 Unauthorized**: Returned if the request is made without an active session.
-
-Example:
-
-```json
-{
-  "error": "Unauthorized!"
-}
-```
 
 - **400 Bad Request**: Returned if the `email` is not specified.
 
@@ -465,6 +462,16 @@ Example:
 ```json
 {
   "error": "Email not specified!"
+}
+```
+
+- **401 Unauthorized**: Returned if the request is made without an active session.
+
+Example:
+
+```json
+{
+  "error": "Unauthorized!"
 }
 ```
 
@@ -490,7 +497,7 @@ Example:
 
 ---
 
-## **GET** `/api/users/get-all-users`
+## **GET** `/api/users`
 
 This endpoint allows an authenticated user with sufficient permissions to retrieve a list of all users along with their roles.
 
@@ -499,7 +506,7 @@ This endpoint allows an authenticated user with sufficient permissions to retrie
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/users/get-all-users`
+- **URL**: `/api/users`
 - **Content-Type**: `application/json`
 
 ### Response
@@ -568,7 +575,7 @@ Example:
 
 ---
 
-## **POST** `/api/users/get-user`
+## **POST** `/api/users/self`
 
 This endpoint allows authenticated users to retrieve their own user information based on the email provided. Only the logged-in user can access their own data.
 
@@ -577,7 +584,7 @@ This endpoint allows authenticated users to retrieve their own user information 
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/users/get-user`
+- **URL**: `/api/users/self`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -612,22 +619,22 @@ A successful response includes the user information.
 
 ### Error Responses
 
-- **401 Unauthorized**: Returned if the request is made without an active session.
-
-```json
-{ "error": "Unauthorized!" }
-```
-
 - **400 Bad Request**: Returned if the `email` field is missing in the request body.
 
 ```json
 { "error": "Email not specified!" }
 ```
 
+- **401 Unauthorized**: Returned if the request is made without an active session.
+
+```json
+{ "error": "Unauthorized!" }
+```
+
 - **403 Forbidden**: Returned if a user tries to access another user's data.
 
 ```json
-{ "error": "Unauthorized to get user info" }
+{ "error": "Not enough permissions" }
 ```
 
 - **500 Internal Server Error**: Returned if there is an error during the user data retrieval process.

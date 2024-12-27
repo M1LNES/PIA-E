@@ -92,13 +92,9 @@ export default function AddingUser() {
 			confirmPassword,
 		}
 		try {
-			const result = await createNewUser(postData)
-			if (result.status === 200) {
-				alert('User added successfully')
-				window.location.reload()
-			} else {
-				alert('Error adding user')
-			}
+			await createNewUser(postData)
+			alert('User added successfully')
+			window.location.reload()
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error adding user')
@@ -116,13 +112,9 @@ export default function AddingUser() {
 		const confirmText = `Do you really want to disable user with e-mail ${email}?`
 		if (confirm(confirmText)) {
 			try {
-				const result = await disableUser(email)
-				if (result.status === 200) {
-					alert('User successfully disabled.')
-					window.location.reload()
-				} else {
-					alert('Error during disabling user')
-				}
+				await disableUser(email)
+				alert('User successfully disabled.')
+				window.location.reload()
 			} catch (error) {
 				console.error('Error:', error)
 				alert('Error during disabling user')
@@ -144,13 +136,9 @@ export default function AddingUser() {
 
 		if (confirm(confirmText)) {
 			try {
-				const result = await activateUser(email)
-				if (result.status === 200) {
-					alert('User successfully re-activated.')
-					window.location.reload()
-				} else {
-					alert('Error during re-activating user.')
-				}
+				await activateUser(email)
+				alert('User successfully re-activated.')
+				window.location.reload()
 			} catch (error) {
 				console.error('Error:', error)
 				alert('Error re-activating user')
@@ -179,16 +167,12 @@ export default function AddingUser() {
 
 		if (confirm(confirmText)) {
 			try {
-				const result = await changeUserRole(
+				await changeUserRole(
 					item.id,
 					parseInt((event.target as HTMLInputElement).value)
 				)
-				if (result.status === 200) {
-					alert('User role successfully updated!')
-					window.location.reload()
-				} else {
-					alert('Error occured during changing users role.')
-				}
+				alert('User role successfully updated!')
+				window.location.reload()
 			} catch {
 				alert('Unexpected error occured.')
 			}

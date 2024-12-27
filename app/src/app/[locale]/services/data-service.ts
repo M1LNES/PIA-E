@@ -34,7 +34,7 @@ export const fetchAllPosts = async () => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllUsers = async () => {
-	const response = await fetch('/api/users/get-all-users')
+	const response = await fetch('/api/users')
 	if (!response.ok) {
 		throw new Error('Failed to fetch data')
 	}
@@ -66,8 +66,8 @@ export const fetchAllRoles = async () => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const changeUserRole = async (userId: number, roleId: number) => {
-	const response = await fetch('/api/users/change-role', {
-		method: 'POST',
+	const response = await fetch('/api/users/role', {
+		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},
@@ -89,7 +89,7 @@ export const changeUserRole = async (userId: number, roleId: number) => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const activateUser = async (email: string) => {
-	const response = await fetch('/api/users/activate-user', {
+	const response = await fetch('/api/users/activation', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export const activateUser = async (email: string) => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const disableUser = async (email: string) => {
-	const response = await fetch('/api/users/disable-user', {
+	const response = await fetch('/api/users/deactivation', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export const createNewUser = async (postData: {
 	password: string
 	confirmPassword: string
 }) => {
-	const response = await fetch('/api/users/add-user', {
+	const response = await fetch('/api/users', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ export const addPost = async (postData: {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchUserData = async (email: string) => {
-	const response = await fetch('/api/users/get-user', {
+	const response = await fetch('/api/users/self', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -254,8 +254,8 @@ export const changePassword = async (postData: {
 	newPassword: string
 	newPasswordConfirm: string
 }) => {
-	const response = await fetch('/api/users/change-password', {
-		method: 'POST',
+	const response = await fetch('/api/users/password', {
+		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},

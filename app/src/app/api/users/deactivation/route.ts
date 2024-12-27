@@ -8,7 +8,7 @@ import {
 } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = 'PUT /api/users/disabled-user'
+const route = 'PUT /api/users/deactivation'
 
 /**
  * API route handler for disabling a user by email.
@@ -84,7 +84,6 @@ export async function PUT(request: Request) {
 		return NextResponse.json(
 			{
 				message: 'User disabled',
-				status: 200,
 			},
 			{ status: 200 }
 		)

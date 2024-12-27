@@ -16,7 +16,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('POST /api/users/change-password', () => {
+describe('PATCH /api/users/password', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -25,7 +25,7 @@ describe('POST /api/users/change-password', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'POST' })
+				const response = await fetch({ method: 'PATCH' })
 				const result = await response.json()
 
 				expect(response.status).toBe(401)
@@ -44,7 +44,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'otheruser@example.com',
 						oldPassword: 'oldpassword',
@@ -54,13 +54,13 @@ describe('POST /api/users/change-password', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
-				expect(result.error).toBe('Unauthorized to change password!!!')
+				expect(response.status).toBe(403)
+				expect(result.error).toBe('Not enough permissions!')
 			},
 		})
 	})
 
-	it('should return 404 if user is not found', async () => {
+	it('should return 3 if user is not found', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(null) // User not found
@@ -71,7 +71,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: 'oldpassword',
@@ -81,13 +81,13 @@ describe('POST /api/users/change-password', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(404)
-				expect(result.error).toBe('User not found!')
+				expect(response.status).toBe(403)
+				expect(result.error).toBe('Not enough permissions!')
 			},
 		})
 	})
 
-	it('should return 422 if old password is incorrect', async () => {
+	it('should return 400 if old password is incorrect', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('correctOldPassword', 10)
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -103,7 +103,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: oldPassword,
@@ -113,13 +113,13 @@ describe('POST /api/users/change-password', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(422)
+				expect(response.status).toBe(400)
 				expect(result.error).toBe('You provided the wrong old password!')
 			},
 		})
 	})
 
-	it('should return 422 if new password and confirm password do not match', async () => {
+	it('should return 400 if new password and confirm password do not match', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('correctOldPassword', 10)
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -133,7 +133,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: 'correctOldPassword',
@@ -143,7 +143,7 @@ describe('POST /api/users/change-password', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(422)
+				expect(response.status).toBe(400)
 				expect(result.error).toBe(
 					'New password and confirm password are not the same!'
 				)
@@ -151,7 +151,7 @@ describe('POST /api/users/change-password', () => {
 		})
 	})
 
-	it('should return 422 if new password is the same as old password', async () => {
+	it('should return 400 if new password is the same as old password', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('oldpassword', 10)
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -165,7 +165,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: 'oldpassword',
@@ -175,7 +175,7 @@ describe('POST /api/users/change-password', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(422)
+				expect(response.status).toBe(400)
 				expect(result.error).toBe(
 					'New password is the same as the old password!'
 				)
@@ -198,7 +198,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: 'oldpassword',
@@ -231,7 +231,7 @@ describe('POST /api/users/change-password', () => {
 			},
 			test: async ({ fetch }) => {
 				const response = await fetch({
-					method: 'POST',
+					method: 'PATCH',
 					body: JSON.stringify({
 						email: 'user@example.com',
 						oldPassword: 'oldpassword',

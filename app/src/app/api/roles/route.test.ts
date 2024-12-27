@@ -75,7 +75,7 @@ describe('GET /api/roles', () => {
 		})
 	})
 
-	it('should return 401 when user has insufficient permissions', async () => {
+	it('should return 403 when user has insufficient permissions', async () => {
 		// Mock session and user with insufficient permissions
 		const mockSession = {
 			user: {
@@ -101,7 +101,7 @@ describe('GET /api/roles', () => {
 				const result = await response.json()
 
 				// Check the response
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})

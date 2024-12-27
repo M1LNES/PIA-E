@@ -109,6 +109,14 @@ A successful response includes the newly created category object.
 
 ### Error Responses
 
+- **400 Bad Request**: Returned if the `title` field is missing in the request body.
+
+  ```json
+  {
+    "error": "Title field required"
+  }
+  ```
+
 - **401 Unauthorized**: Returned if the request is made without an active session.
 
   ```json
@@ -125,20 +133,11 @@ A successful response includes the newly created category object.
   }
   ```
 
-- **400 Bad Request**: Returned if the `title` field is missing in the request body.
-
-  ```json
-  {
-    "error": "Title field required"
-  }
-  ```
-
 - **409 Conflict**: Returned if a category with the same `title` already exists.
 
   ```json
   {
-    "error": "Category with this title already exists!",
-    "status": 409
+    "error": "Category with this title already exists!"
   }
   ```
 

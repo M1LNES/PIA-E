@@ -54,13 +54,9 @@ export default function PostCreator() {
 		const postData = { title, description, category }
 		try {
 			// Attempt to create the post using the API
-			const result = await addPost(postData)
-			if (result.status === 200) {
-				alert('Post added successfully')
-				window.location.reload() // Reload the page to show the new post
-			} else {
-				alert('Error adding post') // Show error if the post creation fails
-			}
+			await addPost(postData)
+			alert('Post added successfully')
+			window.location.reload() // Reload the page to show the new post
 		} catch (error) {
 			console.error('Error:', error)
 			alert('Error adding post') // Show error if the API call fails

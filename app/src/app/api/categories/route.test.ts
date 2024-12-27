@@ -280,7 +280,7 @@ describe('GET /api/categories', () => {
 		})
 	})
 
-	it('should return 401 when user has insufficient permissions', async () => {
+	it('should return 403 when user has insufficient permissions', async () => {
 		// Mock session and user with insufficient permissions
 		const mockSession = {
 			user: {
