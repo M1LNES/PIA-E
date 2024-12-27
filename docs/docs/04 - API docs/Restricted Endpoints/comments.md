@@ -6,7 +6,7 @@ slug: /api/rest/comments
 
 This documentation page provides details on the routes prefixed with `/api/comments`.
 
-## **POST** `/api/comments/add-comment`
+## **POST** `/api/comments`
 
 This endpoint allows an authorized user to add a comment to a specified post.
 
@@ -15,7 +15,7 @@ This endpoint allows an authorized user to add a comment to a specified post.
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/comments/add-comment`
+- **URL**: `/api/comments`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -36,7 +36,7 @@ Example:
 
 ### Response
 
-- **Status Code**: `200 OK`
+- **Status Code**: `201 Created`
 - **Content-Type**: `application/json`
 
 #### Successful Response
@@ -45,8 +45,6 @@ The response includes the created comment object.
 
 ```json
 {
-  "received": true,
-  "status": 200,
   "message": "Comment created",
   "comment": {
     "id": 1,
@@ -59,6 +57,14 @@ The response includes the created comment object.
 ```
 
 ### Error Responses
+
+- **400 Bad Request**: Returned if the `description` or `postId` field is missing from the request body.
+
+  ```json
+  {
+    "error": "Missing required fields"
+  }
+  ```
 
 - **401 Unauthorized**: Returned if the request is made without an active session.
 
@@ -76,22 +82,6 @@ The response includes the created comment object.
   }
   ```
 
-- **400 Bad Request**: Returned if the `description` or `postId` field is missing from the request body.
-
-  ```json
-  {
-    "error": "Missing required fields"
-  }
-  ```
-
-- **422 Unprocessable Entity**: Returned if the user's account was not found in the database (possibly deactivated).
-
-  ```json
-  {
-    "error": "User not found in DB!"
-  }
-  ```
-
 - **500 Internal Server Error**: Returned if there is an error while processing the request.
 
   ```json
@@ -102,7 +92,7 @@ The response includes the created comment object.
 
 ---
 
-## **GET** `/api/comments/posts-comments/:postId`
+## **GET** `/api/comments/:postId`
 
 This endpoint retrieves all comments for a specific post based on the `postId` provided in the URL.
 
@@ -111,7 +101,7 @@ This endpoint retrieves all comments for a specific post based on the `postId` p
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/comments/posts-comments/:postId`
+- **URL**: `/api/comments/:postId`
 - **Authentication**: Required (session-based)
 
 #### URL Parameters
@@ -159,18 +149,6 @@ The response includes an array of comment objects, where each object contains de
 
 ### Error Responses
 
-#### Unauthorized Access
-
-- **Status Code**: 401 Unauthorized
-- **Content-Type**: application/json
-- **Response**:
-
-```json
-{
-  "error": "Unauthorized!"
-}
-```
-
 #### Missing postId Parameter
 
 - **Status Code**: 400 Bad Request
@@ -183,9 +161,21 @@ The response includes an array of comment objects, where each object contains de
 }
 ```
 
-#### Insufficient Permissions
+#### Unauthorized Access
 
 - **Status Code**: 401 Unauthorized
+- **Content-Type**: application/json
+- **Response**:
+
+```json
+{
+  "error": "Unauthorized!"
+}
+```
+
+#### Insufficient Permissions
+
+- **Status Code**: 403 Forbidden
 - **Content-Type**: application/json
 - **Response**:
 

@@ -6,7 +6,7 @@ slug: /api/rest/categories
 
 This documentation page provides details on the routes prefixed with `/api/category`.
 
-## **GET** `/api/category/get-categories`
+## **GET** `/api/category`
 
 This endpoint allows authorized users to retrieve a list of all categories available in the system.
 
@@ -15,7 +15,7 @@ This endpoint allows authorized users to retrieve a list of all categories avail
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/category/get-categories`
+- **URL**: `/api/category`
 
 ### Response
 
@@ -52,9 +52,19 @@ The response includes an array of category objects, where each object represents
   }
   ```
 
+- **403 Forbidden**: Returned if the user does not have enough permissions to perform this action.
+
   ```json
   {
     "error": "Not enough permissions!"
+  }
+  ```
+
+  - **409 Conflict**: Returned if the category already exists.
+
+  ```json
+  {
+    "error": "Category with this title already exists!"
   }
   ```
 
@@ -68,7 +78,7 @@ The response includes an array of category objects, where each object represents
 
 ---
 
-## **POST** `/api/category/add-category`
+## **POST** `/api/category`
 
 This endpoint allows authorized users to create a new category in the system.
 
@@ -77,7 +87,7 @@ This endpoint allows authorized users to create a new category in the system.
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/category/add-category`
+- **URL**: `/api/category`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -101,9 +111,7 @@ A successful response includes the newly created category object.
 
 ```json
 {
-  "received": true,
-  "status": 200,
-  "category": "New Category Title"
+  "message": "Category created"
 }
 ```
 
@@ -129,8 +137,7 @@ A successful response includes the newly created category object.
 
   ```json
   {
-    "received": true,
-    "message": "Title field required"
+    "error": "Title field required"
   }
   ```
 
@@ -138,7 +145,7 @@ A successful response includes the newly created category object.
 
   ```json
   {
-    "message": "Category with this title already exists!",
+    "error": "Category with this title already exists!",
     "status": 409
   }
   ```

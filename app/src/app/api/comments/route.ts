@@ -8,7 +8,7 @@ import {
 } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = 'POST /api/comments/add-comment'
+const route = 'POST /api/comments'
 
 /**
  * Handles the addition of a new comment to a specified post.
@@ -39,8 +39,8 @@ export async function POST(request: Request) {
 				`User ${session.user?.email} was not found in DB! Most likely they are deactivated.`
 			)
 			return NextResponse.json(
-				{ error: 'User not found in DB!' },
-				{ status: 422 }
+				{ error: 'Not enough permissions!' },
+				{ status: 403 }
 			)
 		}
 
@@ -90,12 +90,13 @@ export async function POST(request: Request) {
 		// Clear the created_at timestamp before returning response
 		comment.created_at = null
 
-		return NextResponse.json({
-			received: true,
-			status: 200,
-			message: 'Comment created',
-			comment,
-		})
+		return NextResponse.json(
+			{
+				message: 'Comment created',
+				comment,
+			},
+			{ status: 201 }
+		)
 	} catch (error) {
 		// Log internal server error details and respond with 500 error
 		log('error', route, 'Error occurred during adding new comment', {

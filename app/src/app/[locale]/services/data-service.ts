@@ -277,7 +277,7 @@ export const changePassword = async (postData: {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchCommentsByPostId = async (postId: number) => {
-	const response = await fetch(`/api/comments/posts-comments/${postId}`)
+	const response = await fetch(`/api/comments/${postId}`)
 
 	if (!response.ok) {
 		throw new Error('Failed to fetch comments')
@@ -305,7 +305,7 @@ export const addComment = async (postData: {
 	description: string
 	postId: number
 }) => {
-	const response = await fetch('/api/comments/add-comment', {
+	const response = await fetch('/api/comments', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

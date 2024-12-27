@@ -3,7 +3,7 @@ import * as queries from '@/app/api/queries'
 import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { AppHandlerType } from '../../public/test-interface'
+import { AppHandlerType } from '../public/test-interface'
 
 jest.mock('@/app/api/queries', () => ({
 	__esModule: true,
@@ -16,7 +16,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('POST /api/comments/add-comment', () => {
+describe('POST /api/comments', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -34,7 +34,7 @@ describe('POST /api/comments/add-comment', () => {
 		})
 	})
 
-	it('should return 422 if user is not found in the database', async () => {
+	it('should return 403 if user is not found in the database', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(null)
@@ -47,8 +47,8 @@ describe('POST /api/comments/add-comment', () => {
 				const response = await fetch({ method: 'POST' })
 				const result = await response.json()
 
-				expect(response.status).toBe(422)
-				expect(result.error).toBe('User not found in DB!')
+				expect(response.status).toBe(403)
+				expect(result.error).toBe('Not enough permissions!')
 			},
 		})
 	})
@@ -99,7 +99,7 @@ describe('POST /api/comments/add-comment', () => {
 		})
 	})
 
-	it('should return 200 when comment is created successfully', async () => {
+	it('should return 201 when comment is created successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = { permission: 80 }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -128,7 +128,7 @@ describe('POST /api/comments/add-comment', () => {
 				})
 				const result = await response.json()
 
-				expect(response.status).toBe(200)
+				expect(response.status).toBe(201)
 				expect(result.message).toBe('Comment created')
 				expect(result.comment.description).toBe('Sample Comment')
 			},

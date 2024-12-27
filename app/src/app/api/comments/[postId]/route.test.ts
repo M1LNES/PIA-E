@@ -15,7 +15,7 @@ jest.mock('next-auth', () => ({
 	getServerSession: jest.fn(),
 }))
 
-describe('GET /api/comments/posts-comments/:postId', () => {
+describe('GET /api/comments/:postId', () => {
 	it('should return 401 when session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
@@ -73,7 +73,7 @@ describe('GET /api/comments/posts-comments/:postId', () => {
 				const response = await fetch({ method: 'GET' })
 				const result = await response.json()
 
-				expect(response.status).toBe(401)
+				expect(response.status).toBe(403)
 				expect(result.error).toBe('Not enough permissions!')
 			},
 		})

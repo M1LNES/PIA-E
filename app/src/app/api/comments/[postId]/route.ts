@@ -7,7 +7,7 @@ import { log } from '@/app/api/logger'
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
 
-const route = 'GET /api/comments/posts-comments/:postId'
+const route = 'GET /api/comments/:postId'
 
 /**
  * Retrieves all comments for a specific post by its post ID.
@@ -56,7 +56,7 @@ export async function GET(
 			)
 			return NextResponse.json(
 				{ error: 'Not enough permissions!' },
-				{ status: 401 }
+				{ status: 403 }
 			)
 		}
 
