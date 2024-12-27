@@ -3,21 +3,87 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import {
 	getUserByEmail,
+	getAllCategories,
 	checkDuplicateCategory,
 	createCategory,
 } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
-const route = 'POST /api/category/add-category'
+export const revalidate = 1
+export const fetchCache = 'force-no-store'
+
+const route = '/api/categories'
 
 /**
- * Handles the creation of a new category.
- * Verifies session and permissions, checks for duplicate category titles,
- * and logs activity and any errors encountered during execution.
+ * Handles HTTP GET and POST requests for the /api/categories endpoint.
+ * - GET: Fetch all categories.
+ * - POST: Create a new category.
  *
  * @param {Request} request - The incoming request object.
  * @returns {NextResponse} - JSON response with status and details of the operation.
  */
+export async function GET() {
+	// Retrieve session data and validate user authentication
+	const session = await getServerSession()
+
+	if (!session) {
+		log('warn', `${route} - GET`, 'Someone accessed without session.')
+		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
+	}
+
+	try {
+		// Log debug information for permission check and data fetching
+		log(
+			'debug',
+			`${route} - GET`,
+			`Checking user permission (${session.user?.email}) and fetching all categories...`
+		)
+
+		const user = await getUserByEmail(session.user?.email as string)
+
+		// Ensure user has sufficient permissions to fetch categories
+		if (
+			user.permission < config.pages.createPost.minPermission ||
+			user.permission < config.pages.createCategory.minPermission
+		) {
+			log(
+				'warn',
+				`${route} - GET`,
+				`User ${session.user?.email} tried to call endpoint, but did not have enough permissions!`,
+				user
+			)
+			return NextResponse.json(
+				{ error: 'Not enough permissions!' },
+				{ status: 403 }
+			)
+		}
+
+		// Fetch and return all categories
+		const categories = await getAllCategories()
+
+		log(
+			'info',
+			`${route} - GET`,
+			`Returning categories for user ${session.user?.email}`,
+			{
+				categories,
+			}
+		)
+
+		return NextResponse.json({ categories }, { status: 200 })
+	} catch (error) {
+		// Log any errors encountered during data fetching
+		log('error', `${route} - GET`, 'Failed to fetch categories', {
+			error: (error as Error).message,
+		})
+
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
+			{ status: 500 }
+		)
+	}
+}
+
 export async function POST(request: Request) {
 	const body = await request.json()
 	const { title } = body
@@ -26,7 +92,7 @@ export async function POST(request: Request) {
 	const session = await getServerSession()
 
 	if (!session) {
-		log('warn', route, 'Someone accessed without session.')
+		log('warn', `${route} - POST`, 'Someone accessed without session.')
 		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
 	}
 
@@ -34,13 +100,12 @@ export async function POST(request: Request) {
 	if (!title) {
 		log(
 			'warn',
-			route,
+			`${route} - POST`,
 			`${session.user?.email} passed empty title while creating category.`
 		)
 		return NextResponse.json(
 			{
-				received: true,
-				message: 'Title field required',
+				error: 'Title field required',
 			},
 			{ status: 400 }
 		)
@@ -50,7 +115,7 @@ export async function POST(request: Request) {
 		// Log debug information for permission and duplication check
 		log(
 			'debug',
-			route,
+			`${route} - POST`,
 			`Checking ${session.user?.email}'s permission, duplicates and creating category...`
 		)
 
@@ -60,7 +125,7 @@ export async function POST(request: Request) {
 		if (!user || user.permission < config.pages.createCategory.minPermission) {
 			log(
 				'warn',
-				route,
+				`${route} - POST`,
 				`User ${session.user?.email} tried to call endpoint, but did not have enough permissions!`,
 				user
 			)
@@ -76,14 +141,13 @@ export async function POST(request: Request) {
 		if (existingCategory.length > 0) {
 			log(
 				'warn',
-				route,
+				`${route} - POST`,
 				`User ${session.user?.email} wanted to create category with already used name!`,
 				user
 			)
 			return NextResponse.json(
 				{
-					message: 'Category with this title already exists!',
-					status: 409,
+					error: 'Category with this title already exists!',
 				},
 				{ status: 409 }
 			)
@@ -94,19 +158,20 @@ export async function POST(request: Request) {
 
 		log(
 			'info',
-			route,
+			`${route} - POST`,
 			`${session.user?.email} successfully created new category.`,
 			newCategory
 		)
 
-		return NextResponse.json({
-			received: true,
-			status: 200,
-			category: newCategory,
-		})
+		return NextResponse.json(
+			{
+				message: 'Category created',
+			},
+			{ status: 201 }
+		)
 	} catch (error) {
 		// Log any errors that occur during the process
-		log('error', route, 'Failure while adding category', {
+		log('error', `${route} - POST`, 'Failure while adding category', {
 			error: (error as Error).message,
 		})
 		return NextResponse.json(
