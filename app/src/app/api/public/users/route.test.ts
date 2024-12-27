@@ -1,24 +1,23 @@
 import { testApiHandler } from 'next-test-api-route-handler'
 import * as queries from '@/app/api/queries'
 import * as appHandler from './route'
-import { AppHandlerType } from '../../test-interface'
+import { AppHandlerType } from '../test-interface'
 import { NextRequest } from 'next/server'
 
 jest.mock('@/app/api/queries', () => ({
 	__esModule: true,
-	getCategoryPostCounts: jest.fn(),
+	getRoleUserCounts: jest.fn(),
 }))
 
-describe('GET /api/public/posts/by-category', () => {
-	it('should return category post count when getCategoryPostCounts succeeds', async () => {
-		const mockResponse = [
-			{ ProjectA: 10 },
-			{ ProjectB: 30 },
-			{ SkibidiProject: 3 },
-		]
-		;(queries.getCategoryPostCounts as jest.Mock).mockResolvedValue(
-			mockResponse
-		)
+describe('GET /api/public/users/by-role', () => {
+	it('should return all roles and total count of assigned users when getRoleUserCounts succeeds', async () => {
+		const mockResponse = {
+			reader: 123,
+			writer: 100,
+			admin: 30,
+			superadmin: 2,
+		}
+		;(queries.getRoleUserCounts as jest.Mock).mockResolvedValue(mockResponse)
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -34,9 +33,9 @@ describe('GET /api/public/posts/by-category', () => {
 			},
 		})
 	})
-	it('should return 500 when getCategoryPostCounts throws an error', async () => {
-		;(queries.getCategoryPostCounts as jest.Mock).mockRejectedValue(
-			new Error('Failed to fetch total category post count from the database')
+	it('should return 500 when getRoleUserCounts throws an error', async () => {
+		;(queries.getRoleUserCounts as jest.Mock).mockRejectedValue(
+			new Error('Failed to fetch total user count from the database')
 		)
 
 		await testApiHandler({

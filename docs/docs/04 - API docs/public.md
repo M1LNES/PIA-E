@@ -75,7 +75,19 @@ The response includes an array of category objects, where each object represents
 ]
 ```
 
-## **GET** `/api/public/comments/all-users`
+### Error Responses
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
+}
+```
+
+## **GET** `/api/public/comments`
 
 This endpoint retrieves the total number of comments made by all users.
 
@@ -84,7 +96,7 @@ This endpoint retrieves the total number of comments made by all users.
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/public/comments/all-users`
+- **URL**: `/api/public/comments`
 
 ### Response
 
@@ -101,7 +113,19 @@ The response contains an object with the total count of all comments.
 }
 ```
 
-## **POST** `/api/public/comments/user`
+### Error Responses
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
+}
+```
+
+## **POST** `/api/public/comments`
 
 This endpoint retrieves the number of comments made by a specified user, grouped by post.
 
@@ -110,7 +134,7 @@ This endpoint retrieves the number of comments made by a specified user, grouped
 ### Request
 
 - **Method**: `POST`
-- **URL**: `/api/public/comments/user`
+- **URL**: `/api/public/comments`
 - **Content-Type**: `application/json`
 
 #### Request Body
@@ -124,6 +148,28 @@ This endpoint retrieves the number of comments made by a specified user, grouped
 ```json
 {
   "email": "user@example.com"
+}
+```
+
+### Error Responses
+
+- **400 Bad Request**: Email was not specified.
+
+Example:
+
+```json
+{
+  "error": "Email is required"
+}
+```
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
 }
 ```
 
@@ -144,7 +190,19 @@ The response contains an object where each key is a formatted post ID (e.g., `po
 }
 ```
 
-## **GET** `/api/public/posts/by-category`
+### Error Responses
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
+}
+```
+
+## **GET** `/api/public/posts`
 
 This endpoint returns the number of posts associated with each category in the system.
 
@@ -153,7 +211,7 @@ This endpoint returns the number of posts associated with each category in the s
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/public/posts/by-category`
+- **URL**: `/api/public/posts`
 
 ### Response
 
@@ -174,7 +232,19 @@ The response contains an object where each key is a category name with the count
 }
 ```
 
-## **GET** `/api/public/users/by-role`
+### Error Responses
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
+}
+```
+
+## **GET** `/api/public/users`
 
 This endpoint returns the number of users associated with each role type in the system.
 
@@ -183,7 +253,7 @@ This endpoint returns the number of users associated with each role type in the 
 ### Request
 
 - **Method**: `GET`
-- **URL**: `/api/public/users/by-role`
+- **URL**: `/api/public/users`
 
 ### Response
 
@@ -201,5 +271,17 @@ The response contains an object where each key is a role type with the count of 
   "reader": 4,
   "writer": 1,
   "admin": 2
+}
+```
+
+### Error Responses
+
+- **500 Internal Server Error**: If error occured.
+
+Example:
+
+```json
+{
+  "error": "Internal Server Error"
 }
 ```

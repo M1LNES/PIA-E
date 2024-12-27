@@ -60,14 +60,6 @@ The response includes an array of category objects, where each object represents
   }
   ```
 
-  - **409 Conflict**: Returned if the category already exists.
-
-  ```json
-  {
-    "error": "Category with this title already exists!"
-  }
-  ```
-
 - **500 Internal Server Error**: Returned if there is an error during the category retrieval process.
 
   ```json

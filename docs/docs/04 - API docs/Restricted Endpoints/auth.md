@@ -8,7 +8,7 @@ This documentation page provides details for the route `/api/auth/[...nextauth]`
 
 ## Overview
 
-This route handles authentication requests using NextAuth.js, supporting both Google and credentials-based authentication providers. It uses JWT for session management and includes logic for verifying users based on their email and password for credentials authentication, and checks if the user exists in the database when using Google authentication.
+This route handles authentication requests using NextAuth.js, supporting both Google and credentials-based authentication providers. It uses JWT for session management and includes logic for verifying users based on their email and password for credentials authentication, and checks if the user exists in the database when using Google authentication. More info on [next-auth](https://next-auth.js.org/) page.
 
 ## HTTP Methods
 
@@ -39,69 +39,6 @@ Example:
 
 The response depends on the authentication provider being used and whether the authentication was successful.
 
-### Successful Response
-
-- **Status Code**: 200 OK
-- **Content-Type**: application/json
-
-For credentials authentication:
-
-```json
-{
-  "image": undefined,
-  "name": "User Name",
-  "email": "user@example.com"
-}
-```
-
-For Google authentication, the response includes user details if the user is found in the database:
-
-```json
-{
-  "image": "link-to-google-image",
-  "name": "User Name",
-  "email": "user@example.com"
-}
-```
-
-### Error Responses
-
-#### Unauthorized Access
-
-- **Status Code**: 401 Unauthorized
-- **Content-Type**: application/json
-
-```json
-{ "error": "Unauthorized!" }
-```
-
-#### Missing Credentials
-
-- **Status Code**: 400 Bad Request
-- **Content-Type**: application/json
-
-```json
-{ "error": "Missing credentials" }
-```
-
-#### Insufficient Permissions (for Google provider)
-
-- **Status Code**: 401 Unauthorized
-- **Content-Type**: application/json
-
-```json
-{ "error": "Not enough permissions!" }
-```
-
-#### Internal Server Error
-
-- **Status Code**: 500 Internal Server Error
-- **Content-Type**: application/json
-
-```json
-{ "error": "Internal server error" }
-```
-
 ## Authentication Flow
 
 1. **Google OAuth Authentication**:
@@ -124,9 +61,3 @@ This callback checks the provider type and determines whether the user can sign 
 
 - For **credentials** authentication, the user is allowed to sign in as long as the credentials are correct.
 - For **Google** authentication, the callback checks if the user's email is already registered in the database.
-
-## Error Handling
-
-- Unauthorized access or incorrect credentials lead to a 401 response.
-- If the required user data is missing, a 400 status is returned.
-- Internal errors (such as database connection issues) will result in a 500 status.

@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
-import { getCommentsByPost } from '@/app/api/queries'
+import { getCommentsByPost, getTotalComments } from '@/app/api/queries'
 import { log } from '@/app/api/logger'
 
 /**
- * API Route: POST /api/public/comments/user
+ * API Route: POST /api/public/comments
  *
  * This route handles a POST request to fetch all comments for a given user, grouped by post ID.
  * It expects an email as input and returns a dictionary of posts and the number of comments associated with each post.
  */
-const route = 'POST /api/public/comments/user'
+const route = 'POST /api/public/comments'
 
 /**
  * Handles the POST request to fetch the total number of comments for a specific user, grouped by post.
@@ -60,6 +60,37 @@ export async function POST(request: Request) {
 		})
 
 		// Return a 500 Internal Server Error response in case of failure
+		return NextResponse.json(
+			{ error: 'Internal server error' },
+			{ status: 500 }
+		)
+	}
+}
+
+/**
+ * GET /api/public/comments
+ * Fetches the total number of comments and returns it in the response.
+ *
+ * @returns {Response} - JSON response containing the total comments count.
+ */
+export async function GET() {
+	log('debug', route, 'Fetching total comments...')
+	try {
+		// Fetch the total number of comments from the database
+		const totalComments = await getTotalComments()
+
+		// Log the successful fetch operation
+		log('info', route, 'Total comments successfully fetched', { totalComments })
+
+		// Return the total number of comments in JSON format with a 200 OK status
+		return NextResponse.json({ totalComments }, { status: 200 })
+	} catch (error) {
+		// Log any errors that occur during the fetch operation
+		log('error', route, 'Failed to fetch total comments', {
+			error: (error as Error).message,
+		})
+
+		// Return a 500 Internal Server Error response
 		return NextResponse.json(
 			{ error: 'Internal server error' },
 			{ status: 500 }
