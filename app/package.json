@@ -12,7 +12,8 @@
     "test:coverage": "jest --coverage",
     "test:debug": "jest --debug",
     "test:e2e": "npx playwright test",
-    "test:e2e:ui": "npx playwright test --ui"
+    "test:e2e:ui": "npx playwright test --ui",
+    "exec": "npm i && npm run dev"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.56.2",
