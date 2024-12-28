@@ -42,6 +42,11 @@ The response includes an array of category objects, where each object represents
 }
 ```
 
+### Comment Object
+
+- **categoryId** (number): The unique identifier for the category.
+- **categoryName** (string): The name of the category.
+
 ### Error Responses
 
 - **401 Unauthorized**: Returned if the request is made without an active session or the user lacks the required permissions.

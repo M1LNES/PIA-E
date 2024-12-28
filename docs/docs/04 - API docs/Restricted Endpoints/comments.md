@@ -56,6 +56,14 @@ The response includes the created comment object.
 }
 ```
 
+### Comment Object
+
+- **commentId** (number): The unique identifier for the comment.
+- **postId** (number): The ID of the post to which this comment belongs.
+- **content** (string): The text content of the comment.
+- **createdAt** (string): The timestamp when the comment was created.
+- **username** (string): The username of the comment author.
+
 ### Error Responses
 
 - **400 Bad Request**: Returned if the `description` or `postId` field is missing from the request body.
