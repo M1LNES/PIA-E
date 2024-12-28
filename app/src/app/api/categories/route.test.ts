@@ -242,6 +242,21 @@ describe('GET /api/categories', () => {
 			{ id: 3, name: 'Gen Z rizzler' },
 		]
 
+		const mockCategoriesMapped = [
+			{
+				categoryId: 1,
+				categoryName: 'Category A',
+			},
+			{
+				categoryId: 2,
+				categoryName: 'Skibidi Sigma',
+			},
+			{
+				categoryId: 3,
+				categoryName: 'Gen Z rizzler',
+			},
+		]
+
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getAllCategories as jest.Mock).mockResolvedValue(mockCategories)
@@ -256,7 +271,7 @@ describe('GET /api/categories', () => {
 
 				// Check the response
 				expect(response.status).toBe(200)
-				expect(result.categories).toEqual(mockCategories)
+				expect(result.categories).toEqual(mockCategoriesMapped)
 			},
 		})
 	})

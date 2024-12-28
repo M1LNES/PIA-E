@@ -6,11 +6,7 @@ import { addPost, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import LoadingSpinner from '../components/loading-spinner'
-
-type Category = {
-	name: string
-	id: number
-}
+import { CategoryDomain } from '@/dto/types'
 
 /**
  * `PostCreator` Component
@@ -141,9 +137,9 @@ export default function PostCreator() {
 							<option key={-1} value={-1}>
 								{t('select-category')}
 							</option>
-							{data.map((item: Category) => (
-								<option key={item.id} value={item.id}>
-									{item.name}
+							{data.map((item: CategoryDomain) => (
+								<option key={item.categoryId} value={item.categoryId}>
+									{item.categoryName}
 								</option>
 							))}
 						</select>

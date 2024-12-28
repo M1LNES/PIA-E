@@ -1,7 +1,7 @@
 import { testApiHandler } from 'next-test-api-route-handler'
 import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
-import { AppHandlerType, Category } from '../../utils/test-interface'
+import { AppHandlerType } from '../../utils/test-interface'
 import { NextRequest } from 'next/server'
 
 jest.mock('@/app/api/utils/queries', () => ({
@@ -17,6 +17,12 @@ describe('GET /api/public/categories', () => {
 			{ id: 3, name: 'Ohio category' },
 		])
 
+		const expectedOutput = [
+			{ categoryId: 1, categoryName: 'GYAT category' },
+			{ categoryId: 2, categoryName: 'Rizz category' },
+			{ categoryId: 3, categoryName: 'Ohio category' },
+		]
+
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
 				[key: string]: (req: NextRequest) => AppHandlerType
@@ -27,17 +33,7 @@ describe('GET /api/public/categories', () => {
 
 				// Check the response
 				expect(response.status).toBe(200)
-
-				expect(Array.isArray(result)).toBe(true)
-
-				result.forEach((category: Category) => {
-					expect(category).toEqual(
-						expect.objectContaining({
-							id: expect.any(Number),
-							name: expect.any(String),
-						})
-					)
-				})
+				expect(result).toEqual(expectedOutput)
 			},
 		})
 	})

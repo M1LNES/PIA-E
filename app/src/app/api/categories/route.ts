@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { createNewCategory, getCategories } from '../service/category-service'
 import { AppError } from '../utils/errors'
+import { CategoryDomain } from '@/dto/types'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -18,7 +19,7 @@ const route = '/api/categories'
  */
 export async function GET() {
 	try {
-		const categories = await getCategories()
+		const categories = <CategoryDomain[]>await getCategories()
 		log('info', `GET ${route}`, 'Returning categories')
 
 		return NextResponse.json({ categories }, { status: 200 })

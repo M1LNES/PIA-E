@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres'
+import { DbCategory } from './dtos'
 
 /**
  * Fetches a user by email along with role and permissions.
@@ -127,9 +128,9 @@ export async function disableUserByEmail(email: string) {
  * Fetches all categories from the database.
  * @returns An array of categories.
  */
-export async function getAllCategories() {
+export async function getAllCategories(): Promise<DbCategory[]> {
 	const result = await sql`SELECT * FROM Category;`
-	return result.rows
+	return <DbCategory[]>result.rows
 }
 
 /**

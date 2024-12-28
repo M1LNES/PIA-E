@@ -6,11 +6,7 @@ import { createCategory, fetchAllCategories } from '../services/data-service'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslations } from 'next-intl'
 import LoadingSpinner from '../components/loading-spinner'
-
-type Category = {
-	name: string
-	id: number
-}
+import { CategoryDomain } from '@/dto/types'
 
 /**
  * `CategoryCreator` Component
@@ -67,7 +63,8 @@ export default function CategoryCreator() {
 	 */
 	const shouldButtonBeDisabled = (newValue: string) => {
 		setIsButtonDisabled(
-			!newValue || data.some((item: Category) => item.name === newValue)
+			!newValue ||
+				data.some((item: CategoryDomain) => item.categoryName === newValue)
 		)
 	}
 
@@ -122,13 +119,13 @@ export default function CategoryCreator() {
 								</tr>
 							</thead>
 							<tbody>
-								{data.map((item: Category) => (
-									<tr key={item.id} className="hover:bg-gray-100">
+								{data.map((item: CategoryDomain) => (
+									<tr key={item.categoryId} className="hover:bg-gray-100">
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.id}
+											{item.categoryId}
 										</td>
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-											{item.name}
+											{item.categoryName}
 										</td>
 									</tr>
 								))}

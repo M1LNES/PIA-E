@@ -1,3 +1,5 @@
+import { CategoryDomain } from '@/dto/types'
+import { mapDbCategoriesToDomain } from '../utils/dtos'
 import { AppError } from '../utils/errors'
 import {
 	checkDuplicateCategory,
@@ -8,7 +10,7 @@ import {
 import { validateSession } from './session-service'
 import config from '@/app/config'
 
-export async function getCategories() {
+export async function getCategories(): Promise<CategoryDomain[]> {
 	// Validate session
 	const session = await validateSession()
 
@@ -30,7 +32,7 @@ export async function getCategories() {
 	const categories = await getAllCategories()
 
 	// Fetch and return roles
-	return categories
+	return mapDbCategoriesToDomain(categories)
 }
 
 export async function createNewCategory(title: string) {
@@ -73,5 +75,5 @@ export async function createNewCategory(title: string) {
 }
 
 export async function getCategoriesPublic() {
-	return await getAllCategories()
+	return await mapDbCategoriesToDomain(await getAllCategories())
 }
