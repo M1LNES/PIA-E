@@ -36,8 +36,8 @@ const authOptions: NextAuthOptions = {
 		// Use the `signIn` function from the service
 		async signIn({ account, profile }) {
 			return signIn({
-				account: account as Account, // Explicitly type as Account
-				profile: profile as Profile, // Explicitly type as Profile
+				account: account as Account,
+				profile: profile as Profile,
 			})
 		},
 	},

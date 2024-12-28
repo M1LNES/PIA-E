@@ -34,6 +34,15 @@ If you do not have access to that, create `.env` fileand insert environment vari
 
 :::
 
+:::tip
+After that, you can install dependencies and run program just by one command
+
+```cmd title="Run app with one command"
+npm run exec
+```
+
+:::
+
 ### Install dependencies
 
 Install all neccessary dependencies:
