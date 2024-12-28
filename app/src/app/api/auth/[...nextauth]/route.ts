@@ -1,16 +1,9 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth, { Account, NextAuthOptions, Profile } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import bcrypt from 'bcrypt'
-import {
-	getAllActiveUsers,
-	getUserByEmailAndNotDeleted,
-} from '../../utils/queries'
+import { authorize, signIn } from '../../service/auth-service'
 import config from '@/app/config'
 
-/**
- * NextAuth configuration options for session management and authentication providers.
- */
 const authOptions: NextAuthOptions = {
 	// Configure JWT session settings
 	session: {
@@ -26,63 +19,26 @@ const authOptions: NextAuthOptions = {
 		CredentialsProvider({
 			name: 'Credentials',
 			credentials: config.placeholder.credentials,
-			/**
-			 * Custom authorization function to verify user credentials.
-			 * Checks if user exists and compares provided password to stored hash.
-			 *
-			 * @param {object} credentials - User credentials (email, password).
-			 * @returns {object|null} - Authenticated user object or null if invalid.
-			 */
+			// Use the `authorize` function from the service
 			async authorize(credentials) {
-				if (!credentials) return null
-				const { email, password } = credentials
-
-				const row = await getUserByEmailAndNotDeleted(email)
-
-				if (!row) {
-					return null
+				if (credentials) {
+					return authorize({
+						email: credentials.email,
+						password: credentials.password,
+					})
 				}
-
-				const user = {
-					id: row.id,
-					name: row.username,
-					email: row.email,
-				}
-
-				// Compare provided password with stored hashed password
-				const arePasswordsSame = bcrypt.compareSync(
-					password,
-					row.hashed_password
-				)
-				return arePasswordsSame ? user : null
+				return null
 			},
 		}),
 	],
 	// Define callback functions for additional logic during authentication flow
 	callbacks: {
-		/**
-		 * Callback to control sign-in behavior.
-		 * Allows Google sign-in if email is present in the database.
-		 *
-		 * @param {object} account - Account details of the sign-in attempt.
-		 * @param {object} profile - Profile data from the provider.
-		 * @returns {boolean} - True if sign-in is allowed, false otherwise.
-		 */
+		// Use the `signIn` function from the service
 		async signIn({ account, profile }) {
-			if (account?.provider === 'credentials') {
-				return true
-			}
-
-			if (account?.provider === 'google') {
-				try {
-					const users = await getAllActiveUsers()
-					// Allow Google sign-in if user's email is in the database
-					return users.some((user) => user.email === profile?.email)
-				} catch {
-					return false
-				}
-			}
-			return false
+			return signIn({
+				account: account as Account, // Explicitly type as Account
+				profile: profile as Profile, // Explicitly type as Profile
+			})
 		},
 	},
 }
