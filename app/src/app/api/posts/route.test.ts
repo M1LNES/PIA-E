@@ -26,7 +26,10 @@ describe('POST /api/posts', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'POST' })
+				const response = await fetch({
+					method: 'POST',
+					body: JSON.stringify({}),
+				})
 				const result = await response.json()
 
 				expect(response.status).toBe(401)
@@ -45,7 +48,10 @@ describe('POST /api/posts', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'POST' })
+				const response = await fetch({
+					method: 'POST',
+					body: JSON.stringify({}),
+				})
 				const result = await response.json()
 
 				expect(response.status).toBe(403)
@@ -66,7 +72,10 @@ describe('POST /api/posts', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'POST' })
+				const response = await fetch({
+					method: 'POST',
+					body: JSON.stringify({}),
+				})
 				const result = await response.json()
 
 				expect(response.status).toBe(403)

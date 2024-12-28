@@ -283,7 +283,7 @@ export async function insertComment(
 export async function insertPost(
 	title: string,
 	description: string,
-	category: string,
+	category: number,
 	author: string
 ) {
 	const result = await sql`
