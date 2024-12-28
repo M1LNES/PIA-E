@@ -2,8 +2,10 @@ import { getAllRoles, getUserWithPermissions } from '@/app/api/utils/queries'
 import config from '@/app/config'
 import { AppError } from '../utils/errors'
 import { validateSession } from './session-service'
+import { mapRolesToDomain } from '../utils/dtos'
+import { RoleDomain } from '@/dto/types'
 
-export async function getRolesForUser() {
+export async function getRolesForUser(): Promise<RoleDomain[]> {
 	// Validate session
 	const session = await validateSession()
 
@@ -20,5 +22,6 @@ export async function getRolesForUser() {
 	}
 
 	// Fetch and return roles
-	return getAllRoles()
+	const roles = await getAllRoles()
+	return await mapRolesToDomain(roles)
 }

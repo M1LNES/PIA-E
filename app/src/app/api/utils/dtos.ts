@@ -2,6 +2,7 @@ import {
 	CategoryDomain,
 	CommentDomain,
 	PostWithDetailsDomain,
+	RoleDomain,
 } from '@/dto/types'
 
 export type UserWithPermissions = {
@@ -92,5 +93,26 @@ export function mapDbPostsToDTO(
 		roleType: post.role_type,
 		categoryName: post.category_name,
 		commentCount: post.comment_count,
+	}))
+}
+
+/* DTOS for Roles */
+
+export type Role = {
+	id: number
+	type: string
+	permission: number
+}
+
+/**
+ * Maps an array of Role objects to an array of RoleDomain objects.
+ * @param roles - The array of Role objects to map.
+ * @returns An array of RoleDomain objects.
+ */
+export function mapRolesToDomain(roles: Role[]): RoleDomain[] {
+	return roles.map((role) => ({
+		roleId: role.id,
+		roleType: role.type,
+		rolePermission: role.permission,
 	}))
 }

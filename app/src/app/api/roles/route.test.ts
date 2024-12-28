@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
+import { Role } from '../utils/dtos'
+import { RoleDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -30,11 +32,18 @@ describe('GET /api/roles', () => {
 			permission: 80, // admin permission
 		}
 
-		const mockRoles = [
-			{ id: 1, name: 'admin', permission: 80 },
-			{ id: 2, name: 'reader', permission: 20 },
-			{ id: 3, name: 'writer', permission: 40 },
-			{ id: 4, name: 'superadmin', permission: 100 },
+		const mockRoles: Role[] = [
+			{ id: 1, type: 'admin', permission: 80 },
+			{ id: 2, type: 'reader', permission: 20 },
+			{ id: 3, type: 'writer', permission: 40 },
+			{ id: 4, type: 'superadmin', permission: 100 },
+		]
+
+		const rolesOutput: RoleDomain[] = [
+			{ roleId: 1, roleType: 'admin', rolePermission: 80 },
+			{ roleId: 2, roleType: 'reader', rolePermission: 20 },
+			{ roleId: 3, roleType: 'writer', rolePermission: 40 },
+			{ roleId: 4, roleType: 'superadmin', rolePermission: 100 },
 		]
 
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -51,7 +60,7 @@ describe('GET /api/roles', () => {
 
 				// Check the response
 				expect(response.status).toBe(200)
-				expect(result.roles).toEqual(mockRoles)
+				expect(result.roles).toEqual(rolesOutput)
 			},
 		})
 	})

@@ -3,6 +3,7 @@ import {
 	Comment,
 	DbCategory,
 	DbPostWithDetails,
+	Role,
 	UserWithPermissions,
 } from './dtos'
 
@@ -182,9 +183,9 @@ export async function getPostsWithDetails(): Promise<DbPostWithDetails[]> {
  * Fetches all roles from the Roles table.
  * @returns An array of roles from the database.
  */
-export async function getAllRoles() {
+export async function getAllRoles(): Promise<Role[]> {
 	const result = await sql`SELECT * FROM Roles;`
-	return result.rows // Returns an array of roles
+	return <Role[]>result.rows // Returns an array of roles
 }
 
 /**

@@ -15,6 +15,7 @@ import UserButton from '../components/user-button'
 import { useSession } from 'next-auth/react'
 import LoadingSpinner from '../components/loading-spinner'
 import config from '@/app/config'
+import { RoleDomain } from '@/dto/types'
 
 type Users = {
 	id: number
@@ -22,12 +23,6 @@ type Users = {
 	email: string
 	deleted_at: number | null
 	roleid: number
-}
-
-type Role = {
-	id: number
-	type: string
-	permission: number
 }
 
 /**
@@ -70,8 +65,8 @@ export default function AddingUser() {
 					(me: Users) => me.email === session?.user?.email
 				)
 				const permission = roles.find(
-					(role: Role) => role.id === currentUser.roleid
-				).permission
+					(role: RoleDomain) => role.roleId === currentUser.roleid
+				)?.rolePermission
 				return permission
 			},
 			enabled: !areRolesLoading && !isLoading,
@@ -160,9 +155,9 @@ export default function AddingUser() {
 			item.username
 		}'s role to ${
 			roles.find(
-				(option: Role) =>
-					option.id === parseInt((event.target as HTMLInputElement).value)
-			).type
+				(option: RoleDomain) =>
+					option.roleId === parseInt((event.target as HTMLInputElement).value)
+			)?.roleType
 		}?`
 
 		if (confirm(confirmText)) {
@@ -273,10 +268,12 @@ export default function AddingUser() {
 								{t('form.select-user-role')}
 							</option>
 							{roles
-								.filter((role: Role) => role.permission < userRolePermission)
-								.map((role: Role) => (
-									<option key={role.id} value={role.id}>
-										{role.type}
+								.filter(
+									(role: RoleDomain) => role.rolePermission < userRolePermission
+								)
+								.map((role: RoleDomain) => (
+									<option key={role.roleId} value={role.roleId}>
+										{role.roleType}
 									</option>
 								))}
 						</select>
@@ -374,11 +371,13 @@ export default function AddingUser() {
 										{item.email === session?.user?.email ||
 										item.deleted_at ||
 										userRolePermission <=
-											roles.find((rItem: Role) => rItem.id === item.roleid)
-												.permission ? (
+											roles.find(
+												(rItem: RoleDomain) => rItem.roleId === item.roleid
+											)?.rolePermission ? (
 											`${
-												roles.find((rItem: Role) => rItem.id === item.roleid)
-													.type
+												roles.find(
+													(rItem: RoleDomain) => rItem.roleId === item.roleid
+												)?.roleType
 											}`
 										) : (
 											<select
@@ -387,11 +386,12 @@ export default function AddingUser() {
 											>
 												{roles
 													.filter(
-														(role: Role) => role.permission < userRolePermission
+														(role: RoleDomain) =>
+															role.rolePermission < userRolePermission
 													)
-													.map((role: Role) => (
-														<option key={role.id} value={role.id}>
-															{role.type}
+													.map((role: RoleDomain) => (
+														<option key={role.roleId} value={role.roleId}>
+															{role.roleType}
 														</option>
 													))}
 											</select>
@@ -407,8 +407,9 @@ export default function AddingUser() {
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.deleted_at
 											? userRolePermission >
-													roles.find((rItem: Role) => rItem.id === item.roleid)
-														.permission && (
+													roles.find(
+														(rItem: RoleDomain) => rItem.roleId === item.roleid
+													)?.rolePermission && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
 															handleActivateUser(event, item.email)
@@ -418,8 +419,9 @@ export default function AddingUser() {
 													/>
 											  )
 											: userRolePermission >
-													roles.find((rItem: Role) => rItem.id === item.roleid)
-														.permission && (
+													roles.find(
+														(rItem: RoleDomain) => rItem.roleId === item.roleid
+													)?.rolePermission && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
 															handleDisableUser(event, item.email)

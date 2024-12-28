@@ -27,3 +27,11 @@ export type PostWithDetailsDomain = {
 	categoryName: string
 	commentCount: number
 }
+
+/* Role object */
+
+export type RoleDomain = {
+	roleId: number
+	roleType: string
+	rolePermission: number
+}

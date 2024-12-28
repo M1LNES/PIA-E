@@ -25,7 +25,7 @@ export async function createNewPost(
 	title: string,
 	description: string,
 	category: number
-) {
+): Promise<void> {
 	const session = await validateSession()
 
 	const userId = await getUserIdByEmail(session?.user?.email as string)
@@ -60,6 +60,8 @@ export async function createNewPost(
 	await insertPost(title, description, category, userId)
 }
 
-export async function getCategoryPostCountsPublic() {
+export async function getCategoryPostCountsPublic(): Promise<
+	Record<string, number>
+> {
 	return await getCategoryPostCounts()
 }

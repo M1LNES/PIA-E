@@ -30,28 +30,34 @@ The response includes an array of roles available in the system.
 {
   "roles": [
     {
-      "id": 1,
-      "type": "admin",
-      "permission": 80
+      "roleId": 1,
+      "roleType": "admin",
+      "rolePermission": 80
     },
     {
-      "id": 2,
-      "type": "writer",
-      "permission": 40
+      "roleId": 2,
+      "roleType": "writer",
+      "rolePermission": 40
     },
     {
-      "id": 3,
-      "type": "reader",
-      "permission": 20
+      "roleId": 3,
+      "roleType": "reader",
+      "rolePermission": 20
     },
     {
-      "id": 4,
-      "type": "superadmin",
-      "permission": 100
+      "roleId": 4,
+      "roleType": "superadmin",
+      "rolePermission": 100
     }
   ]
 }
 ```
+
+### Role Object
+
+- **roleId** (number): The unique identifier for the role
+- **roleType** (string): The name of the role
+- **rolePermission** (number): The permission of the role.
 
 ### Error Responses
 

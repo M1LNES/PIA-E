@@ -21,7 +21,9 @@ const route = 'GET /api/public/posts'
 export async function GET() {
 	try {
 		// Fetch post counts grouped by category
-		const categoryPostCounts = await getCategoryPostCountsPublic()
+		const categoryPostCounts = <Record<string, number>>(
+			await getCategoryPostCountsPublic()
+		)
 
 		// Log the successful retrieval of category post counts
 		log('info', route, 'Category posts count fetched.', categoryPostCounts)
