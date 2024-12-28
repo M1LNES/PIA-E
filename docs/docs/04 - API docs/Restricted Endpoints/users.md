@@ -127,7 +127,7 @@ Example:
 
 ### Response
 
-- **Status Code**: `201 OK`
+- **Status Code**: `201 Created`
 - **Content-Type**: `application/json`
 
 #### Successful Response
