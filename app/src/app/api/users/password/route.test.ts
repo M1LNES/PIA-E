@@ -25,7 +25,10 @@ describe('PATCH /api/users/password', () => {
 				[key: string]: (req: NextRequest) => AppHandlerType
 			},
 			test: async ({ fetch }) => {
-				const response = await fetch({ method: 'PATCH' })
+				const response = await fetch({
+					method: 'PATCH',
+					body: JSON.stringify({}),
+				})
 				const result = await response.json()
 
 				expect(response.status).toBe(401)

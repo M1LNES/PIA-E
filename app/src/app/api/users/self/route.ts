@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getUserByEmail } from '@/app/api/utils/queries'
-import { getServerSession } from 'next-auth'
 import { log } from '@/app/api/utils/logger'
+import { getSelfInfo } from '../../service/user-service'
+import { AppError } from '../../utils/errors'
 
 const route = 'POST /api/users/self'
 
@@ -15,57 +15,24 @@ const route = 'POST /api/users/self'
  *          if the email is not specified, the user is unauthorized, or there's an internal error.
  */
 export async function POST(request: Request) {
-	// Get the session of the current user
-	const session = await getServerSession()
-
-	// If no session is found, return an unauthorized response
-	if (!session) {
-		log('warn', route, 'Someone accessed without session.')
-		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
-	}
-
-	// Parse the request body to extract the email
-	const body = await request.json()
-	const { email } = body
-
-	// If no email is provided, return a bad request response
-	if (!email) {
-		log(
-			'warn',
-			route,
-			`User ${session.user?.email} tried to access endpoint without specifying e-mail address.`
-		)
-		return NextResponse.json(
-			{
-				error: 'Email not specified!',
-			},
-			{ status: 400 }
-		)
-	}
-
-	// Ensure that the logged-in user is only accessing their own information
-	if (email !== session?.user?.email) {
-		log(
-			'warn',
-			route,
-			`User ${session.user?.email} tried to access other user's (${email}) data!`
-		)
-		return NextResponse.json(
-			{
-				error: 'Not enough permissions',
-			},
-			{ status: 403 }
-		)
-	}
-
 	try {
-		// Fetch user information from the database by email
-		const user = await getUserByEmail(email)
-		log('info', route, `Returned info about user ${session.user?.email}`)
+		// Parse the request body to extract the email
+		const body = await request.json()
+		const { email } = body
+
+		const user = await getSelfInfo(email)
+		log('info', route, `Returned info about user ${email}`)
 
 		// Return the user data in the response
 		return NextResponse.json({ user }, { status: 200 })
 	} catch (error) {
+		if (error instanceof AppError) {
+			log('warn', route, error.description)
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: error.statusCode }
+			)
+		}
 		// Log and return an internal server error if fetching the user fails
 		log('error', route, 'Failed to fetch user', {
 			error: (error as Error).message,

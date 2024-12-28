@@ -226,7 +226,7 @@ export async function getUserIdByEmail(email: string) {
  * @param userId - The ID of the user.
  * @returns The user's details and permissions.
  */
-export async function getUserDetailsById(userId: string) {
+export async function getUserDetailsById(userId: number) {
 	const result = await sql`
 		SELECT 
 			Users.id, 
@@ -299,7 +299,7 @@ export async function insertPost(
  * @param roleId - The role ID.
  * @returns The permission level of the role.
  */
-export async function getRolePermission(roleId: string) {
+export async function getRolePermission(roleId: number) {
 	const result = await sql`
 		SELECT permission FROM Roles WHERE id = ${roleId}
 	`
@@ -311,7 +311,7 @@ export async function getRolePermission(roleId: string) {
  * @param userId - The ID of the user whose role is being updated.
  * @param roleId - The new role ID to assign to the user.
  */
-export async function updateUserRole(userId: string, roleId: string) {
+export async function updateUserRole(userId: number, roleId: number) {
 	await sql`UPDATE Users SET role = ${roleId} WHERE id = ${userId}`
 }
 

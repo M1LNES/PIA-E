@@ -1,5 +1,4 @@
 import Ably from 'ably'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { validateSession } from '../service/session-service'
