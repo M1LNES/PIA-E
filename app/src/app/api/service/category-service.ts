@@ -71,3 +71,7 @@ export async function createNewCategory(title: string) {
 	const newCategory = await createCategory(title)
 	return newCategory
 }
+
+export async function getCategoriesPublic() {
+	return await getAllCategories()
+}

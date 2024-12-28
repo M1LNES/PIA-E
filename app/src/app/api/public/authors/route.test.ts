@@ -1,6 +1,6 @@
 import { testApiHandler } from 'next-test-api-route-handler'
 import * as appHandler from './route'
-import { Author } from '../test-interface'
+import { Author } from '../../utils/test-interface'
 
 describe('GET /api/public/authors', () => {
 	it('Authors endpoint returns array with authors', async () => {

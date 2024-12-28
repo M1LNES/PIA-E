@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getCategoryPostCounts } from '@/app/api/utils/queries'
 import { log } from '@/app/api/utils/logger'
+import { getCategoryPostCountsPublic } from '../../service/post-service'
 
 /**
  * API Route: GET /api/public/posts
@@ -21,7 +21,7 @@ const route = 'GET /api/public/posts'
 export async function GET() {
 	try {
 		// Fetch post counts grouped by category
-		const categoryPostCounts = await getCategoryPostCounts()
+		const categoryPostCounts = await getCategoryPostCountsPublic()
 
 		// Log the successful retrieval of category post counts
 		log('info', route, 'Category posts count fetched.', categoryPostCounts)

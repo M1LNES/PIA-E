@@ -2,7 +2,7 @@ import { testApiHandler } from 'next-test-api-route-handler'
 import * as Ably from 'ably'
 import { getServerSession } from 'next-auth'
 import * as appHandler from './route'
-import { AppHandlerType } from '../public/test-interface'
+import { AppHandlerType } from '../utils/test-interface'
 import { NextRequest } from 'next/server'
 
 jest.mock('next-auth', () => ({

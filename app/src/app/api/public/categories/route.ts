@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getAllCategories } from '@/app/api/utils/queries'
 import { log } from '@/app/api/utils/logger'
+import { getCategoriesPublic } from '../../service/category-service'
 
 // Cache control settings
 export const revalidate = 1
@@ -19,7 +19,7 @@ export async function GET() {
 	log('debug', route, 'Fetching all categories...')
 	try {
 		// Fetch all categories from the database
-		const result = await getAllCategories()
+		const result = await getCategoriesPublic()
 
 		// Log the successful fetch operation
 		log('info', route, 'All categories successfully fetched', { result })

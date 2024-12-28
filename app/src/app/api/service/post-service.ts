@@ -1,5 +1,6 @@
 import { AppError } from '../utils/errors'
 import {
+	getCategoryPostCounts,
 	getPostsWithDetails,
 	getUserDetailsById,
 	getUserIdByEmail,
@@ -53,4 +54,8 @@ export async function createNewPost(
 	}
 
 	await insertPost(title, description, category, userId)
+}
+
+export async function getCategoryPostCountsPublic() {
+	return await getCategoryPostCounts()
 }

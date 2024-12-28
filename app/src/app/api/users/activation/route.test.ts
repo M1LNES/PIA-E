@@ -3,7 +3,7 @@ import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { AppHandlerType } from '../../public/test-interface'
+import { AppHandlerType } from '../../utils/test-interface'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,

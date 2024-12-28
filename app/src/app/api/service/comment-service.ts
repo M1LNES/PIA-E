@@ -1,6 +1,8 @@
 import { AppError } from '../utils/errors'
 import {
+	getCommentsByPost,
 	getCommentsByPostId,
+	getTotalComments,
 	getUserDetailsById,
 	getUserIdByEmail,
 	getUserWithPermissions,
@@ -78,4 +80,30 @@ export async function getPostCommentById(postId: string) {
 	const comments = await getCommentsByPostId(postId)
 
 	return comments
+}
+
+export async function getTotalCommentsPublic() {
+	return await getTotalComments()
+}
+
+export async function getCommentsForUser(email: string) {
+	// If no email is provided, return a 400 Bad Request response
+	if (!email) {
+		throw new AppError('Email is required', 400, `Email required`)
+	}
+
+	// Fetch comments grouped by post ID for the provided email
+	const commentsByPostRows = await getCommentsByPost(email)
+
+	// Transform the result into an object where each key is a "postX" (post ID) and the value is the comment count
+	const commentsByPost = commentsByPostRows.reduce(
+		(acc: Record<string, number>, row) => {
+			// Format the key as "postX"
+			acc[`post${row.post}`] = row.comment_count
+			return acc
+		},
+		{}
+	)
+
+	return commentsByPost
 }

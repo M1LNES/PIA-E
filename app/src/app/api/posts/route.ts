@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 	} catch (error) {
 		// Log any errors that occur during the process
 		if (error instanceof AppError) {
-			log('warn', `GET ${route}`, error.description)
+			log('warn', `POST ${route}`, error.description)
 			return NextResponse.json(
 				{ error: error.message },
 				{ status: error.statusCode }
@@ -69,7 +69,7 @@ export async function GET() {
 			)
 		}
 		// Handle any errors during the data fetching process
-		log('error', `${route} - GET`, 'Failure while fetching posts', {
+		log('error', `GET ${route}`, 'Failure while fetching posts', {
 			error: (error as Error).message,
 		})
 		return NextResponse.json(

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getRoleUserCounts } from '@/app/api/utils/queries'
 import { log } from '@/app/api/utils/logger'
+import { getRoleUserCountsPublic } from '../../service/user-service'
 
 /**
  * API Route: GET /api/public/users
@@ -24,7 +24,7 @@ export async function GET() {
 
 	try {
 		// Fetch user counts grouped by their roles
-		const roleUserCounts = await getRoleUserCounts()
+		const roleUserCounts = await getRoleUserCountsPublic()
 
 		// Log the successful retrieval of user role counts
 		log(

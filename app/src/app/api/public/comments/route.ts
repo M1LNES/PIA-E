@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
-import { getCommentsByPost, getTotalComments } from '@/app/api/utils/queries'
 import { log } from '@/app/api/utils/logger'
+import {
+	getCommentsForUser,
+	getTotalCommentsPublic,
+} from '../../service/comment-service'
+import { AppError } from '../../utils/errors'
 
 /**
  * API Route: POST /api/public/comments
@@ -8,7 +12,7 @@ import { log } from '@/app/api/utils/logger'
  * This route handles a POST request to fetch all comments for a given user, grouped by post ID.
  * It expects an email as input and returns a dictionary of posts and the number of comments associated with each post.
  */
-const route = 'POST /api/public/comments'
+const route = '/api/public/comments'
 
 /**
  * Handles the POST request to fetch the total number of comments for a specific user, grouped by post.
@@ -22,31 +26,11 @@ export async function POST(request: Request) {
 		// Parse the request body to extract the email
 		const { email } = await request.json()
 
-		// If no email is provided, return a 400 Bad Request response
-		if (!email) {
-			return NextResponse.json({ error: 'Email is required' }, { status: 400 })
-		}
-
-		// Log the email being queried for comment counts
-		log('debug', route, 'Fetching all comments for email: ', email)
-
-		// Fetch comments grouped by post ID for the provided email
-		const commentsByPostRows = await getCommentsByPost(email)
-
-		// Transform the result into an object where each key is a "postX" (post ID) and the value is the comment count
-		const commentsByPost = commentsByPostRows.reduce(
-			(acc: Record<string, number>, row) => {
-				// Format the key as "postX"
-				acc[`post${row.post}`] = row.comment_count
-				return acc
-			},
-			{}
-		)
-
+		const commentsByPost = await getCommentsForUser(email)
 		// Log the successful retrieval of comments by post
 		log(
 			'info',
-			route,
+			`POST ${route}`,
 			'Comments successfully fetched, the returned result',
 			commentsByPost
 		)
@@ -54,8 +38,17 @@ export async function POST(request: Request) {
 		// Return the transformed data with a 200 OK status
 		return NextResponse.json(commentsByPost, { status: 200 })
 	} catch (error) {
+		// Log any errors that occur during the process
+		if (error instanceof AppError) {
+			log('warn', `POST ${route}`, error.description)
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: error.statusCode }
+			)
+		}
+
 		// Log any errors encountered during the request
-		log('error', route, 'Failed to fetch  comments by post', {
+		log('error', `POST ${route}`, 'Failed to fetch  comments by post', {
 			error: (error as Error).message,
 		})
 
@@ -74,19 +67,22 @@ export async function POST(request: Request) {
  * @returns {Response} - JSON response containing the total comments count.
  */
 export async function GET() {
-	log('debug', route, 'Fetching total comments...')
 	try {
+		log('debug', `GET ${route}`, 'Fetching total comments...')
+
 		// Fetch the total number of comments from the database
-		const totalComments = await getTotalComments()
+		const totalComments = await getTotalCommentsPublic()
 
 		// Log the successful fetch operation
-		log('info', route, 'Total comments successfully fetched', { totalComments })
+		log('info', `GET ${route}`, 'Total comments successfully fetched', {
+			totalComments,
+		})
 
 		// Return the total number of comments in JSON format with a 200 OK status
 		return NextResponse.json({ totalComments }, { status: 200 })
 	} catch (error) {
 		// Log any errors that occur during the fetch operation
-		log('error', route, 'Failed to fetch total comments', {
+		log('error', `GET ${route}`, 'Failed to fetch total comments', {
 			error: (error as Error).message,
 		})
 
