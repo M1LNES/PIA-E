@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
+import { UserSelfInfo } from '../../utils/dtos'
+import { UserSelfInfoDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -84,13 +86,22 @@ describe('POST /api/users/self', () => {
 
 	it('should return 200 with user data if email matches session', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			email: 'user@example.com',
 			username: 'Test User',
 			id: 1,
 			permission: 80,
 			type: 'admin',
 			role: 1,
+		}
+
+		const outputUser: UserSelfInfoDomain = {
+			userEmail: 'user@example.com',
+			username: 'Test User',
+			userId: 1,
+			rolePermission: 80,
+			roleType: 'admin',
+			roleId: 1,
 		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
@@ -108,7 +119,7 @@ describe('POST /api/users/self', () => {
 				const result = await response.json()
 
 				expect(response.status).toBe(200)
-				expect(result.user).toEqual(mockUser)
+				expect(result.user).toEqual(outputUser)
 			},
 		})
 	})

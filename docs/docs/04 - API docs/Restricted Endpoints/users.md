@@ -524,22 +524,30 @@ Example:
 {
   "users": [
     {
-      "id": 1,
+      "userId": 1,
       "username": "Skibidi Milan",
-      "deleted_at": null,
-      "email": "skibidi-lan@gmail.com",
-      "roleid": 2
+      "deletedTime": null,
+      "userEmail": "skibidi-lan@gmail.com",
+      "roleId": 2
     },
     {
-      "id": 2,
+      "userId": 2,
       "username": "GYAT lvl 10",
-      "deleted_at": null,
-      "email": "fanum-tax@seznam.cz",
-      "roleid": 3
+      "deletedTime": null,
+      "userEmail": "fanum-tax@seznam.cz",
+      "roleId": 3
     }
   ]
 }
 ```
+
+### User Object
+
+- **userId** (number): The unique identifier for the user
+- **username** (string): The username of user
+- **deletedTime** (string | null): The time when user was deleted
+- **userEmail** (string): User's email
+- **roleId** (number): The identifier of role
 
 #### Error Responses
 
@@ -607,15 +615,24 @@ A successful response includes the user information.
 ```json
 {
   "user": {
-    "id": 1,
+    "userId": 1,
     "username": "john_doe",
-    "email": "john_doe@example.com",
-    "role": 2,
-    "type": "admin",
-    "permission": 5
+    "userEmail": "john_doe@example.com",
+    "roleId": 2,
+    "roleType": "admin",
+    "rolePermission": 5
   }
 }
 ```
+
+### User Self InfoObject
+
+- **userId** (number): The unique identifier for the user
+- **username** (string): The username of user
+- **userEmail** (string): User's email
+- **roleId** (number): The identifier of role
+- **roleType** (string): Name of the role
+- **rolePermission** (number): The permission "value"
 
 ### Error Responses
 

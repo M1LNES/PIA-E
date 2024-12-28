@@ -3,6 +3,8 @@ import {
 	CommentDomain,
 	PostWithDetailsDomain,
 	RoleDomain,
+	UserDomain,
+	UserSelfInfoDomain,
 } from '@/dto/types'
 
 export type UserWithPermissions = {
@@ -115,4 +117,65 @@ export function mapRolesToDomain(roles: Role[]): RoleDomain[] {
 		roleType: role.type,
 		rolePermission: role.permission,
 	}))
+}
+
+/* User object */
+export type User = {
+	id: number
+	username: string
+	email: string
+	deleted_at: string | null
+	roleid: number
+}
+
+/**
+ * Maps a User (database result) to a UserDomain (application domain).
+ * @param user The user object from the database query.
+ * @returns The mapped UserDomain object.
+ */
+function mapUserToDomain(user: User): UserDomain {
+	return {
+		userId: user.id,
+		username: user.username,
+		userEmail: user.email,
+		deletedTime: user.deleted_at, // If deleted_at is not null, the user is considered deleted
+		roleId: user.roleid,
+	}
+}
+
+/**
+ * Maps an array of Users (database result) to an array of UserDomains.
+ * @param users An array of user objects from the database query.
+ * @returns An array of mapped UserDomain objects.
+ */
+export function mapUsersToDomains(users: User[]): UserDomain[] {
+	return users.map(mapUserToDomain)
+}
+
+/* User self info */
+export type UserSelfInfo = {
+	id: number
+	username: string
+	email: string
+	role: number
+	type: string
+	permission: number
+}
+
+/**
+ * Maps a UserSelfInfo (database result) to a UserSelfInfoDomain (application domain).
+ * @param user The user object from the database query.
+ * @returns The mapped UserSelfInfoDomain object.
+ */
+export function mapUserSelfInfoToDomain(
+	user: UserSelfInfo
+): UserSelfInfoDomain {
+	return {
+		userId: user.id,
+		username: user.username,
+		userEmail: user.email,
+		roleId: user.role,
+		roleType: user.type,
+		rolePermission: user.permission,
+	}
 }

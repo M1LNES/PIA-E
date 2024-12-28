@@ -35,3 +35,23 @@ export type RoleDomain = {
 	roleType: string
 	rolePermission: number
 }
+
+/* User object */
+
+export type UserDomain = {
+	userId: number
+	username: string
+	userEmail: string
+	deletedTime: string | null
+	roleId: number
+}
+
+/* User self info object */
+export type UserSelfInfoDomain = {
+	userId: number
+	username: string
+	userEmail: string
+	roleId: number
+	roleType: string
+	rolePermission: number
+}

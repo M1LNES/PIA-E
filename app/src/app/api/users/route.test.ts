@@ -5,6 +5,8 @@ import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
 import bcrypt from 'bcrypt'
+import { User } from '../utils/dtos'
+import { UserDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -334,20 +336,37 @@ describe('GET /api/users', () => {
 	it('should return 200 with user data if permission is sufficient', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockUsers = [
+		const mockUsers: User[] = [
 			{
 				id: 1,
 				email: 'user1@example.com',
-				role: 'admin',
+				roleid: 2,
 				username: 'skibidi 1',
 				deleted_at: null,
 			},
 			{
 				id: 2,
 				email: 'user2@example.com',
-				role: 'writer',
+				roleid: 3,
 				username: 'skibidi 2',
 				deleted_at: null,
+			},
+		]
+
+		const outputUsers: UserDomain[] = [
+			{
+				userId: 1,
+				userEmail: 'user1@example.com',
+				roleId: 2,
+				username: 'skibidi 1',
+				deletedTime: null,
+			},
+			{
+				userId: 2,
+				userEmail: 'user2@example.com',
+				roleId: 3,
+				username: 'skibidi 2',
+				deletedTime: null,
 			},
 		]
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -363,7 +382,7 @@ describe('GET /api/users', () => {
 				const result = await response.json()
 
 				expect(response.status).toBe(200)
-				expect(result.users).toEqual(mockUsers)
+				expect(result.users).toEqual(outputUsers)
 			},
 		})
 	})

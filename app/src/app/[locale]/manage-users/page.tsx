@@ -15,15 +15,7 @@ import UserButton from '../components/user-button'
 import { useSession } from 'next-auth/react'
 import LoadingSpinner from '../components/loading-spinner'
 import config from '@/app/config'
-import { RoleDomain } from '@/dto/types'
-
-type Users = {
-	id: number
-	username: string
-	email: string
-	deleted_at: number | null
-	roleid: number
-}
+import { RoleDomain, UserDomain } from '@/dto/types'
 
 /**
  * A component for adding new users and managing existing users.
@@ -49,7 +41,6 @@ export default function AddingUser() {
 		queryKey: ['users'],
 		queryFn: () => fetchAllUsers(),
 	})
-
 	const { data: roles, isLoading: areRolesLoading } = useQuery({
 		queryKey: ['roles'],
 		queryFn: () => fetchAllRoles(),
@@ -62,14 +53,14 @@ export default function AddingUser() {
 			queryFn: () => {
 				// Find the current user based on session email
 				const currentUser = data.find(
-					(me: Users) => me.email === session?.user?.email
+					(me: UserDomain) => me.userEmail === session?.user?.email
 				)
 				const permission = roles.find(
-					(role: RoleDomain) => role.roleId === currentUser.roleid
+					(role: RoleDomain) => role.roleId === currentUser.roleId
 				)?.rolePermission
 				return permission
 			},
-			enabled: !areRolesLoading && !isLoading,
+			enabled: !areRolesLoading && !isLoading && data !== undefined,
 		})
 
 	/**
@@ -149,7 +140,10 @@ export default function AddingUser() {
 	 * @param event - The form submit event.
 	 * @param item - The user whose role will be changed.
 	 */
-	const handleChangeUserRole = async (event: React.FormEvent, item: Users) => {
+	const handleChangeUserRole = async (
+		event: React.FormEvent,
+		item: UserDomain
+	) => {
 		event.preventDefault()
 		const confirmText = `Do you really want to switch ${
 			item.username
@@ -163,7 +157,7 @@ export default function AddingUser() {
 		if (confirm(confirmText)) {
 			try {
 				await changeUserRole(
-					item.id,
+					item.userId,
 					parseInt((event.target as HTMLInputElement).value)
 				)
 				alert('User role successfully updated!')
@@ -173,7 +167,7 @@ export default function AddingUser() {
 			}
 		} else {
 			alert('Aborting role changing...')
-			;(event.target as HTMLInputElement).value = item.roleid.toString()
+			;(event.target as HTMLInputElement).value = item.roleId.toString()
 		}
 	}
 
@@ -190,7 +184,7 @@ export default function AddingUser() {
 				!password ||
 				password !== confirmPassword ||
 				selectedRole === -1 ||
-				data.some((item: Users) => item.email === email)
+				data.some((item: UserDomain) => item.userEmail === email)
 			)
 		}
 
@@ -362,26 +356,26 @@ export default function AddingUser() {
 							</tr>
 						</thead>
 						<tbody>
-							{data.map((item: Users) => (
-								<tr key={item.id} className="hover:bg-gray-100">
+							{data.map((item: UserDomain) => (
+								<tr key={item.userId} className="hover:bg-gray-100">
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.username}
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-										{item.email === session?.user?.email ||
-										item.deleted_at ||
+										{item.userEmail === session?.user?.email ||
+										item.deletedTime ||
 										userRolePermission <=
 											roles.find(
-												(rItem: RoleDomain) => rItem.roleId === item.roleid
+												(rItem: RoleDomain) => rItem.roleId === item.roleId
 											)?.rolePermission ? (
 											`${
 												roles.find(
-													(rItem: RoleDomain) => rItem.roleId === item.roleid
+													(rItem: RoleDomain) => rItem.roleId === item.roleId
 												)?.roleType
 											}`
 										) : (
 											<select
-												value={item.roleid}
+												value={item.roleId}
 												onChange={(e) => handleChangeUserRole(e, item)}
 											>
 												{roles
@@ -399,20 +393,20 @@ export default function AddingUser() {
 									</td>
 
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-										{item.email}
+										{item.userEmail}
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-										{item.deleted_at || t('table.active')}
+										{item.deletedTime || t('table.active')}
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-										{item.deleted_at
+										{item.deletedTime
 											? userRolePermission >
 													roles.find(
-														(rItem: RoleDomain) => rItem.roleId === item.roleid
+														(rItem: RoleDomain) => rItem.roleId === item.roleId
 													)?.rolePermission && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
-															handleActivateUser(event, item.email)
+															handleActivateUser(event, item.userEmail)
 														}
 														label={t('table.activate')}
 														color="green"
@@ -420,11 +414,11 @@ export default function AddingUser() {
 											  )
 											: userRolePermission >
 													roles.find(
-														(rItem: RoleDomain) => rItem.roleId === item.roleid
+														(rItem: RoleDomain) => rItem.roleId === item.roleId
 													)?.rolePermission && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
-															handleDisableUser(event, item.email)
+															handleDisableUser(event, item.userEmail)
 														}
 														label={t('table.disable')}
 														color="red"

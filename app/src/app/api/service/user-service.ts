@@ -18,6 +18,7 @@ import {
 } from '../utils/queries'
 import { validateSession } from './session-service'
 import bcrypt from 'bcrypt'
+import { mapUserSelfInfoToDomain, mapUsersToDomains } from '../utils/dtos'
 
 export async function getRoleUserCountsPublic() {
 	return await await getRoleUserCounts()
@@ -226,7 +227,8 @@ export async function getSelfInfo(email: string) {
 
 	// Fetch user information from the database by email
 	const user = await getUserByEmail(email)
-	return user
+
+	return await mapUserSelfInfoToDomain(user)
 }
 
 export async function createNewUser(
@@ -323,5 +325,5 @@ export async function getAllUsers() {
 
 	// Fetch all users with their roles
 	const users = await getAllUsersWithRoles()
-	return users
+	return await mapUsersToDomains(users)
 }

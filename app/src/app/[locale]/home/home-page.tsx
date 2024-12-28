@@ -265,7 +265,7 @@ export default function HomePageClient() {
 									{t('comments.typing')}
 								</div>
 							)}
-							{user.permission >= config.pages.createPost.minPermission && (
+							{user.rolePermission >= config.pages.createPost.minPermission && (
 								<>
 									<textarea
 										className="w-full border border-gray-300 rounded-md p-2 mb-2"

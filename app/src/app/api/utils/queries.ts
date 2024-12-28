@@ -4,6 +4,8 @@ import {
 	DbCategory,
 	DbPostWithDetails,
 	Role,
+	User,
+	UserSelfInfo,
 	UserWithPermissions,
 } from './dtos'
 
@@ -29,14 +31,14 @@ export async function getUserWithPermissions(
  * @param email - The email of the user to fetch.
  * @returns The user data with role and permissions if found, otherwise undefined.
  */
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string): Promise<UserSelfInfo> {
 	const result = await sql`
     SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
     FROM Users
     LEFT JOIN Roles ON Users.role = Roles.id
     WHERE Users.email = ${email} AND Users.deleted_at IS NULL
   `
-	return result.rows[0] // Returns undefined if no user is found
+	return <UserSelfInfo>result.rows[0] // Returns undefined if no user is found
 }
 
 /**
@@ -93,13 +95,13 @@ export async function getAllActiveUsers() {
  * Fetches all users along with their roles.
  * @returns An array of users with their role information.
  */
-export async function getAllUsersWithRoles() {
+export async function getAllUsersWithRoles(): Promise<User[]> {
 	const result = await sql`
 		SELECT Users.id, Users.username, Users.deleted_at, Users.email, Roles.id as roleid
 		FROM Users
 		LEFT JOIN Roles ON Users.role = Roles.id;
 	`
-	return result.rows // Returns an array of users with their roles
+	return <User[]>result.rows // Returns an array of users with their roles
 }
 
 /**
