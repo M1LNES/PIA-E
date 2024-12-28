@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react'
 import config from '@/app/config'
 import { useTranslations } from 'next-intl'
 import Ably from 'ably'
+import { CommentDomain } from '@/dto/types'
 
 type Post = {
 	username: string
@@ -200,16 +201,16 @@ export default function HomePageClient() {
 
 		return (
 			<div className="mt-4 space-y-4 mb-4">
-				{comments.map((comment: Comment) => (
+				{comments.map((comment: CommentDomain) => (
 					<div
-						key={comment.id}
+						key={comment.commentId}
 						className={`p-3 border rounded-md shadow-sm ${
-							comment.created_at
+							comment.createdAt
 								? 'border-gray-200 bg-gray-50'
 								: 'border-green-400 bg-green-100'
 						}`}
 					>
-						{comment.created_at === null && (
+						{comment.createdAt === null && (
 							<span className="text-green-600 font-semibold">
 								<p>{t('comments.new-comment') as string}</p>
 							</span>
@@ -220,18 +221,18 @@ export default function HomePageClient() {
 								{comment.username}
 							</div>
 							<div className="text-gray-500 text-xs">
-								{comment.created_at ? (
+								{comment.createdAt ? (
 									`${new Date(
-										comment.created_at
+										comment.createdAt
 									).toLocaleDateString()} ${new Date(
-										comment.created_at
+										comment.createdAt
 									).toLocaleTimeString()}`
 								) : (
 									<p>{t('comments.just-now') as string}</p>
 								)}
 							</div>
 						</div>
-						<p className="text-gray-700 text-sm">{comment.description}</p>
+						<p className="text-gray-700 text-sm">{comment.content}</p>
 					</div>
 				))}
 			</div>

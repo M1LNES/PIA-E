@@ -1,19 +1,21 @@
 import { sql } from '@vercel/postgres'
-import { DbCategory } from './dtos'
+import { Comment, DbCategory, UserWithPermissions } from './dtos'
 
 /**
  * Fetches a user by email along with role and permissions.
  * @param email - The email of the user.
  * @returns The user data with role and permissions if found, otherwise undefined.
  */
-export async function getUserWithPermissions(email: string) {
+export async function getUserWithPermissions(
+	email: string
+): Promise<UserWithPermissions> {
 	const result = await sql`
     SELECT Users.email, Users.role, Roles.permission 
     FROM Users 
     LEFT JOIN Roles ON Users.role = Roles.id 
     WHERE Users.email = ${email} AND Users.deleted_at IS NULL
 `
-	return result.rows[0] // Returns undefined if no user is found
+	return <UserWithPermissions>result.rows[0] // Returns undefined if no user is found
 }
 
 /**
@@ -185,7 +187,7 @@ export async function getAllRoles() {
  * @param postId - The ID of the post for which to fetch comments.
  * @returns An array of comments for the specified post.
  */
-export async function getCommentsByPostId(postId: string) {
+export async function getCommentsByPostId(postId: number): Promise<Comment[]> {
 	const result = await sql`
 		SELECT 
 			ThreadComments.id, 
@@ -203,7 +205,7 @@ export async function getCommentsByPostId(postId: string) {
 		ORDER BY 
 			ThreadComments.created_at ASC
 	`
-	return result.rows // Returns an array of comments
+	return <Comment[]>result.rows // Returns an array of comments
 }
 
 /**
@@ -343,7 +345,7 @@ export async function updateUserPassword(
  * Retrieves the total count of comments from the ThreadComments table.
  * @returns The total count of comments.
  */
-export async function getTotalComments() {
+export async function getTotalComments(): Promise<number> {
 	const { rows } =
 		await sql`SELECT COUNT(*) AS total_comments FROM ThreadComments`
 	return rows[0].total_comments // Return the total count of comments

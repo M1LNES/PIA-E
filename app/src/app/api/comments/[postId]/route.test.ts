@@ -7,6 +7,8 @@ import * as appHandler from './route'
 import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
 import { AppHandlerType } from '@/app/api/utils/test-interface'
+import { Comment } from '../../utils/dtos'
+import { CommentDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -88,11 +90,11 @@ describe('GET /api/comments/:postId', () => {
 			email: 'user@example.com',
 			permission: 80,
 		}
-		const mockComments = [
+		const mockComments: Comment[] = [
 			{
 				id: 1,
 				author: 'author1',
-				post: '123',
+				post: 123,
 				description: 'First comment',
 				created_at: '2024-01-01T00:00:00.000Z',
 				username: 'user1',
@@ -100,9 +102,28 @@ describe('GET /api/comments/:postId', () => {
 			{
 				id: 2,
 				author: 'author2',
-				post: '123',
+				post: 123,
 				description: 'Second comment',
 				created_at: '2024-01-02T00:00:00.000Z',
+				username: 'user2',
+			},
+		]
+
+		const outputComments: CommentDomain[] = [
+			{
+				commentId: 1,
+				authorId: 'author1',
+				postId: 123,
+				content: 'First comment',
+				createdAt: '2024-01-01T00:00:00.000Z',
+				username: 'user1',
+			},
+			{
+				commentId: 2,
+				authorId: 'author2',
+				postId: 123,
+				content: 'Second comment',
+				createdAt: '2024-01-02T00:00:00.000Z',
 				username: 'user2',
 			},
 		]
@@ -121,7 +142,7 @@ describe('GET /api/comments/:postId', () => {
 				const result = await response.json()
 
 				expect(response.status).toBe(200)
-				expect(result).toEqual(mockComments)
+				expect(result).toEqual(outputComments)
 			},
 		})
 	})

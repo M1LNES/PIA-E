@@ -1,3 +1,5 @@
+import { CommentDomain } from '@/dto/types'
+import { Comment, mapDbCommentsToDomain } from '../utils/dtos'
 import { AppError } from '../utils/errors'
 import {
 	getCommentsByPost,
@@ -53,7 +55,9 @@ export async function createNewComment(postId: string, description: string) {
 	return comment
 }
 
-export async function getPostCommentById(postId: string) {
+export async function getPostCommentById(
+	postId: number
+): Promise<CommentDomain[]> {
 	const session = await validateSession()
 
 	if (!postId) {
@@ -77,12 +81,12 @@ export async function getPostCommentById(postId: string) {
 	}
 
 	// Fetch and return comments for the specified post ID
-	const comments = await getCommentsByPostId(postId)
+	const comments = <Comment[]>await getCommentsByPostId(postId)
 
-	return comments
+	return await mapDbCommentsToDomain(comments)
 }
 
-export async function getTotalCommentsPublic() {
+export async function getTotalCommentsPublic(): Promise<number> {
 	return await getTotalComments()
 }
 

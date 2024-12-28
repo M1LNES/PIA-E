@@ -71,7 +71,7 @@ export async function GET() {
 		log('debug', `GET ${route}`, 'Fetching total comments...')
 
 		// Fetch the total number of comments from the database
-		const totalComments = await getTotalCommentsPublic()
+		const totalComments = <number>await getTotalCommentsPublic()
 
 		// Log the successful fetch operation
 		log('info', `GET ${route}`, 'Total comments successfully fetched', {

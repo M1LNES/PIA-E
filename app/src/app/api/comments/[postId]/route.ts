@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getPostCommentById } from '../../service/comment-service'
 import { AppError } from '../../utils/errors'
+import { CommentDomain } from '@/dto/types'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -26,9 +27,10 @@ export async function GET(
 	// Extract postId from request parameters
 
 	try {
-		const postId = (await params).postId
+		const postId = <number>parseInt((await params).postId, 10)
 		// Fetch and return comments for the specified post ID
-		const comments = await getPostCommentById(postId)
+		const comments = <CommentDomain[]>await getPostCommentById(postId)
+
 		log('info', route, `Returning comments at post ${postId}:`, { comments })
 
 		return NextResponse.json(comments, { status: 200 })
