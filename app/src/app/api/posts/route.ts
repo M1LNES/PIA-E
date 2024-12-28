@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { createNewPost, getAllPosts } from '../service/post-service'
 import { AppError } from '../utils/errors'
+import { PostWithDetailsDomain } from '@/dto/types'
 
 const route = '/api/posts'
 
@@ -56,7 +57,8 @@ export async function POST(request: Request) {
 export async function GET() {
 	try {
 		// Fetch all posts with details
-		const posts = await getAllPosts()
+		const posts = <PostWithDetailsDomain[]>await getAllPosts()
+
 		log('info', `GET ${route}`, `Returning all posts`)
 		return NextResponse.json({ posts }, { status: 200 })
 	} catch (error) {

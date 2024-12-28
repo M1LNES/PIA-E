@@ -64,12 +64,12 @@ The response includes an array of category objects, where each object represents
 ```json
 [
   {
-    "id": 1,
-    "name": "Category1"
+    "categoryId": 1,
+    "categoryName": "Category1"
   },
   {
-    "id": 2,
-    "name": "Category2"
+    "categoryId": 2,
+    "categoryName": "Category2"
   },
   ...
 ]

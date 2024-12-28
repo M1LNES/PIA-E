@@ -1,5 +1,10 @@
 import { sql } from '@vercel/postgres'
-import { Comment, DbCategory, UserWithPermissions } from './dtos'
+import {
+	Comment,
+	DbCategory,
+	DbPostWithDetails,
+	UserWithPermissions,
+} from './dtos'
 
 /**
  * Fetches a user by email along with role and permissions.
@@ -139,7 +144,7 @@ export async function getAllCategories(): Promise<DbCategory[]> {
  * Fetches all posts with their associated users, roles, categories, and comment counts.
  * @returns An array of posts with details.
  */
-export async function getPostsWithDetails() {
+export async function getPostsWithDetails(): Promise<DbPostWithDetails[]> {
 	const result = await sql`
 		SELECT 
 			Users.username, 
@@ -170,7 +175,7 @@ export async function getPostsWithDetails() {
 		ORDER BY 
 			Posts.created_at;
 	`
-	return result.rows // Returns an array of posts with details
+	return <DbPostWithDetails[]>result.rows // Returns an array of posts with details
 }
 
 /**

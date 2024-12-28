@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
+import { DbPostWithDetails } from '../utils/dtos'
+import { PostWithDetailsDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -181,9 +183,54 @@ describe('GET /api/posts', () => {
 			},
 		}
 
-		const mockPosts = [
-			{ id: 1, title: 'Post 1', content: 'Content of post 1' },
-			{ id: 2, title: 'Post 2', content: 'Content of post 2' },
+		const mockPosts: DbPostWithDetails[] = [
+			{
+				username: 'franta',
+				role_type: 'admin',
+				post_id: 12,
+				title: 'Cenda nevim',
+				description: 'Zdarec parek',
+				created_at: '2024-01-01T00:00:00.000Z',
+				edited_at: null,
+				category_name: 'omni cast',
+				comment_count: 10,
+			},
+			{
+				username: 'franta',
+				role_type: 'admin',
+				post_id: 16,
+				title: 'Cenda nevim 1234',
+				description: 'Zdarec parek fesmlefksef',
+				created_at: '2024-01-02T00:00:00.000Z',
+				edited_at: null,
+				category_name: 'omni skibidi',
+				comment_count: 123,
+			},
+		]
+
+		const expectedPosts: PostWithDetailsDomain[] = [
+			{
+				username: 'franta',
+				roleType: 'admin',
+				postId: 12,
+				title: 'Cenda nevim',
+				description: 'Zdarec parek',
+				createdAt: '2024-01-01T00:00:00.000Z',
+				editedAt: null,
+				categoryName: 'omni cast',
+				commentCount: 10,
+			},
+			{
+				username: 'franta',
+				roleType: 'admin',
+				postId: 16,
+				title: 'Cenda nevim 1234',
+				description: 'Zdarec parek fesmlefksef',
+				createdAt: '2024-01-02T00:00:00.000Z',
+				editedAt: null,
+				categoryName: 'omni skibidi',
+				commentCount: 123,
+			},
 		]
 
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
@@ -199,7 +246,7 @@ describe('GET /api/posts', () => {
 
 				// Check the response
 				expect(response.status).toBe(200)
-				expect(result.posts).toEqual(mockPosts)
+				expect(result.posts).toEqual(expectedPosts)
 			},
 		})
 	})

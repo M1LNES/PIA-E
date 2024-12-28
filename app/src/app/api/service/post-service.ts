@@ -1,3 +1,5 @@
+import { PostWithDetailsDomain } from '@/dto/types'
+import { mapDbPostsToDTO } from '../utils/dtos'
 import { AppError } from '../utils/errors'
 import {
 	getCategoryPostCounts,
@@ -9,12 +11,14 @@ import {
 import { validateSession } from './session-service'
 import config from '@/app/config'
 
-export async function getAllPosts() {
+export async function getAllPosts(): Promise<PostWithDetailsDomain[]> {
 	await validateSession()
 	// Posts are accessible to any authenticated user, no further authorization needed
 
 	const posts = await getPostsWithDetails()
-	return posts
+
+	const dtoPosts = <PostWithDetailsDomain[]>await mapDbPostsToDTO(posts)
+	return dtoPosts
 }
 
 export async function createNewPost(

@@ -120,19 +120,19 @@ The response includes an array of comment objects, where each object contains de
 ```json
 [
   {
-    "id": 1,
-    "author": "12345",
-    "post": "67890",
-    "description": "This is a comment.",
-    "created_at": "2023-10-01T12:34:56.000Z",
+    "commentId": 1,
+    "authorId": "12345",
+    "postId": 12,
+    "content": "This is a comment.",
+    "createdAt": "2023-10-01T12:34:56.000Z",
     "username": "user123"
   },
   {
-    "id": 2,
-    "author": "67890",
-    "post": "67890",
-    "description": "Another comment.",
-    "created_at": "2023-10-02T08:45:00.000Z",
+    "commentId": 2,
+    "authorId": "67890",
+    "postId": 13,
+    "content": "Another comment.",
+    "createdAt": "2023-10-02T08:45:00.000Z",
     "username": "user456"
   }
 ]
@@ -140,11 +140,11 @@ The response includes an array of comment objects, where each object contains de
 
 ### Comment Object
 
-- **id** (integer): The unique identifier for the comment.
-- **author** (string): The ID of the user who authored the comment.
-- **post** (string): The ID of the post to which this comment belongs.
-- **description** (string): The text content of the comment.
-- **created_at** (string): The timestamp when the comment was created.
+- **commentId** (number): The unique identifier for the comment.
+- **authorId** (string): The ID of the user who authored the comment.
+- **postId** (number): The ID of the post to which this comment belongs.
+- **content** (string): The text content of the comment.
+- **createdAt** (string): The timestamp when the comment was created.
 - **username** (string): The username of the comment author.
 
 ### Error Responses

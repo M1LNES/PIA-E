@@ -13,28 +13,7 @@ import { useSession } from 'next-auth/react'
 import config from '@/app/config'
 import { useTranslations } from 'next-intl'
 import Ably from 'ably'
-import { CommentDomain } from '@/dto/types'
-
-type Post = {
-	username: string
-	role_type: string
-	post_id: number
-	title: string
-	description: string
-	created_at: Date
-	edited_at: Date
-	category_name: string
-	comment_count: number
-}
-
-type Comment = {
-	id: number
-	author: number
-	post: number
-	description: string
-	created_at: Date
-	username: string
-}
+import { CommentDomain, PostWithDetailsDomain } from '@/dto/types'
 
 /**
  * HomePageClient Component
@@ -243,7 +222,7 @@ export default function HomePageClient() {
 
 	return (
 		<>
-			{posts.map((item: Post, index: number) => (
+			{posts.map((item: PostWithDetailsDomain, index: number) => (
 				<div
 					key={index}
 					className="p-4 mb-4 bg-white shadow-lg rounded-md border border-gray-200"
@@ -251,15 +230,15 @@ export default function HomePageClient() {
 					{/* Post rendering */}
 					<div className="flex justify-between items-center mb-2">
 						<div className="text-2xl font-bold">
-							[{item.category_name}] - {item.title}
+							[{item.categoryName}] - {item.title}
 						</div>
 						<div className="text-gray-500 text-sm">
-							{new Date(item.created_at).toLocaleDateString()}{' '}
-							{new Date(item.created_at).toLocaleTimeString()}{' '}
+							{new Date(item.createdAt).toLocaleDateString()}{' '}
+							{new Date(item.createdAt).toLocaleTimeString()}{' '}
 						</div>
 					</div>
 					<div className="text-gray-600 text-sm mb-4">
-						{item.username} - {item.role_type}
+						{item.username} - {item.roleType}
 					</div>
 					<p className="text-base mb-4">{item.description}</p>
 
@@ -267,22 +246,22 @@ export default function HomePageClient() {
 					<div className="text-gray-600 text-sm mb-4">
 						<button
 							className="text-blue-500 underline text-sm"
-							onClick={() => handleToggleComments(item.post_id)}
+							onClick={() => handleToggleComments(item.postId)}
 						>
-							{showComments[item.post_id]
+							{showComments[item.postId]
 								? t('comments.hide-comments')
 								: t('comments.show-comments')}
 						</button>
-						({item.comment_count})
+						({item.commentCount})
 					</div>
 
 					{/* Comments section */}
-					{showComments[item.post_id] && (
+					{showComments[item.postId] && (
 						<div className="mt-4 border-t pt-4">
-							<CommentsSection postId={item.post_id} />
-							{typingUsers[item.post_id]?.size > 0 && (
+							<CommentsSection postId={item.postId} />
+							{typingUsers[item.postId]?.size > 0 && (
 								<div className="text-gray-500 text-sm">
-									{Array.from(typingUsers[item.post_id]).join(', ')}{' '}
+									{Array.from(typingUsers[item.postId]).join(', ')}{' '}
 									{t('comments.typing')}
 								</div>
 							)}
@@ -291,25 +270,24 @@ export default function HomePageClient() {
 									<textarea
 										className="w-full border border-gray-300 rounded-md p-2 mb-2"
 										rows={3}
-										value={newComments[item.post_id] || ''}
-										onChange={(e) => handleNewCommentChange(e, item.post_id)}
+										value={newComments[item.postId] || ''}
+										onChange={(e) => handleNewCommentChange(e, item.postId)}
 										placeholder={t('comments.write-comment')}
 									></textarea>
 									<button
 										className={`px-4 py-2 rounded-md text-white 
 													${
-														!newComments[item.post_id] ||
-														isAddingComment[item.post_id]
+														!newComments[item.postId] ||
+														isAddingComment[item.postId]
 															? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 															: 'bg-blue-500 hover:bg-blue-600'
 													}`}
-										onClick={() => handleAddComment(item.post_id)}
+										onClick={() => handleAddComment(item.postId)}
 										disabled={
-											!newComments[item.post_id] ||
-											isAddingComment[item.post_id]
+											!newComments[item.postId] || isAddingComment[item.postId]
 										}
 									>
-										{isAddingComment[item.post_id]
+										{isAddingComment[item.postId]
 											? t('comments.adding-comment')
 											: t('comments.add-comment')}
 									</button>

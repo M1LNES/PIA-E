@@ -13,3 +13,17 @@ export type CommentDomain = {
 	createdAt: string
 	username: string
 }
+
+/* Post object */
+
+export type PostWithDetailsDomain = {
+	postId: number
+	title: string
+	description: string
+	createdAt: string
+	editedAt: string | null
+	username: string
+	roleType: string
+	categoryName: string
+	commentCount: number
+}

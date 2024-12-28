@@ -3,7 +3,8 @@ import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route' // Assuming the handler is in the same directory
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { AppHandlerType } from '../utils/test-interface'
+import { AppHandlerType, Category } from '../utils/test-interface'
+import { CategoryDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -236,13 +237,13 @@ describe('GET /api/categories', () => {
 			permission: 80,
 		}
 
-		const mockCategories = [
+		const mockCategories: Category[] = [
 			{ id: 1, name: 'Category A' },
 			{ id: 2, name: 'Skibidi Sigma' },
 			{ id: 3, name: 'Gen Z rizzler' },
 		]
 
-		const mockCategoriesMapped = [
+		const mockCategoriesMapped: CategoryDomain[] = [
 			{
 				categoryId: 1,
 				categoryName: 'Category A',

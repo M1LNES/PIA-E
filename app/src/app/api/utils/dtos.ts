@@ -1,4 +1,8 @@
-import { CategoryDomain, CommentDomain } from '@/dto/types'
+import {
+	CategoryDomain,
+	CommentDomain,
+	PostWithDetailsDomain,
+} from '@/dto/types'
 
 export type UserWithPermissions = {
 	email: string
@@ -54,4 +58,39 @@ function mapDbCommentToDomain(dbComment: Comment): CommentDomain {
 
 export function mapDbCommentsToDomain(dbComments: Comment[]): CommentDomain[] {
 	return dbComments.map(mapDbCommentToDomain)
+}
+
+/* DTOS for posts */
+
+export type DbPostWithDetails = {
+	username: string
+	role_type: string
+	post_id: number
+	title: string
+	description: string
+	created_at: string
+	edited_at: string | null
+	category_name: string
+	comment_count: number
+}
+
+/**
+ * Mapuje objekty z databáze na PostWithDetailsDTO.
+ * @param dbPosts - Pole objektů z databáze.
+ * @returns Pole objektů PostWithDetailsDTO.
+ */
+export function mapDbPostsToDTO(
+	dbPosts: DbPostWithDetails[]
+): PostWithDetailsDomain[] {
+	return dbPosts.map((post) => ({
+		postId: post.post_id,
+		title: post.title,
+		description: post.description,
+		createdAt: post.created_at,
+		editedAt: post.edited_at,
+		username: post.username,
+		roleType: post.role_type,
+		categoryName: post.category_name,
+		commentCount: post.comment_count,
+	}))
 }

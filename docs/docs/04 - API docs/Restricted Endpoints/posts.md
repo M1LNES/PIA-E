@@ -111,20 +111,42 @@ The response includes an array of all posts, each containing details like the ti
 {
   "posts": [
     {
-      "id": 1,
-      "title": "Post 1",
-      "description": "Content of the first post",
-      "category": 2
+      "username": "franta",
+      "roleType": "admin",
+      "postId": 12,
+      "title": "Cenda nevim",
+      "description": "Zdarec parek",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "editedAt": null,
+      "categoryName": "omni cast",
+      "commentCount": 10
     },
     {
-      "id": 2,
-      "title": "Post 2",
-      "description": "Content of the second post",
-      "category": 1
+      "username": "franta",
+      "roleType": "admin",
+      "postId": 16,
+      "title": "Cenda nevim 1234",
+      "description": "Zdarec parek fesmlefksef",
+      "createdAt": "2024-01-02T00:00:00.000Z",
+      "editedAt": null,
+      "categoryName": "omni skibidi",
+      "commentCount": 123
     }
   ]
 }
 ```
+
+### Post Object
+
+- **username** (string): Username of the post creator
+- **roleType** (string): Role (e.g. "admin")
+- **postId** (number): The ID of the post
+- **title** (string): Title of the post
+- **description** (string): Content of the posts
+- **createdAt** (string): Time when post was created
+- **editedAt** (string | null): Edited time of post
+- **categoryName** (string): Name of the post's category
+- **commentCount** (number): Number of comments under the post
 
 ### Error Responses
 
