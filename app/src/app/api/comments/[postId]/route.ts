@@ -1,11 +1,7 @@
-import {
-	getCommentsByPostId,
-	getUserWithPermissions,
-} from '@/app/api/utils/queries'
-import config from '@/app/config'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
+import { getPostCommentById } from '../../service/comment-service'
+import { AppError } from '../../utils/errors'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -28,52 +24,23 @@ export async function GET(
 	{ params }: { params: Promise<{ postId: string }> }
 ) {
 	// Extract postId from request parameters
-	const postId = (await params).postId
-	const session = await getServerSession()
-
-	if (!session) {
-		// Log unauthorized access attempt and respond with 401 error
-		log('warn', route, 'Someone accessed without session.')
-		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
-	}
 
 	try {
-		if (!postId) {
-			// Log missing postId in the request and respond with 400 error
-			log('warn', route, `User ${session.user?.email} did not specify postId`)
-			return NextResponse.json(
-				{ error: 'Post Id not specified' },
-				{ status: 400 }
-			)
-		}
-
-		/* Authorization */
-
-		// Retrieve user with permission level and check if sufficient for access
-		const user = await getUserWithPermissions(session.user?.email as string)
-		if (user.permission < config.pages.home.minPermission) {
-			log(
-				'warn',
-				route,
-				`User ${session.user?.email} does not have permission to access this route!`
-			)
-			return NextResponse.json(
-				{ error: 'Not enough permissions!' },
-				{ status: 403 }
-			)
-		}
-
+		const postId = (await params).postId
 		// Fetch and return comments for the specified post ID
-		const comments = await getCommentsByPostId(postId)
-		log(
-			'info',
-			route,
-			`Returning comments for user (${session.user?.email}) at post ${postId}:`,
-			{ comments }
-		)
+		const comments = await getPostCommentById(postId)
+		log('info', route, `Returning comments at post ${postId}:`, { comments })
 
 		return NextResponse.json(comments, { status: 200 })
 	} catch (error) {
+		// Log any errors that occur during the process
+		if (error instanceof AppError) {
+			log('warn', `POST ${route}`, error.description)
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: error.statusCode }
+			)
+		}
 		// Log internal server error details and respond with 500 error
 		log('error', route, 'Error occurred during loading post comments.', {
 			error: (error as Error).message,
