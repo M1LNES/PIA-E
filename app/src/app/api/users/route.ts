@@ -9,8 +9,8 @@ import {
 	getRolePermission,
 	getAllUsersWithRoles,
 	getUserWithPermissions,
-} from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+} from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 const route = '/api/users'
 

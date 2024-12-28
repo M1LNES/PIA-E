@@ -2,7 +2,10 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcrypt'
-import { getAllActiveUsers, getUserByEmailAndNotDeleted } from '../../queries'
+import {
+	getAllActiveUsers,
+	getUserByEmailAndNotDeleted,
+} from '../../utils/queries'
 import config from '@/app/config'
 
 /**

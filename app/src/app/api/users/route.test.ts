@@ -1,12 +1,12 @@
 import { testApiHandler } from 'next-test-api-route-handler'
-import * as queries from '@/app/api/queries'
+import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../public/test-interface'
 import bcrypt from 'bcrypt'
 
-jest.mock('@/app/api/queries', () => ({
+jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
 	getUserByEmail: jest.fn(),
 	getRolePermission: jest.fn(),

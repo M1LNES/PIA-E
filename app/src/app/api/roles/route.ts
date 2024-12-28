@@ -1,8 +1,7 @@
-import config from '@/app/config'
-import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { getAllRoles, getUserWithPermissions } from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+import { log } from '@/app/api/utils/logger'
+import { getRolesForUser } from '../service/roles-service'
+import { AppError } from '../utils/errors'
 
 /**
  * API Route: GET /api/roles
@@ -22,57 +21,21 @@ const route = 'GET /api/roles'
  * @returns {NextResponse} - A response containing roles data or an error message.
  */
 export async function GET() {
-	/* Authentication */
-	// Retrieve the session information to check if the user is authenticated
-	const session = await getServerSession()
-	if (!session) {
-		// Log and return a 401 Unauthorized response if no session is found
-		log('warn', route, 'Someone accessed without session.')
-		return NextResponse.json({ error: 'Unauthorized!' }, { status: 401 })
-	}
-
-	/* Authorization */
 	try {
-		// Log the attempt to fetch roles and verify the user's permissions
-		log(
-			'debug',
-			route,
-			`Checking user permission ${session.user?.email} and fetching roles...`
-		)
+		const roles = await getRolesForUser()
 
-		// Fetch the user with their permissions based on their email
-		const user = await getUserWithPermissions(session.user?.email as string)
-
-		// Check if the user has the required permissions to access the roles
-		if (user.permission < config.pages.manageUsers.minPermission) {
-			// Log and return a 401 response if the user doesn't have enough permissions
-			log(
-				'warn',
-				route,
-				`User ${session.user?.email} tried to call endpoint, but did not have enough permissions!`,
-				user
-			)
+		log('info', route, `Returning roles`)
+		return NextResponse.json({ roles }, { status: 200 })
+	} catch (error) {
+		if (error instanceof AppError) {
+			log('warn', route, error.description)
 			return NextResponse.json(
-				{ error: 'Not enough permissions!' },
-				{ status: 403 }
+				{ error: error.message },
+				{ status: error.statusCode }
 			)
 		}
 
-		// Fetch all available roles from the database
-		const roles = await getAllRoles()
-
-		// Log the successful retrieval of roles and return them in the response
-		log('info', route, `Returning roles for user ${session.user?.email}`, {
-			roles,
-		})
-		return NextResponse.json({ roles }, { status: 200 })
-	} catch (error) {
-		// Log any errors encountered during the request
-		log('error', route, 'Failed to fetch roles', {
-			error: (error as Error).message,
-		})
-
-		// Return a 500 Internal Server Error response in case of failure
+		log('error', route, 'Internal Server Error', { error })
 		return NextResponse.json(
 			{ error: 'Internal Server Error' },
 			{ status: 500 }

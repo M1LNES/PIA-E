@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getCommentsByPost, getTotalComments } from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+import { getCommentsByPost, getTotalComments } from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 /**
  * API Route: POST /api/public/comments

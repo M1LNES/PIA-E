@@ -6,8 +6,8 @@ import {
 	getAllCategories,
 	checkDuplicateCategory,
 	createCategory,
-} from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+} from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'

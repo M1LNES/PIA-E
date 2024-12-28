@@ -6,8 +6,8 @@ import {
 	getUserDetailsById,
 	getUserIdByEmail,
 	insertPost,
-} from '../queries'
-import { log } from '@/app/api/logger'
+} from '../utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 const route = '/api/posts'
 

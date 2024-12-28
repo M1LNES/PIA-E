@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { getUserByEmail } from '@/app/api/queries'
+import { getUserByEmail } from '@/app/api/utils/queries'
 import { getServerSession } from 'next-auth'
-import { log } from '@/app/api/logger'
+import { log } from '@/app/api/utils/logger'
 
 const route = 'POST /api/users/self'
 

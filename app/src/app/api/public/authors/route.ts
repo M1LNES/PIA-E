@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Author } from '../test-interface'
-import { log } from '@/app/api/logger'
+import { log } from '@/app/api/utils/logger'
 
 /**
  * GET /api/public/authors

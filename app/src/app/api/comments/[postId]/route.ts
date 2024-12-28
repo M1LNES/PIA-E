@@ -1,8 +1,11 @@
-import { getCommentsByPostId, getUserWithPermissions } from '@/app/api/queries'
+import {
+	getCommentsByPostId,
+	getUserWithPermissions,
+} from '@/app/api/utils/queries'
 import config from '@/app/config'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { log } from '@/app/api/logger'
+import { log } from '@/app/api/utils/logger'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'

@@ -1,10 +1,10 @@
 import { testApiHandler } from 'next-test-api-route-handler'
-import * as queries from '@/app/api/queries'
+import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { AppHandlerType } from '../test-interface'
 import { NextRequest } from 'next/server'
 
-jest.mock('@/app/api/queries', () => ({
+jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
 	getCommentsByPost: jest.fn(),
 	getTotalComments: jest.fn(),

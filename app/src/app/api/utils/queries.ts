@@ -11,7 +11,7 @@ export async function getUserWithPermissions(email: string) {
     FROM Users 
     LEFT JOIN Roles ON Users.role = Roles.id 
     WHERE Users.email = ${email} AND Users.deleted_at IS NULL
-  `
+`
 	return result.rows[0] // Returns undefined if no user is found
 }
 

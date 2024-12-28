@@ -3,7 +3,7 @@ import { getToken } from 'next-auth/jwt'
 import createMiddleware from 'next-intl/middleware'
 import { routing } from './i18n/routing'
 import appConfig from './app/config'
-import { getUserWithPermissions } from '@/app/api/queries'
+import { getUserWithPermissions } from '@/app/api/utils/queries'
 
 const secret = process.env.NEXTAUTH_SECRET
 const intlMiddleware = createMiddleware(routing)

@@ -1,11 +1,14 @@
 import { testApiHandler } from 'next-test-api-route-handler'
-import { getCommentsByPostId, getUserWithPermissions } from '@/app/api/queries'
+import {
+	getCommentsByPostId,
+	getUserWithPermissions,
+} from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
 import { AppHandlerType } from '@/app/api/public/test-interface'
 
-jest.mock('@/app/api/queries', () => ({
+jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
 	getCommentsByPostId: jest.fn(),
 	getUserWithPermissions: jest.fn(),

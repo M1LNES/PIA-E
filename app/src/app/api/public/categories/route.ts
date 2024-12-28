@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getAllCategories } from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+import { getAllCategories } from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 // Cache control settings
 export const revalidate = 1

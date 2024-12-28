@@ -1,7 +1,7 @@
 import Ably from 'ably'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
-import { log } from '@/app/api/logger'
+import { log } from '@/app/api/utils/logger'
 
 export const revalidate = 0
 export const fetchCache = 'force-no-store'

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getCategoryPostCounts } from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+import { getCategoryPostCounts } from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 /**
  * API Route: GET /api/public/posts

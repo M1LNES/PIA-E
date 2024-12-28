@@ -2,8 +2,11 @@ import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 import config from '@/app/config'
-import { getHashedPasswordByEmail, updateUserPassword } from '@/app/api/queries'
-import { log } from '@/app/api/logger'
+import {
+	getHashedPasswordByEmail,
+	updateUserPassword,
+} from '@/app/api/utils/queries'
+import { log } from '@/app/api/utils/logger'
 
 const route = 'PATCH /api/users/password'
 
