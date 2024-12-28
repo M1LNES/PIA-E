@@ -49,6 +49,16 @@ Example:
 
 ### Error Responses
 
+- **400 Bad Request**: Returned if the `email` field is missing from the request body.
+
+Example:
+
+```json
+{
+  "error": "Email not specified!"
+}
+```
+
 - **401 Unauthorized**: Returned if the request is made without an active session.
 
 Example:
@@ -66,16 +76,6 @@ Example:
 ```json
 {
   "error": "Not enough permissions!"
-}
-```
-
-- **400 Bad Request**: Returned if the `email` field is missing from the request body.
-
-Example:
-
-```json
-{
-  "error": "Email not specified!"
 }
 ```
 

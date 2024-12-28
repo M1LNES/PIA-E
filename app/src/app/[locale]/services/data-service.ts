@@ -6,7 +6,7 @@
 export const fetchAllCategories = async () => {
 	const response = await fetch('/api/categories')
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to fetch categories')
 	}
 
 	const result = (await response.json()).categories
@@ -21,7 +21,7 @@ export const fetchAllCategories = async () => {
 export const fetchAllPosts = async () => {
 	const response = await fetch('/api/posts')
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to fetch posts')
 	}
 
 	const result = (await response.json()).posts
@@ -36,7 +36,7 @@ export const fetchAllPosts = async () => {
 export const fetchAllUsers = async () => {
 	const response = await fetch('/api/users')
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to fetch users data')
 	}
 
 	const result = (await response.json()).users
@@ -51,7 +51,7 @@ export const fetchAllUsers = async () => {
 export const fetchAllRoles = async () => {
 	const response = await fetch('/api/roles')
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to fetch roles')
 	}
 
 	const result = (await response.json()).roles
@@ -75,7 +75,7 @@ export const changeUserRole = async (userId: number, roleId: number) => {
 	})
 
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to change role')
 	}
 
 	const result = await response.json()
@@ -98,7 +98,7 @@ export const activateUser = async (email: string) => {
 	})
 
 	if (!response.ok) {
-		throw new Error('Failed to fetch data')
+		throw new Error('Failed to activate user')
 	}
 
 	const result = await response.json()
