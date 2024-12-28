@@ -189,7 +189,7 @@ export default function HomePageClient() {
 								: 'border-green-400 bg-green-100'
 						}`}
 					>
-						{comment.createdAt === null && (
+						{comment.createdAt === '' && (
 							<span className="text-green-600 font-semibold">
 								<p>{t('comments.new-comment') as string}</p>
 							</span>

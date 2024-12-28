@@ -47,10 +47,10 @@ The response includes the created comment object.
 {
   "message": "Comment created",
   "comment": {
-    "id": 1,
-    "post": 123,
-    "description": "This is my comment on the post.",
-    "created_at": null, // Setting null so live-update knows on frontend how to render new comment
+    "commentId": 1,
+    "postId": 123,
+    "content": "This is my comment on the post.",
+    "createdAt": "", // Setting "" so live-update knows on frontend how to render new comment
     "username": "user123"
   }
 }
@@ -121,7 +121,6 @@ The response includes an array of comment objects, where each object contains de
 [
   {
     "commentId": 1,
-    "authorId": "12345",
     "postId": 12,
     "content": "This is a comment.",
     "createdAt": "2023-10-01T12:34:56.000Z",
@@ -129,7 +128,6 @@ The response includes an array of comment objects, where each object contains de
   },
   {
     "commentId": 2,
-    "authorId": "67890",
     "postId": 13,
     "content": "Another comment.",
     "createdAt": "2023-10-02T08:45:00.000Z",
@@ -141,7 +139,6 @@ The response includes an array of comment objects, where each object contains de
 ### Comment Object
 
 - **commentId** (number): The unique identifier for the comment.
-- **authorId** (string): The ID of the user who authored the comment.
 - **postId** (number): The ID of the post to which this comment belongs.
 - **content** (string): The text content of the comment.
 - **createdAt** (string): The timestamp when the comment was created.

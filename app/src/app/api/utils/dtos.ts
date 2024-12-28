@@ -41,17 +41,15 @@ export function mapDbCategoriesToDomain(
 
 export type Comment = {
 	id: number
-	author: string
 	post: number
 	description: string
 	created_at: string
 	username: string
 }
 
-function mapDbCommentToDomain(dbComment: Comment): CommentDomain {
+export function mapDbCommentToDomain(dbComment: Comment): CommentDomain {
 	return {
 		commentId: dbComment.id,
-		authorId: dbComment.author,
 		postId: dbComment.post,
 		content: dbComment.description,
 		createdAt: dbComment.created_at,

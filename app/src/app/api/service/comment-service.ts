@@ -1,5 +1,5 @@
 import { CommentDomain } from '@/dto/types'
-import { Comment, mapDbCommentsToDomain } from '../utils/dtos'
+import { mapDbCommentsToDomain, mapDbCommentToDomain } from '../utils/dtos'
 import { AppError } from '../utils/errors'
 import {
 	getCommentsByPost,
@@ -50,9 +50,9 @@ export async function createNewComment(postId: string, description: string) {
 	const comment = await insertComment(userId, postId, description)
 
 	// Clear the created_at timestamp before returning response
-	comment.created_at = null
+	comment.created_at = ''
 
-	return comment
+	return await mapDbCommentToDomain(comment)
 }
 
 export async function getPostCommentById(
@@ -81,7 +81,7 @@ export async function getPostCommentById(
 	}
 
 	// Fetch and return comments for the specified post ID
-	const comments = <Comment[]>await getCommentsByPostId(postId)
+	const comments = await getCommentsByPostId(postId)
 
 	return await mapDbCommentsToDomain(comments)
 }

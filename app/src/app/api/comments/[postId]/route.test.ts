@@ -93,7 +93,6 @@ describe('GET /api/comments/:postId', () => {
 		const mockComments: Comment[] = [
 			{
 				id: 1,
-				author: 'author1',
 				post: 123,
 				description: 'First comment',
 				created_at: '2024-01-01T00:00:00.000Z',
@@ -101,7 +100,6 @@ describe('GET /api/comments/:postId', () => {
 			},
 			{
 				id: 2,
-				author: 'author2',
 				post: 123,
 				description: 'Second comment',
 				created_at: '2024-01-02T00:00:00.000Z',
@@ -112,7 +110,6 @@ describe('GET /api/comments/:postId', () => {
 		const outputComments: CommentDomain[] = [
 			{
 				commentId: 1,
-				authorId: 'author1',
 				postId: 123,
 				content: 'First comment',
 				createdAt: '2024-01-01T00:00:00.000Z',
@@ -120,7 +117,6 @@ describe('GET /api/comments/:postId', () => {
 			},
 			{
 				commentId: 2,
-				authorId: 'author2',
 				postId: 123,
 				content: 'Second comment',
 				createdAt: '2024-01-02T00:00:00.000Z',

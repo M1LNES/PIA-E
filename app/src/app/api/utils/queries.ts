@@ -199,7 +199,6 @@ export async function getCommentsByPostId(postId: number): Promise<Comment[]> {
 	const result = await sql`
 		SELECT 
 			ThreadComments.id, 
-			ThreadComments.author, 
 			ThreadComments.post, 
 			ThreadComments.description, 
 			ThreadComments.created_at, 
@@ -264,7 +263,7 @@ export async function insertComment(
 	author: string,
 	post: string,
 	description: string
-) {
+): Promise<Comment> {
 	const result = await sql`
 		WITH inserted_comment AS (
 			INSERT INTO ThreadComments (author, post, description)
@@ -280,7 +279,7 @@ export async function insertComment(
 		FROM inserted_comment
 		JOIN Users ON Users.id = inserted_comment.author;
 	`
-	return result.rows[0] // Return the inserted comment
+	return <Comment>result.rows[0] // Return the inserted comment
 }
 
 /**

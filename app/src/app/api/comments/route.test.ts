@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
+import { Comment } from '../utils/dtos'
+import { CommentDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -111,16 +113,26 @@ describe('POST /api/comments', () => {
 	it('should return 201 when comment is created successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser = { permission: 80 }
+
+		const mockedValue: Comment = {
+			id: 1,
+			post: 1,
+			description: 'komentaaar',
+			created_at: '2024-01-01T00:00:00.000Z',
+			username: 'Milan',
+		}
+
+		const mockedValueOutput: CommentDomain = {
+			commentId: 1,
+			postId: 1,
+			content: 'komentaaar',
+			createdAt: '',
+			username: 'Milan',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
-		;(queries.insertComment as jest.Mock).mockResolvedValue({
-			comment_id: 1,
-			post_id: 1,
-			user_id: 1,
-			description: 'Sample Comment',
-			created_at: null,
-		})
+		;(queries.insertComment as jest.Mock).mockResolvedValue(mockedValue)
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -136,10 +148,9 @@ describe('POST /api/comments', () => {
 					}),
 				})
 				const result = await response.json()
-
 				expect(response.status).toBe(201)
 				expect(result.message).toBe('Comment created')
-				expect(result.comment.description).toBe('Sample Comment')
+				expect(result.comment).toEqual(mockedValueOutput)
 			},
 		})
 	})

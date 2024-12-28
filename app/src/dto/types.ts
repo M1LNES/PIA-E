@@ -7,7 +7,6 @@ export type CategoryDomain = {
 /* Comment object */
 export type CommentDomain = {
 	commentId: number
-	authorId: string
 	postId: number
 	content: string
 	createdAt: string

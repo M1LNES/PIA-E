@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 		const comment = await createNewComment(postId, description)
 		// Log success and return the newly created comment
 		log('info', route, `User created new comment!`, comment)
-
+		console.log('MRDKA', comment)
 		return NextResponse.json(
 			{
 				message: 'Comment created',
