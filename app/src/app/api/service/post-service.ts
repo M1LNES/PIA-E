@@ -17,7 +17,7 @@ export async function getAllPosts(): Promise<PostWithDetailsDomain[]> {
 
 	const posts = await getPostsWithDetails()
 
-	const dtoPosts = <PostWithDetailsDomain[]>await mapDbPostsToDTO(posts)
+	const dtoPosts = await mapDbPostsToDTO(posts)
 	return dtoPosts
 }
 

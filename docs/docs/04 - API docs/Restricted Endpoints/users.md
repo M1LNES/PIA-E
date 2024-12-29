@@ -625,7 +625,7 @@ A successful response includes the user information.
 }
 ```
 
-### User Self InfoObject
+### User Self Info Object
 
 - **userId** (number): The unique identifier for the user
 - **username** (string): The username of user
