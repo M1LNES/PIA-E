@@ -3,7 +3,7 @@ import {
 	getAllActiveUsers,
 	getUserByEmailAndNotDeleted,
 } from '../utils/queries'
-import { Account, Profile } from 'next-auth'
+import { Account, Profile, User } from 'next-auth'
 
 /**
  * Custom authorization function to verify user credentials.
@@ -13,7 +13,7 @@ import { Account, Profile } from 'next-auth'
 export async function authorize(credentials: {
 	email: string
 	password: string
-}) {
+}): Promise<null | User> {
 	if (!credentials) return null
 	const { email, password } = credentials
 
