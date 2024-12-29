@@ -1,4 +1,4 @@
-import NextAuth, { Account, NextAuthOptions, Profile } from 'next-auth'
+import NextAuth, { Account, NextAuthOptions, Profile, User } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { authorize, signIn } from '../../service/auth-service'
@@ -20,7 +20,7 @@ const authOptions: NextAuthOptions = {
 			name: 'Credentials',
 			credentials: config.placeholder.credentials,
 			// Use the `authorize` function from the service
-			async authorize(credentials) {
+			async authorize(credentials): Promise<null | User> {
 				if (credentials) {
 					return authorize({
 						email: credentials.email,

@@ -72,7 +72,7 @@ export async function POST(
  * the minimum required permissions to manage users.
  *
  * @returns {Promise<NextResponse<ErrorResponse | AllUsers>>}
- * 			A JSON response containing the list of users with roles, or an error message
+ * 		A JSON response containing the list of users with roles, or an error message
  *          if the user is unauthorized, lacks permissions, or if there's an internal error.
  */
 export async function GET(): Promise<NextResponse<ErrorResponse | AllUsers>> {

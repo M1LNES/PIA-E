@@ -19,9 +19,11 @@ import {
 import { validateSession } from './session-service'
 import bcrypt from 'bcrypt'
 import { mapUserSelfInfoToDomain, mapUsersToDomains } from '../utils/dtos'
-import { UserSelfInfoDomain } from '@/dto/types'
+import { UserDomain, UserSelfInfoDomain } from '@/dto/types'
 
-export async function getRoleUserCountsPublic() {
+export async function getRoleUserCountsPublic(): Promise<
+	Record<string, number>
+> {
 	return await await getRoleUserCounts()
 }
 
@@ -329,7 +331,7 @@ export async function createNewUser(
 	await createUser(username, selectedRole, email, hashedPassword)
 }
 
-export async function getAllUsers() {
+export async function getAllUsers(): Promise<UserDomain[]> {
 	const session = await validateSession()
 
 	// Fetch the logged-in user's permissions
