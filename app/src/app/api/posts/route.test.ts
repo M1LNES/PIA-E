@@ -101,7 +101,11 @@ describe('POST /api/posts', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ title: '', description: '', category: -1 }),
+					body: JSON.stringify({
+						postTitle: '',
+						postDescription: '',
+						postCategory: -1,
+					}),
 				})
 				const result = await response.json()
 
@@ -128,9 +132,9 @@ describe('POST /api/posts', () => {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						title: 'Sample Title',
-						description: 'Sample Description',
-						category: 1,
+						postTitle: 'Sample Title',
+						postDescription: 'Sample Description',
+						postCategory: 1,
 					}),
 				})
 				const result = await response.json()
@@ -160,9 +164,9 @@ describe('POST /api/posts', () => {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						title: 'Sample Title',
-						description: 'Sample Description',
-						category: 1,
+						postTitle: 'Sample Title',
+						postDescription: 'Sample Description',
+						postCategory: 1,
 					}),
 				})
 				const result = await response.json()

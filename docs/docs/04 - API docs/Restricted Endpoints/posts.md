@@ -22,17 +22,17 @@ This endpoint allows authorized users to create a new post in the system. The us
 
 The request body must include the following fields:
 
-- **title** (string): The title of the post.
-- **description** (string): The description/content of the post.
-- **category** (integer): The category of the post. A value of `-1` is considered invalid.
+- **postTitle** (string): The title of the post.
+- **postDescription** (string): The description/content of the post.
+- **postCategory** (integer): The category of the post. A value of `-1` is considered invalid.
 
 Example Request Body:
 
 ```json
 {
-  "title": "New Post Title",
-  "description": "Content of the new post.",
-  "category": 2
+  "postTitle": "New Post Title",
+  "postDescription": "Content of the new post.",
+  "postCategory": 2
 }
 ```
 

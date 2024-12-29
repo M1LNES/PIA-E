@@ -17,11 +17,11 @@ export async function POST(request: Request) {
 	try {
 		// Parse and validate the request body fields
 		const body = await request.json()
-		const { title, description, category } = body
+		const { postTitle, postDescription, postCategory } = body
 
 		// Insert the new post into the database
 
-		await createNewPost(title, description, category)
+		await createNewPost(postTitle, postDescription, postCategory)
 
 		return NextResponse.json(
 			{ message: 'Post created successfully' },

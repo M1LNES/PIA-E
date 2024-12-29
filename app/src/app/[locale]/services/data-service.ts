@@ -204,7 +204,11 @@ export const addPost = async (postData: {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(postData),
+		body: JSON.stringify({
+			postTitle: postData.title,
+			postDescription: postData.description,
+			postCategory: postData.category,
+		}),
 	})
 
 	if (!response.ok) {
