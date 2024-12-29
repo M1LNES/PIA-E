@@ -19,13 +19,13 @@ export async function PUT(request: Request) {
 	try {
 		// Parse the request body to extract the email of the user to be disabled
 		const body = await request.json()
-		const { email } = body
+		const { emailAddress } = body
 
 		// Disable the user by email
-		await deactivateUser(email)
+		await deactivateUser(emailAddress)
 
 		// Log the successful operation and return a success response
-		log('info', route, `User successfully disabled : ${email}`)
+		log('info', route, `User successfully disabled : ${emailAddress}`)
 
 		return NextResponse.json(
 			{

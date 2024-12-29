@@ -20,13 +20,13 @@ This endpoint allows authorized users to activate a previously deactivated user.
 
 #### Request Body
 
-The request body must include the `email` of the user to be re-activated.
+The request body must include the `emailAddress` of the user to be re-activated.
 
 Example:
 
 ```json
 {
-  "email": "user@example.com"
+  "emailAddress": "user@example.com"
 }
 ```
 
@@ -426,13 +426,13 @@ This endpoint allows an authenticated user with sufficient permissions to disabl
 
 The request body must include the following fields:
 
-- `email` (string): The email of the user to disable.
+- `emailAddress` (string): The email of the user to disable.
 
 Example:
 
 ```json
 {
-  "email": "user@example.com"
+  "emailAddress": "user@example.com"
 }
 ```
 

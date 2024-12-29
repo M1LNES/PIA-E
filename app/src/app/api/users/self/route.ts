@@ -18,10 +18,10 @@ export async function POST(request: Request) {
 	try {
 		// Parse the request body to extract the email
 		const body = await request.json()
-		const { email } = body
+		const { emailAddress } = body
 
-		const user = await getSelfInfo(email)
-		log('info', route, `Returned info about user ${email}`)
+		const user = await getSelfInfo(emailAddress)
+		log('info', route, `Returned info about user ${emailAddress}`)
 
 		// Return the user data in the response
 		return NextResponse.json({ user }, { status: 200 })

@@ -18,10 +18,10 @@ export async function PUT(request: Request) {
 	// Parse the request body to retrieve the email
 	try {
 		const body = await request.json()
-		const { email } = body
+		const { emailAddress } = body
 
-		await activateUser(email)
-		log('info', route, `User re-activated: ${email}`)
+		await activateUser(emailAddress)
+		log('info', route, `User re-activated: ${emailAddress}`)
 
 		// Return a success message in the response
 		return NextResponse.json(

@@ -28,7 +28,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: 'skibidi@seznam.cz' }),
+					body: JSON.stringify({ emailAddress: 'skibidi@seznam.cz' }),
 				})
 
 				const result = await response.json()
@@ -74,7 +74,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: mockEmail }), // Email mismatch
+					body: JSON.stringify({ emailAddress: mockEmail }), // Email mismatch
 				})
 				const result = await response.json()
 
@@ -114,7 +114,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: mockSession.user.email }),
+					body: JSON.stringify({ emailAddress: mockSession.user.email }),
 				})
 				const result = await response.json()
 
@@ -139,7 +139,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: mockSession.user.email }),
+					body: JSON.stringify({ emailAddress: mockSession.user.email }),
 				})
 				const result = await response.json()
 

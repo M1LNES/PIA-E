@@ -28,7 +28,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: 'inactive@domain.com' }),
+					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
@@ -79,7 +79,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: 'inactive@domain.com' }),
+					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
@@ -109,7 +109,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: 'inactive@domain.com' }),
+					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 
@@ -137,7 +137,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: 'inactive@domain.com' }),
+					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
 				})
 				const result = await response.json()
 

@@ -94,7 +94,7 @@ export const activateUser = async (email: string) => {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ email }),
+		body: JSON.stringify({ emailAddress: email }),
 	})
 
 	if (!response.ok) {
@@ -117,7 +117,7 @@ export const disableUser = async (email: string) => {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ email }),
+		body: JSON.stringify({ emailAddress: email }),
 	})
 
 	if (!response.ok) {
@@ -231,7 +231,7 @@ export const fetchUserData = async (email: string) => {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ email }),
+		body: JSON.stringify({ emailAddress: email }),
 	})
 
 	if (!response.ok) {

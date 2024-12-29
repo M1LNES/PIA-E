@@ -27,7 +27,7 @@ describe('PUT /api/users/deactivation', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'anotheruser@example.com' }),
+					body: JSON.stringify({ emailAddress: 'anotheruser@example.com' }),
 				})
 				const result = await response.json()
 
@@ -58,7 +58,7 @@ describe('PUT /api/users/deactivation', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'anotheruser@example.com' }),
+					body: JSON.stringify({ emailAddress: 'anotheruser@example.com' }),
 				})
 				const result = await response.json()
 
@@ -113,7 +113,7 @@ describe('PUT /api/users/deactivation', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'userToDisable@example.com' }),
+					body: JSON.stringify({ emailAddress: 'userToDisable@example.com' }),
 				})
 				const result = await response.json()
 
@@ -143,7 +143,7 @@ describe('PUT /api/users/deactivation', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PUT',
-					body: JSON.stringify({ email: 'userToDisable@example.com' }),
+					body: JSON.stringify({ emailAddress: 'userToDisable@example.com' }),
 				})
 				const result = await response.json()
 
