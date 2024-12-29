@@ -139,15 +139,15 @@ This endpoint retrieves the number of comments made by a specified user, grouped
 
 #### Request Body
 
-| Field   | Type   | Description                                              |
-| ------- | ------ | -------------------------------------------------------- |
-| `email` | string | The email of the user whose comments are being retrieved |
+| Field          | Type   | Description                                              |
+| -------------- | ------ | -------------------------------------------------------- |
+| `emailAddress` | string | The email of the user whose comments are being retrieved |
 
 **Example**:
 
 ```json
 {
-  "email": "user@example.com"
+  "emailAddress": "user@example.com"
 }
 ```
 

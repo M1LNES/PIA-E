@@ -100,7 +100,7 @@ describe('POST /api/comments', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ description: '', postId: '' }),
+					body: JSON.stringify({ content: '', postId: '' }),
 				})
 				const result = await response.json()
 
@@ -143,7 +143,7 @@ describe('POST /api/comments', () => {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						description: 'Sample Comment',
+						content: 'Sample Comment',
 						postId: 1,
 					}),
 				})
@@ -174,7 +174,7 @@ describe('POST /api/comments', () => {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						description: 'Sample Comment',
+						content: 'Sample Comment',
 						postId: 1,
 					}),
 				})

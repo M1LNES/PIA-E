@@ -22,14 +22,14 @@ This endpoint allows an authorized user to add a comment to a specified post.
 
 The request body should include the following fields:
 
-- **description** (string, required): The content of the comment.
+- **content** (string, required): The content of the comment.
 - **postId** (integer, required): The ID of the post to which the comment is being added.
 
 Example:
 
 ```json
 {
-  "description": "This is my comment on the post.",
+  "content": "This is my comment on the post.",
   "postId": 123
 }
 ```

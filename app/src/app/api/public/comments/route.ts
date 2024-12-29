@@ -24,9 +24,9 @@ const route = '/api/public/comments'
 export async function POST(request: Request) {
 	try {
 		// Parse the request body to extract the email
-		const { email } = await request.json()
+		const { emailAddress } = await request.json()
 
-		const commentsByPost = await getCommentsForUser(email)
+		const commentsByPost = await getCommentsForUser(emailAddress)
 		// Log the successful retrieval of comments by post
 		log(
 			'info',

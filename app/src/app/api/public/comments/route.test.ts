@@ -31,7 +31,7 @@ describe('POST /api/public/comments/user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ email: mockEmail }),
+					body: JSON.stringify({ emailAddress: mockEmail }),
 				})
 				const result = await response.json()
 
@@ -80,7 +80,7 @@ describe('POST /api/public/comments/user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ email: mockEmail }),
+					body: JSON.stringify({ emailAddress: mockEmail }),
 				})
 				const result = await response.json()
 

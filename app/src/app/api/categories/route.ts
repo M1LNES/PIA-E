@@ -43,9 +43,9 @@ export async function GET() {
 export async function POST(request: Request) {
 	try {
 		const body = await request.json()
-		const { title } = body
+		const { categoryTitle } = body
 
-		const newCategory = await createNewCategory(title)
+		const newCategory = await createNewCategory(categoryTitle)
 		log(
 			'info',
 			`${route} - POST`,

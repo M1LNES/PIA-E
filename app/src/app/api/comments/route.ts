@@ -16,9 +16,9 @@ const route = 'POST /api/comments'
 export async function POST(request: Request) {
 	try {
 		const body = await request.json()
-		const { description, postId } = body
+		const { content, postId } = body
 
-		const comment = await createNewComment(postId, description)
+		const comment = await createNewComment(postId, content)
 		// Log success and return the newly created comment
 		log('info', route, `User created new comment!`, comment)
 		console.log('MRDKA', comment)

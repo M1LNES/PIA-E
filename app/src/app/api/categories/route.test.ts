@@ -29,7 +29,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 
@@ -41,7 +41,7 @@ describe('POST /api/categories', () => {
 
 	it('should return 400 if the title field is missing', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const title = ''
+		const categoryTitle = ''
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 
 		await testApiHandler({
@@ -51,7 +51,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title }),
+					body: JSON.stringify({ categoryTitle }),
 				})
 				const result = await response.json()
 
@@ -81,7 +81,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 
@@ -115,7 +115,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 
@@ -148,7 +148,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 
@@ -182,7 +182,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 
@@ -208,7 +208,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ title: 'New Category' }),
+					body: JSON.stringify({ categoryTitle: 'New Category' }),
 				})
 				const result = await response.json()
 

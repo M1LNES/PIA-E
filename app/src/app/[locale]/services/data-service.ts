@@ -174,7 +174,7 @@ export const createCategory = async (title: string) => {
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ title }),
+		body: JSON.stringify({ categoryTitle: title }),
 	})
 
 	if (!response.ok) {
@@ -294,7 +294,7 @@ export const fetchCommentsByPostId = async (postId: number) => {
  * It expects the post data to include the comment's description and the ID of the post.
  *
  * @param {Object} postData - The data for the new comment.
- * @param {string} postData.description - The content of the comment being added.
+ * @param {string} postData.content - The content of the comment being added.
  * @param {number} postData.postId - The ID of the post to which the comment is being added.
  *
  * @returns {Promise<Object>} A promise that resolves with the result of the comment addition.
@@ -302,7 +302,7 @@ export const fetchCommentsByPostId = async (postId: number) => {
  * @throws {Error} If the request fails or the server responds with an error.
  */
 export const addComment = async (postData: {
-	description: string
+	content: string
 	postId: number
 }) => {
 	const response = await fetch('/api/comments', {

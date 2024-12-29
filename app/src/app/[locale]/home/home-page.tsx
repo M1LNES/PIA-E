@@ -85,7 +85,7 @@ export default function HomePageClient() {
 	const handleAddComment = async (postId: number) => {
 		setIsAddingComment((prev) => ({ ...prev, [postId]: true }))
 
-		const postData = { postId, description: newComments[postId] }
+		const postData = { postId, content: newComments[postId] }
 		try {
 			const result = await addComment(postData)
 			setNewComments((prev) => ({ ...prev, [postId]: '' }))

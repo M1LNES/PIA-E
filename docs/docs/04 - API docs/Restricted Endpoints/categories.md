@@ -89,11 +89,11 @@ This endpoint allows authorized users to create a new category in the system.
 
 #### Request Body
 
-The request body must include a `title` field representing the category's name.
+The request body must include a `categoryTitle` field representing the category's name.
 
 ```json
 {
-  "title": "New Category Title"
+  "categoryTitle": "New Category Title"
 }
 ```
 
