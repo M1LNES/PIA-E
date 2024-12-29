@@ -40,7 +40,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',
@@ -99,7 +99,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',
@@ -134,7 +134,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',
@@ -171,7 +171,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',
@@ -209,7 +209,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',
@@ -244,7 +244,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: 'newuser@example.com',
+						emailAddress: 'newuser@example.com',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'skibidi123',
@@ -279,7 +279,7 @@ describe('POST /api/users', () => {
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
 						username: 'newuser',
-						email: '657fgybhinuiuhbdewiybewdiy',
+						emailAddress: '657fgybhinuiuhbdewiybewdiy',
 						selectedRole: 2,
 						password: 'password123',
 						confirmPassword: 'password123',

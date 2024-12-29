@@ -72,7 +72,7 @@ export default function AddingUser() {
 		event.preventDefault()
 		const postData = {
 			username,
-			email,
+			emailAddress: email,
 			selectedRole,
 			password,
 			confirmPassword,

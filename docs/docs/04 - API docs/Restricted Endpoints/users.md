@@ -108,7 +108,7 @@ This endpoint allows an authorized user to create a new user with the provided d
 The request body must include the following fields:
 
 - `username` (string): The username of the new user.
-- `email` (string): The email address of the new user.
+- `emailAddress` (string): The email address of the new user.
 - `selectedRole` (integer): The role ID for the new user.
 - `password` (string): The password for the new user.
 - `confirmPassword` (string): A confirmation of the password.
@@ -118,7 +118,7 @@ Example:
 ```json
 {
   "username": "newuser",
-  "email": "newuser@example.com",
+  "emailAddress": "newuser@example.com",
   "selectedRole": 2,
   "password": "password123",
   "confirmPassword": "password123"
@@ -228,7 +228,7 @@ This endpoint allows an authenticated user to change their password by providing
 
 The request body must include the following fields:
 
-- `email` (string): The email of the user changing their password.
+- `emailAddress` (string): The email of the user changing their password.
 - `oldPassword` (string): The user's current password.
 - `newPassword` (string): The new password the user wants to set.
 - `newPasswordConfirm` (string): A confirmation of the new password.
@@ -237,7 +237,7 @@ Example:
 
 ```json
 {
-  "email": "user@example.com",
+  "emailAddress": "user@example.com",
   "oldPassword": "oldpassword123",
   "newPassword": "newpassword123",
   "newPasswordConfirm": "newpassword123"
@@ -597,10 +597,10 @@ This endpoint allows authenticated users to retrieve their own user information 
 
 #### Request Body
 
-The request body must include the `email` field representing the user's email address.
+The request body must include the `emailAddress` field representing the user's email address.
 
 ```json
-{ "email": "user@example.com" }
+{ "emailAddress": "user@example.com" }
 ```
 
 ### Response

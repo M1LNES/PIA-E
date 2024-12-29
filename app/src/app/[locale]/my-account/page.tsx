@@ -49,7 +49,7 @@ export default function MyAccount() {
 
 		// Prepare data for password change request
 		const postData = {
-			email: user.userEmail,
+			emailAddress: user.userEmail,
 			oldPassword,
 			newPassword,
 			newPasswordConfirm,

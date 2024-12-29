@@ -132,7 +132,7 @@ export const disableUser = async (email: string) => {
  * Creates a new user with the provided data.
  * @param {Object} postData - The data for the new user.
  * @param {string} postData.username - The username of the new user.
- * @param {string} postData.email - The email address of the new user.
+ * @param {string} postData.emailAddress - The email address of the new user.
  * @param {number} postData.selectedRole - The ID of the role to assign to the user.
  * @param {string} postData.password - The password for the new user.
  * @param {string} postData.confirmPassword - The password confirmation.
@@ -141,7 +141,7 @@ export const disableUser = async (email: string) => {
  */
 export const createNewUser = async (postData: {
 	username: string
-	email: string
+	emailAddress: string
 	selectedRole: number
 	password: string
 	confirmPassword: string
@@ -245,7 +245,7 @@ export const fetchUserData = async (email: string) => {
 /**
  * Changes the password for a user.
  * @param {Object} postData - The data for changing the password.
- * @param {string} postData.email - The email address of the user whose password is changing.
+ * @param {string} postData.emailAddress - The email address of the user whose password is changing.
  * @param {string} postData.oldPassword - The old password of the user.
  * @param {string} postData.newPassword - The new password to set.
  * @param {string} postData.newPasswordConfirm - Confirmation of the new password.
@@ -253,7 +253,7 @@ export const fetchUserData = async (email: string) => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const changePassword = async (postData: {
-	email: string
+	emailAddress: string
 	oldPassword: string
 	newPassword: string
 	newPasswordConfirm: string

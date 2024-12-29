@@ -49,7 +49,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'otheruser@example.com',
+						emailAddress: 'otheruser@example.com',
 						oldPassword: 'oldpassword',
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'newpassword',
@@ -76,7 +76,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: 'oldpassword',
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'newpassword',
@@ -108,7 +108,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: oldPassword,
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'newpassword',
@@ -138,7 +138,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: 'correctOldPassword',
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'mismatchedPassword',
@@ -170,7 +170,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: 'oldpassword',
 						newPassword: 'oldpassword',
 						newPasswordConfirm: 'oldpassword',
@@ -203,7 +203,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: 'oldpassword',
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'newpassword',
@@ -236,7 +236,7 @@ describe('PATCH /api/users/password', () => {
 				const response = await fetch({
 					method: 'PATCH',
 					body: JSON.stringify({
-						email: 'user@example.com',
+						emailAddress: 'user@example.com',
 						oldPassword: 'oldpassword',
 						newPassword: 'newpassword',
 						newPasswordConfirm: 'newpassword',

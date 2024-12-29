@@ -15,11 +15,16 @@ export async function PATCH(request: Request) {
 	try {
 		// Parse the request body to extract the necessary fields
 		const body = await request.json()
-		const { email, oldPassword, newPassword, newPasswordConfirm } = body
+		const { emailAddress, oldPassword, newPassword, newPasswordConfirm } = body
 
-		await changePassword(email, oldPassword, newPassword, newPasswordConfirm)
+		await changePassword(
+			emailAddress,
+			oldPassword,
+			newPassword,
+			newPasswordConfirm
+		)
 		// Log the successful password change and return a success message
-		log('info', route, `User ${email} successfully changed password.`)
+		log('info', route, `User ${emailAddress} successfully changed password.`)
 		return NextResponse.json(
 			{
 				message: 'Password successfully changed!',

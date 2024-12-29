@@ -18,16 +18,17 @@ export async function POST(request: Request) {
 	try {
 		// Parse the request body to extract user details
 		const body = await request.json()
-		const { username, email, selectedRole, password, confirmPassword } = body
+		const { username, emailAddress, selectedRole, password, confirmPassword } =
+			body
 
 		await createNewUser(
 			username,
-			email,
+			emailAddress,
 			selectedRole,
 			password,
 			confirmPassword
 		)
-		log('info', `POST ${route}`, `Created new user: ${email}`)
+		log('info', `POST ${route}`, `Created new user: ${emailAddress}`)
 
 		// Return a success message if the user was created successfully
 		return NextResponse.json(
