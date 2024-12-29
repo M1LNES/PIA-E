@@ -52,11 +52,11 @@ export default function AddingUser() {
 			queryKey: ['user-permissions'],
 			queryFn: () => {
 				// Find the current user based on session email
-				const currentUser = data.find(
+				const currentUser = data?.find(
 					(me: UserDomain) => me.userEmail === session?.user?.email
 				)
-				const permission = roles.find(
-					(role: RoleDomain) => role.roleId === currentUser.roleId
+				const permission = roles?.find(
+					(role: RoleDomain) => role.roleId === currentUser?.roleId
 				)?.rolePermission
 				return permission
 			},
@@ -148,7 +148,7 @@ export default function AddingUser() {
 		const confirmText = `Do you really want to switch ${
 			item.username
 		}'s role to ${
-			roles.find(
+			roles?.find(
 				(option: RoleDomain) =>
 					option.roleId === parseInt((event.target as HTMLInputElement).value)
 			)?.roleType
@@ -184,7 +184,7 @@ export default function AddingUser() {
 				!password ||
 				password !== confirmPassword ||
 				selectedRole === -1 ||
-				data.some((item: UserDomain) => item.userEmail === email)
+				(data?.some((item: UserDomain) => item.userEmail === email) ?? false)
 			)
 		}
 
@@ -262,8 +262,11 @@ export default function AddingUser() {
 								{t('form.select-user-role')}
 							</option>
 							{roles
-								.filter(
-									(role: RoleDomain) => role.rolePermission < userRolePermission
+								?.filter(
+									(role: RoleDomain) =>
+										role.rolePermission <
+										(userRolePermission ||
+											config.pages.manageUsers.minPermission)
 								)
 								.map((role: RoleDomain) => (
 									<option key={role.roleId} value={role.roleId}>
@@ -356,7 +359,7 @@ export default function AddingUser() {
 							</tr>
 						</thead>
 						<tbody>
-							{data.map((item: UserDomain) => (
+							{data?.map((item: UserDomain) => (
 								<tr key={item.userId} className="hover:bg-gray-100">
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.username}
@@ -364,12 +367,14 @@ export default function AddingUser() {
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.userEmail === session?.user?.email ||
 										item.deletedTime ||
-										userRolePermission <=
-											roles.find(
+										(userRolePermission ||
+											config.pages.manageUsers.minPermission) <=
+											(roles?.find(
 												(rItem: RoleDomain) => rItem.roleId === item.roleId
-											)?.rolePermission ? (
+											)?.rolePermission ||
+												config.pages.manageUsers.minPermission) ? (
 											`${
-												roles.find(
+												roles?.find(
 													(rItem: RoleDomain) => rItem.roleId === item.roleId
 												)?.roleType
 											}`
@@ -379,9 +384,11 @@ export default function AddingUser() {
 												onChange={(e) => handleChangeUserRole(e, item)}
 											>
 												{roles
-													.filter(
+													?.filter(
 														(role: RoleDomain) =>
-															role.rolePermission < userRolePermission
+															role.rolePermission <
+															(userRolePermission ||
+																config.pages.manageUsers.minPermission)
 													)
 													.map((role: RoleDomain) => (
 														<option key={role.roleId} value={role.roleId}>
@@ -400,10 +407,12 @@ export default function AddingUser() {
 									</td>
 									<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 										{item.deletedTime
-											? userRolePermission >
-													roles.find(
+											? (userRolePermission ||
+													config.pages.manageUsers.minPermission) >
+													(roles?.find(
 														(rItem: RoleDomain) => rItem.roleId === item.roleId
-													)?.rolePermission && (
+													)?.rolePermission ||
+														config.pages.manageUsers.minPermission) && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
 															handleActivateUser(event, item.userEmail)
@@ -412,10 +421,12 @@ export default function AddingUser() {
 														color="green"
 													/>
 											  )
-											: userRolePermission >
-													roles.find(
+											: (userRolePermission ||
+													config.pages.manageUsers.minPermission) >
+													(roles?.find(
 														(rItem: RoleDomain) => rItem.roleId === item.roleId
-													)?.rolePermission && (
+													)?.rolePermission ||
+														config.pages.manageUsers.minPermission) && (
 													<UserButton
 														onClick={(event: React.FormEvent) =>
 															handleDisableUser(event, item.userEmail)

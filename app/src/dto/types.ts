@@ -54,3 +54,8 @@ export type UserSelfInfoDomain = {
 	roleType: string
 	rolePermission: number
 }
+
+export type AllCategories = { categories: CategoryDomain[] }
+export type AllPosts = { posts: PostWithDetailsDomain[] }
+export type AllUsers = { users: UserDomain[] }
+export type AllRoles = { roles: RoleDomain[] }

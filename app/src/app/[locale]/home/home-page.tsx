@@ -222,7 +222,7 @@ export default function HomePageClient() {
 
 	return (
 		<>
-			{posts.map((item: PostWithDetailsDomain, index: number) => (
+			{posts?.map((item: PostWithDetailsDomain, index: number) => (
 				<div
 					key={index}
 					className="p-4 mb-4 bg-white shadow-lg rounded-md border border-gray-200"

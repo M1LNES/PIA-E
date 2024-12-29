@@ -63,8 +63,9 @@ export default function CategoryCreator() {
 	 */
 	const shouldButtonBeDisabled = (newValue: string) => {
 		setIsButtonDisabled(
-			!newValue ||
-				data.some((item: CategoryDomain) => item.categoryName === newValue)
+			(!newValue ||
+				data?.some((item: CategoryDomain) => item.categoryName === newValue)) ??
+				false
 		)
 	}
 
@@ -119,7 +120,7 @@ export default function CategoryCreator() {
 								</tr>
 							</thead>
 							<tbody>
-								{data.map((item: CategoryDomain) => (
+								{data?.map((item: CategoryDomain) => (
 									<tr key={item.categoryId} className="hover:bg-gray-100">
 										<td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
 											{item.categoryId}

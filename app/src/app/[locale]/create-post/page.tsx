@@ -137,7 +137,7 @@ export default function PostCreator() {
 							<option key={-1} value={-1}>
 								{t('select-category')}
 							</option>
-							{data.map((item: CategoryDomain) => (
+							{data?.map((item: CategoryDomain) => (
 								<option key={item.categoryId} value={item.categoryId}>
 									{item.categoryName}
 								</option>

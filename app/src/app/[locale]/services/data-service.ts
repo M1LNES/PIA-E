@@ -7,20 +7,31 @@ import {
 	CreateUserRequest,
 	InputEmailAddress,
 } from '@/dto/post-bodies'
+import {
+	AllCategories,
+	AllPosts,
+	AllRoles,
+	AllUsers,
+	CategoryDomain,
+	PostWithDetailsDomain,
+	RoleDomain,
+	UserDomain,
+} from '@/dto/types'
 
 /**
  * Fetches all categories from the API.
  * @returns {Promise<Array>} A promise that resolves to an array of categories.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchAllCategories = async () => {
+export const fetchAllCategories = async (): Promise<CategoryDomain[]> => {
 	const response = await fetch('/api/categories')
 	if (!response.ok) {
 		throw new Error('Failed to fetch categories')
 	}
 
-	const result = (await response.json()).categories
-	return result
+	const result: AllCategories = await response.json()
+
+	return result.categories
 }
 
 /**
@@ -28,14 +39,14 @@ export const fetchAllCategories = async () => {
  * @returns {Promise<Array>} A promise that resolves to an array of posts.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchAllPosts = async () => {
+export const fetchAllPosts = async (): Promise<PostWithDetailsDomain[]> => {
 	const response = await fetch('/api/posts')
 	if (!response.ok) {
 		throw new Error('Failed to fetch posts')
 	}
 
-	const result = (await response.json()).posts
-	return result
+	const result: AllPosts = await response.json()
+	return result.posts
 }
 
 /**
@@ -43,14 +54,14 @@ export const fetchAllPosts = async () => {
  * @returns {Promise<Array>} A promise that resolves to an array of users.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchAllUsers = async () => {
+export const fetchAllUsers = async (): Promise<UserDomain[]> => {
 	const response = await fetch('/api/users')
 	if (!response.ok) {
 		throw new Error('Failed to fetch users data')
 	}
 
-	const result = (await response.json()).users
-	return result
+	const result: AllUsers = await response.json()
+	return result.users
 }
 
 /**
@@ -58,14 +69,14 @@ export const fetchAllUsers = async () => {
  * @returns {Promise<Array>} A promise that resolves to an array of roles.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchAllRoles = async () => {
+export const fetchAllRoles = async (): Promise<RoleDomain[]> => {
 	const response = await fetch('/api/roles')
 	if (!response.ok) {
 		throw new Error('Failed to fetch roles')
 	}
 
-	const result = (await response.json()).roles
-	return result
+	const result: AllRoles = await response.json()
+	return result.roles
 }
 
 /**
