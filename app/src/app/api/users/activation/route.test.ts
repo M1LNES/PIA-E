@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
+import { InputEmailAddress } from '@/dto/post-bodies'
+import { UserDeleted, UserSelfInfo } from '../../utils/dtos'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -19,7 +21,7 @@ jest.mock('next-auth', () => ({
 describe('PUT /api/users/activation', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
-
+		const mockBody: InputEmailAddress = { emailAddress: 'inactive@domain.com' }
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
 				[key: string]: (req: NextRequest) => AppHandlerType
@@ -28,7 +30,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -62,9 +64,23 @@ describe('PUT /api/users/activation', () => {
 
 	it('should return 403 if user does not have enough permissions', async () => {
 		const mockSession = { user: { email: 'user@domain.com' } }
-		const mockUser = { email: 'user@domain.com', permission: 50 }
-		const mockDeletedUser = { email: 'inactive@domain.com', permission: 80 }
-
+		const mockUser: UserSelfInfo = {
+			email: 'user@domain.com',
+			permission: 50,
+			id: 10,
+			role: 5,
+			type: 'nevim',
+			username: 'KAREL',
+		}
+		const mockDeletedUser: UserDeleted = {
+			email: 'inactive@domain.com',
+			permission: 80,
+			id: 4,
+			role: 7,
+			type: 'gsges',
+			username: ' vilem',
+		}
+		const mockBody: InputEmailAddress = { emailAddress: 'inactive@domain.com' }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
@@ -79,7 +95,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -91,8 +107,23 @@ describe('PUT /api/users/activation', () => {
 
 	it('should return 200 and activate user if permissions are sufficient', async () => {
 		const mockSession = { user: { email: 'admin@domain.com' } }
-		const mockUser = { email: 'admin@domain.com', permission: 100 }
-		const mockDeletedUser = { email: 'inactive@domain.com', permission: 50 }
+		const mockUser: UserSelfInfo = {
+			email: 'admin@domain.com',
+			permission: 100,
+			id: 5,
+			role: 4,
+			type: 'nejaka',
+			username: 'pepa',
+		}
+		const mockDeletedUser: UserDeleted = {
+			email: 'inactive@domain.com',
+			permission: 50,
+			id: 100,
+			role: 43,
+			type: 'roleaaa',
+			username: 'karel 1',
+		}
+		const mockBody: InputEmailAddress = { emailAddress: 'active@domain.com' }
 
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
@@ -109,7 +140,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -121,8 +152,15 @@ describe('PUT /api/users/activation', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'admin@domain.com' } }
-		const mockUser = { email: 'admin@domain.com', permission: 100 }
-
+		const mockUser: UserSelfInfo = {
+			email: 'admin@domain.com',
+			permission: 100,
+			id: 4,
+			role: 5,
+			type: 'role2',
+			username: 'Vojta',
+		}
+		const mockBody: InputEmailAddress = { emailAddress: 'inactive@domain.com' }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getDeletedUserByEmail as jest.Mock).mockRejectedValue(
@@ -137,7 +175,7 @@ describe('PUT /api/users/activation', () => {
 				const response = await fetch({
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: 'inactive@domain.com' }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 

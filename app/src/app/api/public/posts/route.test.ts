@@ -11,7 +11,7 @@ jest.mock('@/app/api/utils/queries', () => ({
 
 describe('GET /api/public/posts', () => {
 	it('should return category post count when getCategoryPostCounts succeeds', async () => {
-		const mockResponse = [
+		const mockResponse: Record<string, number>[] = [
 			{ ProjectA: 10 },
 			{ ProjectB: 30 },
 			{ SkibidiProject: 3 },

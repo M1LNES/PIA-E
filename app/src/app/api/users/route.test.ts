@@ -5,8 +5,9 @@ import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
 import bcrypt from 'bcrypt'
-import { User } from '../utils/dtos'
+import { User, UserSelfInfo, UserWithPermissions } from '../utils/dtos'
 import { UserDomain } from '@/dto/types'
+import { CreateUserRequest } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -29,7 +30,13 @@ jest.mock('bcrypt', () => ({
 describe('POST /api/users', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
-
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
 				[key: string]: (req: NextRequest) => AppHandlerType
@@ -38,13 +45,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -80,7 +81,21 @@ describe('POST /api/users', () => {
 
 	it('should return 409 if email is already used', async () => {
 		const mockSession = { user: { email: 'admin@example.com' } }
-		const mockUser = { permission: 100 }
+		const mockUser: UserSelfInfo = {
+			permission: 100,
+			email: 'karel@nevim.cz',
+			id: 30,
+			role: 3,
+			type: 'aas',
+			username: 'karel janecek',
+		}
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		const mockRolePermission = 40
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
@@ -97,13 +112,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -116,8 +125,22 @@ describe('POST /api/users', () => {
 
 	it('should return 403 if user does not have enough permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 50 }
+		const mockUser: UserSelfInfo = {
+			permission: 50,
+			email: 'aaa@ale.cz',
+			id: 30,
+			role: 3,
+			type: 'fesfse',
+			username: 'Fanda',
+		}
 		const mockRolePermission = 60
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getRolePermission as jest.Mock).mockResolvedValue(
@@ -132,13 +155,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -151,8 +168,22 @@ describe('POST /api/users', () => {
 
 	it('should create user successfully', async () => {
 		const mockSession = { user: { email: 'admin@example.com' } }
-		const mockUser = { permission: 100 }
+		const mockUser: UserSelfInfo = {
+			permission: 100,
+			email: 'aneta@seznam.cz',
+			id: 30,
+			role: 3,
+			type: 'sdds',
+			username: 'pdsds',
+		}
 		const mockRolePermission = 40
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getRolePermission as jest.Mock).mockResolvedValue(
@@ -169,13 +200,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -194,6 +219,13 @@ describe('POST /api/users', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'admin@example.com' } }
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.isEmailUsed as jest.Mock).mockRejectedValue(
 			new Error('Database error')
@@ -207,13 +239,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -224,9 +250,23 @@ describe('POST /api/users', () => {
 		})
 	})
 
-	it('should return 400 if password and conffirm password are not same', async () => {
+	it('should return 400 if password and confirm password are not same', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 50 }
+		const mockUser: UserSelfInfo = {
+			permission: 50,
+			email: 'karel@janecek.cz',
+			id: 33,
+			role: 30,
+			type: 'sdds',
+			username: 'JANEKCE',
+		}
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'skibidi123',
+		}
 		const mockRolePermission = 60
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
@@ -242,13 +282,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: 'newuser@example.com',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'skibidi123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -261,8 +295,22 @@ describe('POST /api/users', () => {
 
 	it('should return 400 if email is not in valid format', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 50 }
+		const mockUser: UserSelfInfo = {
+			permission: 50,
+			email: 'karel@janecek.cz',
+			id: 33,
+			role: 30,
+			type: 'sdds',
+			username: 'JANEKCE',
+		}
 		const mockRolePermission = 60
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: '657fgybhinuiuhbdewiybewdiy',
+			selectedRole: 2,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getRolePermission as jest.Mock).mockResolvedValue(
@@ -277,13 +325,7 @@ describe('POST /api/users', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						username: 'newuser',
-						emailAddress: '657fgybhinuiuhbdewiybewdiy',
-						selectedRole: 2,
-						password: 'password123',
-						confirmPassword: 'password123',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -315,7 +357,11 @@ describe('GET /api/users', () => {
 
 	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 40, role: 2, email: 'user@example.com' } // writer
+		const mockUser: UserWithPermissions = {
+			permission: 40,
+			role: 2,
+			email: 'user@example.com',
+		} // writer
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
 
@@ -335,7 +381,11 @@ describe('GET /api/users', () => {
 
 	it('should return 200 with user data if permission is sufficient', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
+		const mockUser: UserWithPermissions = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+		}
 		const mockUsers: User[] = [
 			{
 				id: 1,
@@ -389,7 +439,11 @@ describe('GET /api/users', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
+		const mockUser: UserWithPermissions = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getAllUsersWithRoles as jest.Mock).mockRejectedValue(

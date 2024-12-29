@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
 import * as appHandler from './route'
+import { ChangePasswordRequest } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -39,6 +40,12 @@ describe('PATCH /api/users/password', () => {
 
 	it('should return 401 if email does not match session user email', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'otheruser@example.com',
+			oldPassword: 'oldpassword',
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'newpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 
 		await testApiHandler({
@@ -48,12 +55,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'otheruser@example.com',
-						oldPassword: 'oldpassword',
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'newpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -63,8 +65,14 @@ describe('PATCH /api/users/password', () => {
 		})
 	})
 
-	it('should return 3 if user is not found', async () => {
+	it('should return 403 if user is not found', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: 'oldpassword',
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'newpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(null) // User not found
 
@@ -75,12 +83,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: 'oldpassword',
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'newpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -93,12 +96,18 @@ describe('PATCH /api/users/password', () => {
 	it('should return 400 if old password is incorrect', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('correctOldPassword', 10)
+		const oldPassword = 'incorrectOldPassword'
+
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: oldPassword,
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'newpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(
 			hashedPassword
 		) // Hashed password from DB
-
-		const oldPassword = 'incorrectOldPassword'
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -107,12 +116,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: oldPassword,
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'newpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -125,6 +129,12 @@ describe('PATCH /api/users/password', () => {
 	it('should return 400 if new password and confirm password do not match', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('correctOldPassword', 10)
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: 'correctOldPassword',
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'mismatchedPassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(
 			hashedPassword
@@ -137,12 +147,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: 'correctOldPassword',
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'mismatchedPassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -157,6 +162,12 @@ describe('PATCH /api/users/password', () => {
 	it('should return 400 if new password is the same as old password', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('oldpassword', 10)
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: 'oldpassword',
+			newPassword: 'oldpassword',
+			newPasswordConfirm: 'oldpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(
 			hashedPassword
@@ -169,12 +180,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: 'oldpassword',
-						newPassword: 'oldpassword',
-						newPasswordConfirm: 'oldpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -189,6 +195,12 @@ describe('PATCH /api/users/password', () => {
 	it('should return 200 and change password successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('oldpassword', 10)
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: 'oldpassword',
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'newpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(
 			hashedPassword
@@ -202,12 +214,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: 'oldpassword',
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'newpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -220,6 +227,12 @@ describe('PATCH /api/users/password', () => {
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const hashedPassword = await bcrypt.hash('oldpassword', 10)
+		const mockBody: ChangePasswordRequest = {
+			emailAddress: 'user@example.com',
+			oldPassword: 'oldpassword',
+			newPassword: 'newpassword',
+			newPasswordConfirm: 'newpassword',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getHashedPasswordByEmail as jest.Mock).mockResolvedValue(
 			hashedPassword
@@ -235,12 +248,7 @@ describe('PATCH /api/users/password', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({
-						emailAddress: 'user@example.com',
-						oldPassword: 'oldpassword',
-						newPassword: 'newpassword',
-						newPasswordConfirm: 'newpassword',
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 

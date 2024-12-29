@@ -3,6 +3,8 @@ import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { AppHandlerType } from '../../utils/test-interface'
 import { NextRequest } from 'next/server'
+import { TotalCommentsResponse } from '../../utils/dtos'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -12,8 +14,8 @@ jest.mock('@/app/api/utils/queries', () => ({
 
 describe('POST /api/public/comments/user', () => {
 	it('should return comments grouped by post ID when email is provided', async () => {
-		const mockEmail = 'test@example.com'
-		const mockCommentsByPost = [
+		const mockBody = { emailAddress: 'mailmail@seznam.cz' }
+		const mockCommentsByPost: { post: number; comment_count: number }[] = [
 			{ post: 1, comment_count: 3 },
 			{ post: 2, comment_count: 5 },
 			{ post: 89, comment_count: 65 },
@@ -31,7 +33,7 @@ describe('POST /api/public/comments/user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ emailAddress: mockEmail }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -68,6 +70,7 @@ describe('POST /api/public/comments/user', () => {
 
 	it('should return 500 when getCommentsByPost throws an error', async () => {
 		const mockEmail = 'test@example.com'
+		const mockBody: InputEmailAddress = { emailAddress: mockEmail }
 
 		;(queries.getCommentsByPost as jest.Mock).mockRejectedValue(
 			new Error('Database error')
@@ -80,7 +83,7 @@ describe('POST /api/public/comments/user', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ emailAddress: mockEmail }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -95,7 +98,7 @@ describe('POST /api/public/comments/user', () => {
 describe('GET /api/public/comments/all-users', () => {
 	it('should return object with total comments count when getTotalComments succeeds', async () => {
 		;(queries.getTotalComments as jest.Mock).mockResolvedValue(12648)
-
+		const output: TotalCommentsResponse = { totalComments: 12648 }
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
 				[key: string]: (req: NextRequest) => AppHandlerType
@@ -106,7 +109,7 @@ describe('GET /api/public/comments/all-users', () => {
 
 				// Check the response
 				expect(response.status).toBe(200)
-				expect(result).toEqual({ totalComments: 12648 })
+				expect(result).toEqual(output)
 			},
 		})
 	})

@@ -4,6 +4,8 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
+import { ChangeRoleRequest } from '@/dto/post-bodies'
+import { UserSelfInfo } from '../../utils/dtos'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -61,8 +63,17 @@ describe('PATCH /api/users/role', () => {
 
 	it('should return 400 if user or role is not found', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
+		const mockBody: ChangeRoleRequest = { userId: 1, roleId: 2 }
+		const idk: UserSelfInfo = {
+			permission: 80,
+			email: 'karel@seznam.cz',
+			id: 30,
+			role: 4,
+			type: 'ee',
+			username: 'kae',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
-		;(queries.getUserByEmail as jest.Mock).mockResolvedValue({ permission: 80 })
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(idk)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(null) // User not found
 		;(queries.getRolePermission as jest.Mock).mockResolvedValue(10)
 
@@ -73,7 +84,7 @@ describe('PATCH /api/users/role', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({ userId: 1, roleId: 2 }), // User or role not found
+					body: JSON.stringify(mockBody), // User or role not found
 				})
 				const result = await response.json()
 
@@ -85,8 +96,16 @@ describe('PATCH /api/users/role', () => {
 
 	it('should return 403 if not enough permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockDbUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockUpdatedUser = {
+		const mockBody: ChangeRoleRequest = { userId: 1, roleId: 2 }
+		const mockDbUser: UserSelfInfo = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+			id: 333,
+			username: 'pes',
+			type: 'neveim',
+		}
+		const mockUpdatedUser: UserSelfInfo = {
 			id: 77,
 			username: 'user123',
 			email: 'user@example.com',
@@ -109,7 +128,7 @@ describe('PATCH /api/users/role', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({ userId: 1, roleId: 2 }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -121,8 +140,16 @@ describe('PATCH /api/users/role', () => {
 
 	it('should return 200 and change role successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockDbUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockUpdatedUser = {
+		const mockBody: ChangeRoleRequest = { userId: 1, roleId: 2 }
+		const mockDbUser: UserSelfInfo = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+			id: 3333,
+			type: 'aas',
+			username: 'pelikan',
+		}
+		const mockUpdatedUser: UserSelfInfo = {
 			id: 3,
 			username: 'user123',
 			email: 'user@example.com',
@@ -146,7 +173,7 @@ describe('PATCH /api/users/role', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({ userId: 1, roleId: 2 }), // Successful role change
+					body: JSON.stringify(mockBody), // Successful role change
 				})
 				const result = await response.json()
 
@@ -158,8 +185,16 @@ describe('PATCH /api/users/role', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockDbUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockUpdatedUser = {
+		const mockBody: ChangeRoleRequest = { userId: 1, roleId: 2 }
+		const mockDbUser: UserSelfInfo = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+			id: 342423,
+			type: 'a',
+			username: 'sasa',
+		}
+		const mockUpdatedUser: UserSelfInfo = {
 			id: 3,
 			username: 'user123',
 			email: 'user@example.com',
@@ -185,7 +220,7 @@ describe('PATCH /api/users/role', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'PATCH',
-					body: JSON.stringify({ userId: 1, roleId: 2 }), // Trigger internal server error
+					body: JSON.stringify(mockBody), // Trigger internal server error
 				})
 				const result = await response.json()
 

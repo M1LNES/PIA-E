@@ -235,7 +235,7 @@ export async function getCommentsByPostId(postId: number): Promise<Comment[]> {
  * @param email - The email of the user.
  * @returns The user's ID.
  */
-export async function getUserIdByEmail(email: string) {
+export async function getUserIdByEmail(email: string): Promise<null | number> {
 	const result = await sql`
 		SELECT id FROM Users 
 		WHERE deleted_at IS NULL AND email = ${email}
@@ -277,7 +277,7 @@ export async function getUserDetailsById(
  * @returns The inserted comment along with the author's username.
  */
 export async function insertComment(
-	author: string,
+	author: number,
 	post: number,
 	description: string
 ): Promise<Comment> {
@@ -311,7 +311,7 @@ export async function insertPost(
 	title: string,
 	description: string,
 	category: number,
-	author: string
+	author: number
 ): Promise<DbPost> {
 	const result = await sql`
 		INSERT INTO posts (title, description, category, author)

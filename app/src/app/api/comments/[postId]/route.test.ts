@@ -7,7 +7,7 @@ import * as appHandler from './route'
 import { getServerSession } from 'next-auth'
 import { NextRequest } from 'next/server'
 import { AppHandlerType } from '@/app/api/utils/test-interface'
-import { Comment } from '../../utils/dtos'
+import { Comment, UserWithPermissions } from '../../utils/dtos'
 import { CommentDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
@@ -24,7 +24,7 @@ describe('GET /api/comments/:postId', () => {
 	it('should return 401 when session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
 
-		const mockParams = { postId: '123' }
+		const mockParams: { postId: string } = { postId: '123' }
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -62,9 +62,10 @@ describe('GET /api/comments/:postId', () => {
 
 	it('should return 401 when user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			permission: 1,
+			role: 1000,
 		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
@@ -86,9 +87,10 @@ describe('GET /api/comments/:postId', () => {
 
 	it('should return comments when user has sufficient permissions and postId is valid', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			permission: 80,
+			role: 30,
 		}
 		const mockComments: Comment[] = [
 			{
@@ -145,11 +147,12 @@ describe('GET /api/comments/:postId', () => {
 
 	it('should return 500 when an error occurs while fetching comments', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			permission: 80,
+			role: 3030,
 		}
-		const mockParams = { postId: '123' }
+		const mockParams: { postId: string } = { postId: '123' }
 
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)

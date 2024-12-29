@@ -5,6 +5,8 @@ import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType, Category } from '../utils/test-interface'
 import { CategoryDomain } from '@/dto/types'
+import { DbCategory, UserSelfInfo } from '../utils/dtos'
+import { CreateCategoryRequest } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -41,7 +43,7 @@ describe('POST /api/categories', () => {
 
 	it('should return 400 if the title field is missing', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const categoryTitle = ''
+		const reqBody: CreateCategoryRequest = { categoryTitle: '' }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 
 		await testApiHandler({
@@ -51,7 +53,7 @@ describe('POST /api/categories', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({ categoryTitle }),
+					body: JSON.stringify(reqBody),
 				})
 				const result = await response.json()
 
@@ -63,7 +65,7 @@ describe('POST /api/categories', () => {
 
 	it('should return 403 if the user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -93,7 +95,7 @@ describe('POST /api/categories', () => {
 
 	it('should return 409 if the category title already exists', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -101,7 +103,7 @@ describe('POST /api/categories', () => {
 			type: 'admin',
 			permission: 80,
 		}
-		const existingCategory = [{ id: 1, name: 'New Category' }]
+		const existingCategory: DbCategory[] = [{ id: 1, name: 'New Category' }]
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.checkDuplicateCategory as jest.Mock).mockResolvedValue(
@@ -127,7 +129,7 @@ describe('POST /api/categories', () => {
 
 	it('should successfully create a new category', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -135,7 +137,7 @@ describe('POST /api/categories', () => {
 			type: 'admin',
 			permission: 80,
 		}
-		const newCategory = { id: 1, name: 'New Category' }
+		const newCategory: DbCategory = { id: 1, name: 'New Category' }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.checkDuplicateCategory as jest.Mock).mockResolvedValue([])
@@ -160,7 +162,7 @@ describe('POST /api/categories', () => {
 
 	it('should return 500 if there is an internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -194,7 +196,7 @@ describe('POST /api/categories', () => {
 
 	it('Should return 403 when user is disabled', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const newCategory = { id: 1, name: 'New Category' }
+		const newCategory: DbCategory = { id: 1, name: 'New Category' }
 
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(undefined) // user is disabled - no permissions!
@@ -228,7 +230,7 @@ describe('GET /api/categories', () => {
 			},
 		}
 
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -304,7 +306,7 @@ describe('GET /api/categories', () => {
 			},
 		}
 
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',
@@ -338,7 +340,7 @@ describe('GET /api/categories', () => {
 				email: 'user@example.com',
 			},
 		}
-		const mockUser = {
+		const mockUser: UserSelfInfo = {
 			id: 1,
 			username: 'user123',
 			email: 'user@example.com',

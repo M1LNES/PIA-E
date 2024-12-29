@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
 import { UserSelfInfo } from '../../utils/dtos'
 import { UserSelfInfoDomain } from '@/dto/types'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -19,6 +20,7 @@ jest.mock('next-auth', () => ({
 describe('POST /api/users/self', () => {
 	it('should return 401 if session is missing', async () => {
 		;(getServerSession as jest.Mock).mockResolvedValue(null)
+		const mockBody: InputEmailAddress = { emailAddress: 'skibidi@seznam.cz' }
 
 		await testApiHandler({
 			appHandler: appHandler as unknown as {
@@ -28,7 +30,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: 'skibidi@seznam.cz' }),
+					body: JSON.stringify(mockBody),
 				})
 
 				const result = await response.json()
@@ -64,6 +66,7 @@ describe('POST /api/users/self', () => {
 	it('should return 403 if email does not match session user email', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockEmail = 'anotheruser@example.com'
+		const mockBody: InputEmailAddress = { emailAddress: mockEmail }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 
 		await testApiHandler({
@@ -74,7 +77,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: mockEmail }), // Email mismatch
+					body: JSON.stringify(mockBody), // Email mismatch
 				})
 				const result = await response.json()
 
@@ -103,6 +106,7 @@ describe('POST /api/users/self', () => {
 			roleType: 'admin',
 			roleId: 1,
 		}
+		const mockBody: InputEmailAddress = { emailAddress: mockSession.user.email }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
 
@@ -114,7 +118,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: mockSession.user.email }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -126,6 +130,7 @@ describe('POST /api/users/self', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
+		const mockBody: InputEmailAddress = { emailAddress: mockSession.user.email }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserByEmail as jest.Mock).mockRejectedValue(
 			new Error('Database error')
@@ -139,7 +144,7 @@ describe('POST /api/users/self', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ emailAddress: mockSession.user.email }),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 

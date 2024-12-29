@@ -4,8 +4,9 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
-import { Comment } from '../utils/dtos'
+import { Comment, UserSelfInfo } from '../utils/dtos'
 import { CommentDomain } from '@/dto/types'
+import { CreateCommentRequest } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -41,6 +42,7 @@ describe('POST /api/comments', () => {
 
 	it('should return 403 if user is not found in the database', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
+		const reqBody: CreateCommentRequest = { content: 'aaa', postId: 20 }
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(null)
 
@@ -51,7 +53,7 @@ describe('POST /api/comments', () => {
 			test: async ({ fetch }) => {
 				const response = await fetch({
 					method: 'POST',
-					body: JSON.stringify({}),
+					body: JSON.stringify(reqBody),
 				})
 				const result = await response.json()
 
@@ -63,7 +65,14 @@ describe('POST /api/comments', () => {
 
 	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 10 } // insufficient permissions
+		const mockUser: UserSelfInfo = {
+			permission: 10,
+			email: 'milan@seznam.cz',
+			id: 30,
+			role: 3,
+			type: 'role',
+			username: 'pendrek',
+		} // insufficient permissions
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -87,7 +96,14 @@ describe('POST /api/comments', () => {
 
 	it('should return 400 if required fields are missing in the request body', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 } // sufficient permissions
+		const mockUser: UserSelfInfo = {
+			permission: 80,
+			email: 'aaaa@seznam.cz',
+			id: 100,
+			role: 2,
+			type: 'role3',
+			username: 'pariz',
+		} // sufficient permissions
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -157,7 +173,14 @@ describe('POST /api/comments', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 }
+		const mockUser: UserSelfInfo = {
+			permission: 80,
+			email: 'aaaa@seznam.cz',
+			id: 100,
+			role: 2,
+			type: 'role3',
+			username: 'pariz',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)

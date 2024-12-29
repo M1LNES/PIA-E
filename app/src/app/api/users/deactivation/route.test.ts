@@ -4,6 +4,7 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../../utils/test-interface'
+import { UserDeleted, UserWithPermissions } from '../../utils/dtos'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -39,11 +40,18 @@ describe('PUT /api/users/deactivation', () => {
 
 	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
-		const mockDeletedUser = {
+		const mockUser: UserWithPermissions = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+		}
+		const mockDeletedUser: UserDeleted = {
 			permission: 80,
 			role: 1,
 			email: 'user2@example.com',
+			id: 123,
+			type: 'admin',
+			username: 'Franta',
 		} // permission higher than current user
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
@@ -70,7 +78,11 @@ describe('PUT /api/users/deactivation', () => {
 
 	it('should return 400 if email is not specified', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80, role: 1, email: 'user@example.com' }
+		const mockUser: UserWithPermissions = {
+			permission: 80,
+			role: 1,
+			email: 'user@example.com',
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
 
@@ -93,12 +105,12 @@ describe('PUT /api/users/deactivation', () => {
 
 	it('should return 200 and disable user successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			permission: 100,
 			role: 4,
 			email: 'super-admin-borec@example.com',
 		}
-		const mockDeletedUser = null // No deleted user
+		const mockDeletedUser = undefined // No deleted user
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)
 		;(queries.getDeletedUserByEmail as jest.Mock).mockResolvedValue(
@@ -125,7 +137,11 @@ describe('PUT /api/users/deactivation', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 } // sufficient permissions
+		const mockUser: UserWithPermissions = {
+			permission: 80,
+			email: 'karel@seznam.cz',
+			role: 1,
+		} // sufficient permissions
 		const mockDeletedUser = null // No deleted user
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserWithPermissions as jest.Mock).mockResolvedValue(mockUser)

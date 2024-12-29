@@ -11,7 +11,7 @@ jest.mock('@/app/api/utils/queries', () => ({
 
 describe('GET /api/public/users', () => {
 	it('should return all roles and total count of assigned users when getRoleUserCounts succeeds', async () => {
-		const mockResponse = {
+		const mockResponse: Record<string, number> = {
 			reader: 123,
 			writer: 100,
 			admin: 30,

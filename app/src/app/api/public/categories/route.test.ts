@@ -3,6 +3,8 @@ import * as queries from '@/app/api/utils/queries'
 import * as appHandler from './route'
 import { AppHandlerType } from '../../utils/test-interface'
 import { NextRequest } from 'next/server'
+import { CategoryDomain } from '@/dto/types'
+import { DbCategory } from '../../utils/dtos'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -11,13 +13,14 @@ jest.mock('@/app/api/utils/queries', () => ({
 
 describe('GET /api/public/categories', () => {
 	it('should return categories when getAllCategories succeeds', async () => {
-		;(queries.getAllCategories as jest.Mock).mockResolvedValue([
+		const mock1: DbCategory[] = [
 			{ id: 1, name: 'GYAT category' },
 			{ id: 2, name: 'Rizz category' },
 			{ id: 3, name: 'Ohio category' },
-		])
+		]
+		;(queries.getAllCategories as jest.Mock).mockResolvedValue(mock1)
 
-		const expectedOutput = [
+		const expectedOutput: CategoryDomain[] = [
 			{ categoryId: 1, categoryName: 'GYAT category' },
 			{ categoryId: 2, categoryName: 'Rizz category' },
 			{ categoryId: 3, categoryName: 'Ohio category' },

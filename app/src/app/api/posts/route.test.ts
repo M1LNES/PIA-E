@@ -4,8 +4,9 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
-import { DbPostWithDetails } from '../utils/dtos'
+import { DbPostWithDetails, UserSelfInfo } from '../utils/dtos'
 import { PostWithDetailsDomain } from '@/dto/types'
+import { CreatePostRequest } from '@/dto/post-bodies'
 
 jest.mock('@/app/api/utils/queries', () => ({
 	__esModule: true,
@@ -64,7 +65,14 @@ describe('POST /api/posts', () => {
 
 	it('should return 403 if user has insufficient permissions', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 10 } // insufficient permissions
+		const mockUser: UserSelfInfo = {
+			permission: 10,
+			email: 'aaa@aaa.cz',
+			id: 2,
+			role: 2,
+			type: 'pr',
+			username: 'Ferda',
+		} // insufficient permissions
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -88,7 +96,19 @@ describe('POST /api/posts', () => {
 
 	it('should return 400 if required fields are missing in the request body', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 } // sufficient permissions
+		const mockUser: UserSelfInfo = {
+			permission: 80,
+			email: 'aaaa@seznem.cz',
+			id: 30,
+			role: 40,
+			type: 'ped',
+			username: 'Karel',
+		} // sufficient permissions
+		const mockBody = {
+			neco: 'a',
+			tu: 2,
+			chybi: 0,
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -101,11 +121,7 @@ describe('POST /api/posts', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						postTitle: '',
-						postDescription: '',
-						postCategory: -1,
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -117,7 +133,19 @@ describe('POST /api/posts', () => {
 
 	it('should return 201 when post is created successfully', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 }
+		const mockUser: UserSelfInfo = {
+			permission: 80,
+			id: 1,
+			email: 'milan.ano@seznam.cz',
+			username: 'karel',
+			role: 1,
+			type: 'admin',
+		}
+		const mockBody: CreatePostRequest = {
+			postTitle: 'Sample Title',
+			postDescription: 'Sample Description',
+			postCategory: 1,
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -131,11 +159,7 @@ describe('POST /api/posts', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						postTitle: 'Sample Title',
-						postDescription: 'Sample Description',
-						postCategory: 1,
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 
@@ -147,7 +171,19 @@ describe('POST /api/posts', () => {
 
 	it('should return 500 on internal server error', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
-		const mockUser = { permission: 80 }
+		const mockUser: UserSelfInfo = {
+			permission: 80,
+			id: 1,
+			email: 'milan.ano@seznam.cz',
+			username: 'karel',
+			role: 1,
+			type: 'admin',
+		}
+		const mockBody: CreatePostRequest = {
+			postTitle: 'Sample Title',
+			postDescription: 'Sample Description',
+			postCategory: 1,
+		}
 		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
 		;(queries.getUserIdByEmail as jest.Mock).mockResolvedValue(1)
 		;(queries.getUserDetailsById as jest.Mock).mockResolvedValue(mockUser)
@@ -163,11 +199,7 @@ describe('POST /api/posts', () => {
 				const response = await fetch({
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						postTitle: 'Sample Title',
-						postDescription: 'Sample Description',
-						postCategory: 1,
-					}),
+					body: JSON.stringify(mockBody),
 				})
 				const result = await response.json()
 

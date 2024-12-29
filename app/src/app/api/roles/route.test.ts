@@ -4,7 +4,7 @@ import * as appHandler from './route'
 import { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { AppHandlerType } from '../utils/test-interface'
-import { Role } from '../utils/dtos'
+import { Role, UserWithPermissions } from '../utils/dtos'
 import { RoleDomain } from '@/dto/types'
 
 jest.mock('@/app/api/utils/queries', () => ({
@@ -26,7 +26,7 @@ describe('GET /api/roles', () => {
 			},
 		}
 
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			role: 1,
 			permission: 80, // admin permission
@@ -92,7 +92,7 @@ describe('GET /api/roles', () => {
 			},
 		}
 
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			role: 3,
 			permission: 20, // reader permission
@@ -124,7 +124,7 @@ describe('GET /api/roles', () => {
 			},
 		}
 
-		const mockUser = {
+		const mockUser: UserWithPermissions = {
 			email: 'user@example.com',
 			role: 1,
 			permission: 80, // admin permission
