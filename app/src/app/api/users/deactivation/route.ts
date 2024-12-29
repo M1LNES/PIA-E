@@ -14,7 +14,7 @@ const route = 'PUT /api/users/deactivation'
  * @param request - The incoming HTTP request object.
  * @returns The response with a status and message indicating whether the user was disabled successfully or if there was an error.
  */
-export async function PUT(request: Request) {
+export async function PUT(request: Request): Promise<NextResponse> {
 	/* Authorization: Ensure the logged-in user has the appropriate permissions to disable another user */
 	try {
 		// Parse the request body to extract the email of the user to be disabled

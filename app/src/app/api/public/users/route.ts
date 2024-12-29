@@ -18,7 +18,7 @@ const route = 'GET /api/public/users'
  *
  * @returns {NextResponse} - A response containing the user count by role or an error message.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	// Log the start of the request to fetch users by role
 	log('debug', route, 'Fetching users by role')
 

@@ -8,7 +8,7 @@ import { getAuthors } from '../../service/author-service'
  *
  * @returns {Response} - JSON response containing the list of authors.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	const authors = await getAuthors()
 	// Log the retrieval of authors
 	log('info', 'GET api/public/authors', 'Authors fetched and returned')

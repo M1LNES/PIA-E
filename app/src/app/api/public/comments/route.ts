@@ -21,7 +21,7 @@ const route = '/api/public/comments'
  *
  * @returns {NextResponse} - A response containing the grouped comments data or an error message.
  */
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the email
 		const { emailAddress } = await request.json()
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
  *
  * @returns {Response} - JSON response containing the total comments count.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		log('debug', `GET ${route}`, 'Fetching total comments...')
 

@@ -14,7 +14,7 @@ const route = 'POST /api/users/self'
  * @returns A JSON response containing the user information, or an error message
  *          if the email is not specified, the user is unauthorized, or there's an internal error.
  */
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the email
 		const body = await request.json()

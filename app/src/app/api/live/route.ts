@@ -19,7 +19,7 @@ const route = 'GET /api/live'
  *
  * @returns {Response} - JSON response with Ably token request data or error details.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse | Response> {
 	try {
 		await validateSession()
 		// Generate Ably token request data for client access

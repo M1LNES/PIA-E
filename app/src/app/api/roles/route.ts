@@ -20,7 +20,7 @@ const route = 'GET /api/roles'
  *
  * @returns {NextResponse} - A response containing roles data or an error message.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		const roles = await getRolesForUser()
 

@@ -14,7 +14,7 @@ const route = '/api/users'
  *
  * @returns {NextResponse} - A response indicating success or failure of the user creation process.
  */
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract user details
 		const body = await request.json()
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
  * @returns A JSON response containing the list of users with roles, or an error message
  *          if the user is unauthorized, lacks permissions, or if there's an internal error.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		const users = await getAllUsers()
 		// Log and return the list of users

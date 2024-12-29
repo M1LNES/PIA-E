@@ -14,7 +14,7 @@ const route = 'PUT /api/users/activation'
  *
  * @returns {NextResponse} - A response indicating the success or failure of the operation.
  */
-export async function PUT(request: Request) {
+export async function PUT(request: Request): Promise<NextResponse> {
 	// Parse the request body to retrieve the email
 	try {
 		const body = await request.json()

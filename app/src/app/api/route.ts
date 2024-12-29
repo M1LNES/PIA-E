@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server'
  *
  * @returns A JSON response containing a message and a URL to the API documentation.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	return NextResponse.json(
 		{
 			message:

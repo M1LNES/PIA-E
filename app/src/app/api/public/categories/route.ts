@@ -15,7 +15,7 @@ const route = 'GET /api/public/categories'
  *
  * @returns {Response} - JSON response containing the categories.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	log('debug', route, 'Fetching all categories...')
 	try {
 		// Fetch all categories from the database

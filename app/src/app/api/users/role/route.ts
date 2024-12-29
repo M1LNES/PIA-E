@@ -11,7 +11,7 @@ const route = 'PATCH /api/users/role'
  * @param request - The incoming HTTP request object.
  * @returns The response with status and message indicating the result of the role change.
  */
-export async function PATCH(request: Request) {
+export async function PATCH(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract userId and roleId
 		const body = await request.json()

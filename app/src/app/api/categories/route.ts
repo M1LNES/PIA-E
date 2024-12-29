@@ -17,7 +17,7 @@ const route = '/api/categories'
  * @param {Request} request - The incoming request object.
  * @returns {NextResponse} - JSON response with status and details of the operation.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		const categories = <CategoryDomain[]>await getCategories()
 		log('info', `GET ${route}`, 'Returning categories')
@@ -40,7 +40,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const body = await request.json()
 		const { categoryTitle } = body

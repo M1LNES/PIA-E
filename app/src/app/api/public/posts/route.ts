@@ -18,7 +18,7 @@ const route = 'GET /api/public/posts'
  *
  * @returns {NextResponse} - A response containing the post count by category or an error message.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		// Fetch post counts grouped by category
 		const categoryPostCounts = <Record<string, number>>(

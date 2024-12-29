@@ -11,7 +11,7 @@ const route = 'PATCH /api/users/password'
  * @param request - The incoming HTTP request object.
  * @returns The response with status and message indicating the result of the password change.
  */
-export async function PATCH(request: Request) {
+export async function PATCH(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the necessary fields
 		const body = await request.json()

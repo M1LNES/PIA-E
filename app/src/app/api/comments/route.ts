@@ -13,7 +13,7 @@ const route = 'POST /api/comments'
  * @param {Request} request - The incoming request containing the comment details in JSON format.
  * @returns {Response} - JSON response with the new comment data, error, or status.
  */
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const body = await request.json()
 		const { content, postId } = body

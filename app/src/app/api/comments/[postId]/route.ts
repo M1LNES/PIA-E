@@ -23,7 +23,7 @@ const route = 'GET /api/comments/:postId'
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ postId: string }> }
-) {
+): Promise<NextResponse> {
 	// Extract postId from request parameters
 
 	try {

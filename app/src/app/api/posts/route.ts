@@ -13,7 +13,7 @@ const route = '/api/posts'
  * @param {Request} request - Incoming request object.
  * @returns {Response} - JSON response indicating success or error.
  */
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse and validate the request body fields
 		const body = await request.json()
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
  *
  * @returns {Response} - JSON response containing posts or an error message.
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		// Fetch all posts with details
 		const posts = <PostWithDetailsDomain[]>await getAllPosts()
