@@ -90,6 +90,20 @@ Each route has its own `route.test.ts` file that tests the functionality of the 
 
 :::
 
+### Running Integration tests
+
+To run integration tests, use command
+
+```cmd title="Run integration tests"
+npm run test:integration
+```
+
+:::info For mr teacher
+
+Due to limits in Vercel database, I created only a few examples for a few `/api/users` endpoints - mainly for activation/deactivation and
+getting user data.
+:::
+
 ### Running End 2 End tests
 
 To run e2e tests, use command
