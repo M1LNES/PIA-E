@@ -6,6 +6,8 @@ import {
 } from '../../service/comment-service'
 import { AppError } from '../../utils/errors'
 import { InputEmailAddress } from '@/dto/post-bodies'
+import { ErrorResponse } from '@/dto/types'
+import { TotalCommentsResponse } from '../../utils/dtos'
 
 /**
  * API Route: POST /api/public/comments
@@ -20,9 +22,11 @@ const route = '/api/public/comments'
  *
  * @param {Request} request - The incoming request containing the email of the user.
  *
- * @returns {NextResponse} - A response containing the grouped comments data or an error message.
+ * @returns {Promise<NextResponse<ErrorResponse | Record<string, number>>>} - A response containing the grouped comments data or an error message.
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(
+	request: Request
+): Promise<NextResponse<ErrorResponse | Record<string, number>>> {
 	try {
 		// Parse the request body to extract the email
 		const body: InputEmailAddress = await request.json()
@@ -66,9 +70,11 @@ export async function POST(request: Request): Promise<NextResponse> {
  * GET /api/public/comments
  * Fetches the total number of comments and returns it in the response.
  *
- * @returns {Response} - JSON response containing the total comments count.
+ * @returns {Promise<NextResponse<ErrorResponse | TotalCommentsResponse>>} - JSON response containing the total comments count.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<
+	NextResponse<ErrorResponse | TotalCommentsResponse>
+> {
 	try {
 		log('debug', `GET ${route}`, 'Fetching total comments...')
 

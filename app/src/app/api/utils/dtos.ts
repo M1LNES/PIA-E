@@ -177,3 +177,7 @@ export function mapUserSelfInfoToDomain(
 		rolePermission: user.permission,
 	}
 }
+
+export type TotalCommentsResponse = {
+	totalComments: number
+}

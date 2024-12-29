@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { activateUser } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
 import { InputEmailAddress } from '@/dto/post-bodies'
+import { ErrorResponse, UserActivated } from '@/dto/types'
 
 const route = 'PUT /api/users/activation'
 
@@ -13,9 +14,11 @@ const route = 'PUT /api/users/activation'
  * by their email address. The function first checks if the requester is authenticated,
  * validates the provided email, checks user permissions, and reactivates the user if allowed.
  *
- * @returns {NextResponse} - A response indicating the success or failure of the operation.
+ * @returns {Promise<NextResponse<ErrorResponse | UserActivated>>} - A response indicating the success or failure of the operation.
  */
-export async function PUT(request: Request): Promise<NextResponse> {
+export async function PUT(
+	request: Request
+): Promise<NextResponse<ErrorResponse | UserActivated>> {
 	// Parse the request body to retrieve the email
 	try {
 		const body: InputEmailAddress = await request.json()

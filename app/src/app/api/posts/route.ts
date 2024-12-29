@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { createNewPost, getAllPosts } from '../service/post-service'
 import { AppError } from '../utils/errors'
-import { PostWithDetailsDomain } from '@/dto/types'
+import { AllPosts, ErrorResponse, PostCreated } from '@/dto/types'
 import { CreatePostRequest } from '@/dto/post-bodies'
 
 const route = '/api/posts'
@@ -12,9 +12,11 @@ const route = '/api/posts'
  * Requires a valid session and checks for mandatory fields.
  *
  * @param {Request} request - Incoming request object.
- * @returns {Response} - JSON response indicating success or error.
+ * @returns {Promise<NextResponse<ErrorResponse | PostCreated>>} - JSON response indicating success or error.
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(
+	request: Request
+): Promise<NextResponse<ErrorResponse | PostCreated>> {
 	try {
 		// Parse the request body fields
 		const body: CreatePostRequest = await request.json()
@@ -55,10 +57,10 @@ export async function POST(request: Request): Promise<NextResponse> {
  *
  * @returns {Response} - JSON response containing posts or an error message.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse<ErrorResponse | AllPosts>> {
 	try {
 		// Fetch all posts with details
-		const posts = <PostWithDetailsDomain[]>await getAllPosts()
+		const posts = await getAllPosts()
 
 		log('info', `GET ${route}`, `Returning all posts`)
 		return NextResponse.json({ posts }, { status: 200 })

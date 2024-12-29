@@ -72,3 +72,8 @@ export type CommentCreated = {
 	message: string
 	comment: CommentDomain
 }
+
+/* Error response */
+export type ErrorResponse = {
+	error: string
+}

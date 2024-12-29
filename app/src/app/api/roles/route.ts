@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getRolesForUser } from '../service/roles-service'
 import { AppError } from '../utils/errors'
+import { AllRoles, ErrorResponse } from '@/dto/types'
 
 /**
  * API Route: GET /api/roles
@@ -18,9 +19,9 @@ const route = 'GET /api/roles'
 /**
  * Handles the GET request to fetch available roles for a user.
  *
- * @returns {NextResponse} - A response containing roles data or an error message.
+ * @returns {Promise<NextResponse<ErrorResponse | AllRoles>>} - A response containing roles data or an error message.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse<ErrorResponse | AllRoles>> {
 	try {
 		const roles = await getRolesForUser()
 

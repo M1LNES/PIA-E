@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { getSelfInfo } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
 import { InputEmailAddress } from '@/dto/post-bodies'
+import { ErrorResponse, UserSelf } from '@/dto/types'
 
 const route = 'POST /api/users/self'
 
@@ -12,10 +13,13 @@ const route = 'POST /api/users/self'
  * This function retrieves the information of a user specified by their email address.
  * The logged-in user is only allowed to fetch their own information.
  *
- * @returns A JSON response containing the user information, or an error message
+ * @returns { Promise<NextResponse<ErrorResponse | UserSelf>>}
+ * 			A JSON response containing the user information, or an error message
  *          if the email is not specified, the user is unauthorized, or there's an internal error.
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(
+	request: Request
+): Promise<NextResponse<ErrorResponse | UserSelf>> {
 	try {
 		// Parse the request body to extract the email
 		const body: InputEmailAddress = await request.json()

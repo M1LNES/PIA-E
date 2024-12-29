@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { AppError } from '../../utils/errors'
 import { changePassword } from '../../service/user-service'
 import { ChangePasswordRequest } from '@/dto/post-bodies'
+import { ErrorResponse, PasswordChanged } from '@/dto/types'
 
 const route = 'PATCH /api/users/password'
 
@@ -10,9 +11,11 @@ const route = 'PATCH /api/users/password'
  * API route handler for changing the user's password.
  *
  * @param request - The incoming HTTP request object.
- * @returns The response with status and message indicating the result of the password change.
+ * @returns {Promise<NextResponse<ErrorResponse | PasswordChanged>>} The response with status and message indicating the result of the password change.
  */
-export async function PATCH(request: Request): Promise<NextResponse> {
+export async function PATCH(
+	request: Request
+): Promise<NextResponse<ErrorResponse | PasswordChanged>> {
 	try {
 		// Parse the request body to extract the necessary fields
 		const body: ChangePasswordRequest = await request.json()

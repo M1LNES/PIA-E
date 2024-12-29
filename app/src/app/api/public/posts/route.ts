@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getCategoryPostCountsPublic } from '../../service/post-service'
+import { ErrorResponse } from '@/dto/types'
 
 /**
  * API Route: GET /api/public/posts
@@ -16,9 +17,11 @@ const route = 'GET /api/public/posts'
 /**
  * Handles the GET request to fetch the post counts by category.
  *
- * @returns {NextResponse} - A response containing the post count by category or an error message.
+ * @returns {Promise<NextResponse<ErrorResponse | Record<string, number>>>} - A response containing the post count by category or an error message.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<
+	NextResponse<ErrorResponse | Record<string, number>>
+> {
 	try {
 		// Fetch post counts grouped by category
 		const categoryPostCounts = <Record<string, number>>(

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getCategoriesPublic } from '../../service/category-service'
+import { CategoryDomain, ErrorResponse } from '@/dto/types'
 
 // Cache control settings
 export const revalidate = 1
@@ -13,9 +14,11 @@ const route = 'GET /api/public/categories'
  * GET /api/public/categories
  * Fetches all categories and returns them as JSON.
  *
- * @returns {Response} - JSON response containing the categories.
+ * @returns {Promise<NextResponse<ErrorResponse | CategoryDomain[]>>} - JSON response containing the categories.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<
+	NextResponse<ErrorResponse | CategoryDomain[]>
+> {
 	log('debug', route, 'Fetching all categories...')
 	try {
 		// Fetch all categories from the database

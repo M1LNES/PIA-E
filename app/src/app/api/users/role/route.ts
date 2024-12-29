@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { changeRole } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
 import { ChangeRoleRequest } from '@/dto/post-bodies'
+import { ErrorResponse, RoleChanged } from '@/dto/types'
 
 const route = 'PATCH /api/users/role'
 
@@ -10,9 +11,11 @@ const route = 'PATCH /api/users/role'
  * API route handler for changing the user's role.
  *
  * @param request - The incoming HTTP request object.
- * @returns The response with status and message indicating the result of the role change.
+ * @returns {Promise<NextResponse<ErrorResponse | RoleChanged>>} The response with status and message indicating the result of the role change.
  */
-export async function PATCH(request: Request): Promise<NextResponse> {
+export async function PATCH(
+	request: Request
+): Promise<NextResponse<ErrorResponse | RoleChanged>> {
 	try {
 		// Parse the request body to extract userId and roleId
 		const body: ChangeRoleRequest = await request.json()

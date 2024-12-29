@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { createNewCategory, getCategories } from '../service/category-service'
 import { AppError } from '../utils/errors'
-import { CategoryDomain } from '@/dto/types'
 import { CreateCategoryRequest } from '@/dto/post-bodies'
+import { AllCategories, CategoryCreated, ErrorResponse } from '@/dto/types'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -16,11 +16,13 @@ const route = '/api/categories'
  * - POST: Create a new category.
  *
  * @param {Request} request - The incoming request object.
- * @returns {NextResponse} - JSON response with status and details of the operation.
+ * @returns {Promise<NextResponse<AllCategories | ErrorResponse>>} - JSON response with status and details of the operation.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<
+	NextResponse<AllCategories | ErrorResponse>
+> {
 	try {
-		const categories = <CategoryDomain[]>await getCategories()
+		const categories = await getCategories()
 		log('info', `GET ${route}`, 'Returning categories')
 
 		return NextResponse.json({ categories }, { status: 200 })
@@ -41,7 +43,13 @@ export async function GET(): Promise<NextResponse> {
 	}
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
+/**
+ * @param {Request} request - The incoming request object.
+ * @returns {Promise<NextResponse<CategoryCreated | ErrorResponse>>} - JSON response with status and details of the operation.
+ */
+export async function POST(
+	request: Request
+): Promise<NextResponse<CategoryCreated | ErrorResponse>> {
 	try {
 		const body: CreateCategoryRequest = await request.json()
 		const { categoryTitle } = body

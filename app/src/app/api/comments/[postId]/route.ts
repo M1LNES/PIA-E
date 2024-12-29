@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getPostCommentById } from '../../service/comment-service'
 import { AppError } from '../../utils/errors'
-import { CommentDomain } from '@/dto/types'
+import { CommentDomain, ErrorResponse } from '@/dto/types'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -18,18 +18,18 @@ const route = 'GET /api/comments/:postId'
  * @param {Object} context - The context object containing route parameters.
  * @param {Promise<Object>} context.params - Promise resolving to the route parameters.
  * @param {string} context.params.postId - The ID of the post whose comments are being requested.
- * @returns {Response} - JSON response with the requested comments, or an error and corresponding status code.
+ * @returns {Promise<NextResponse<CommentDomain[] | ErrorResponse>>} - JSON response with the requested comments, or an error and corresponding status code.
  */
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ postId: string }> }
-): Promise<NextResponse> {
+): Promise<NextResponse<CommentDomain[] | ErrorResponse>> {
 	// Extract postId from request parameters
 
 	try {
-		const postId = <number>parseInt((await params).postId, 10)
+		const postId = parseInt((await params).postId, 10)
 		// Fetch and return comments for the specified post ID
-		const comments = <CommentDomain[]>await getPostCommentById(postId)
+		const comments = await getPostCommentById(postId)
 
 		log('info', route, `Returning comments at post ${postId}:`, { comments })
 

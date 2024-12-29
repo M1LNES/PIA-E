@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { validateSession } from '../service/session-service'
 import { AppError } from '../utils/errors'
+import { ErrorResponse } from '@/dto/types'
 
 export const revalidate = 0
 export const fetchCache = 'force-no-store'
@@ -17,9 +18,9 @@ const route = 'GET /api/live'
  * This route ensures that only users with a valid session can receive an Ably token,
  * which is required for accessing Ably channels securely on the client-side.
  *
- * @returns {Response} - JSON response with Ably token request data or error details.
+ * @returns {Promise<NextResponse<ErrorResponse> | Response>} - JSON response with Ably token request data or error details.
  */
-export async function GET(): Promise<NextResponse | Response> {
+export async function GET(): Promise<NextResponse<ErrorResponse> | Response> {
 	try {
 		await validateSession()
 		// Generate Ably token request data for client access

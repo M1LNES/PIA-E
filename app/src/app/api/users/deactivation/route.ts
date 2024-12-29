@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { AppError } from '../../utils/errors'
 import { deactivateUser } from '../../service/user-service'
 import { InputEmailAddress } from '@/dto/post-bodies'
+import { ErrorResponse, UserDeactivated } from '@/dto/types'
 
 const route = 'PUT /api/users/deactivation'
 
@@ -13,9 +14,11 @@ const route = 'PUT /api/users/deactivation'
  * and disables the specified user if the current user has sufficient privileges.
  *
  * @param request - The incoming HTTP request object.
- * @returns The response with a status and message indicating whether the user was disabled successfully or if there was an error.
+ * @returns {Promise<NextResponse<ErrorResponse | UserDeactivated>>} The response with a status and message indicating whether the user was disabled successfully or if there was an error.
  */
-export async function PUT(request: Request): Promise<NextResponse> {
+export async function PUT(
+	request: Request
+): Promise<NextResponse<ErrorResponse | UserDeactivated>> {
 	/* Authorization: Ensure the logged-in user has the appropriate permissions to disable another user */
 	try {
 		// Parse the request body to extract the email of the user to be disabled

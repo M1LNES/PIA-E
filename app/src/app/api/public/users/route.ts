@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getRoleUserCountsPublic } from '../../service/user-service'
+import { ErrorResponse } from '@/dto/types'
 
 /**
  * API Route: GET /api/public/users
@@ -16,9 +17,11 @@ const route = 'GET /api/public/users'
 /**
  * Handles the GET request to fetch the user counts by role.
  *
- * @returns {NextResponse} - A response containing the user count by role or an error message.
+ * @returns {Promise<NextResponse<ErrorResponse | Record<string, number>>>} - A response containing the user count by role or an error message.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<
+	NextResponse<ErrorResponse | Record<string, number>>
+> {
 	// Log the start of the request to fetch users by role
 	log('debug', route, 'Fetching users by role')
 

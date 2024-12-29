@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { createNewComment } from '../service/comment-service'
 import { AppError } from '../utils/errors'
 import { CreateCommentRequest } from '@/dto/post-bodies'
+import { CommentCreated, ErrorResponse } from '@/dto/types'
 
 const route = 'POST /api/comments'
 
@@ -12,9 +13,11 @@ const route = 'POST /api/comments'
  * It performs validation on the provided data and logs relevant information for tracking.
  *
  * @param {Request} request - The incoming request containing the comment details in JSON format.
- * @returns {Response} - JSON response with the new comment data, error, or status.
+ * @returns {Promise<NextResponse<ErrorResponse | CommentCreated>> } - JSON response
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(
+	request: Request
+): Promise<NextResponse<ErrorResponse | CommentCreated>> {
 	try {
 		const body: CreateCommentRequest = await request.json()
 		const { content, postId } = body
@@ -22,7 +25,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 		const comment = await createNewComment(postId, content)
 		// Log success and return the newly created comment
 		log('info', route, `User created new comment!`, comment)
-		console.log('MRDKA', comment)
+
 		return NextResponse.json(
 			{
 				message: 'Comment created',

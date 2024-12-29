@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { AppError } from '../utils/errors'
 import { createNewUser, getAllUsers } from '../service/user-service'
 import { CreateUserRequest } from '@/dto/post-bodies'
+import { AllUsers, ErrorResponse, UserCreated } from '@/dto/types'
 
 const route = '/api/users'
 
@@ -13,9 +14,11 @@ const route = '/api/users'
  * It first verifies that all required fields are provided, checks that the passwords match, validates
  * the email format, checks the permissions of the requesting user, and then adds the new user to the system.
  *
- * @returns {NextResponse} - A response indicating success or failure of the user creation process.
+ * @returns {Promise<NextResponse<ErrorResponse | UserCreated>> } - A response indicating success or failure of the user creation process.
  */
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(
+	request: Request
+): Promise<NextResponse<ErrorResponse | UserCreated>> {
 	try {
 		// Parse the request body to extract user details
 		const body: CreateUserRequest = await request.json()
@@ -68,10 +71,11 @@ export async function POST(request: Request): Promise<NextResponse> {
  * permissions can access the list of all users. The logged-in user must have at least
  * the minimum required permissions to manage users.
  *
- * @returns A JSON response containing the list of users with roles, or an error message
+ * @returns {Promise<NextResponse<ErrorResponse | AllUsers>>}
+ * 			A JSON response containing the list of users with roles, or an error message
  *          if the user is unauthorized, lacks permissions, or if there's an internal error.
  */
-export async function GET(): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse<ErrorResponse | AllUsers>> {
 	try {
 		const users = await getAllUsers()
 		// Log and return the list of users
