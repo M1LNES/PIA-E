@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { createNewCategory, getCategories } from '../service/category-service'
 import { AppError } from '../utils/errors'
 import { CategoryDomain } from '@/dto/types'
+import { CreateCategoryRequest } from '@/dto/post-bodies'
 
 export const revalidate = 1
 export const fetchCache = 'force-no-store'
@@ -42,7 +43,7 @@ export async function GET(): Promise<NextResponse> {
 
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
-		const body = await request.json()
+		const body: CreateCategoryRequest = await request.json()
 		const { categoryTitle } = body
 
 		const newCategory = await createNewCategory(categoryTitle)

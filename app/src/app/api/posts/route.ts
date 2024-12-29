@@ -3,6 +3,7 @@ import { log } from '@/app/api/utils/logger'
 import { createNewPost, getAllPosts } from '../service/post-service'
 import { AppError } from '../utils/errors'
 import { PostWithDetailsDomain } from '@/dto/types'
+import { CreatePostRequest } from '@/dto/post-bodies'
 
 const route = '/api/posts'
 
@@ -15,8 +16,8 @@ const route = '/api/posts'
  */
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
-		// Parse and validate the request body fields
-		const body = await request.json()
+		// Parse the request body fields
+		const body: CreatePostRequest = await request.json()
 		const { postTitle, postDescription, postCategory } = body
 
 		// Insert the new post into the database

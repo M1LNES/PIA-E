@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { changeRole } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
+import { ChangeRoleRequest } from '@/dto/post-bodies'
 
 const route = 'PATCH /api/users/role'
 
@@ -14,7 +15,7 @@ const route = 'PATCH /api/users/role'
 export async function PATCH(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract userId and roleId
-		const body = await request.json()
+		const body: ChangeRoleRequest = await request.json()
 		const { userId, roleId } = body
 
 		await changeRole(userId, roleId)

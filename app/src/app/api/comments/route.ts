@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { createNewComment } from '../service/comment-service'
 import { AppError } from '../utils/errors'
+import { CreateCommentRequest } from '@/dto/post-bodies'
 
 const route = 'POST /api/comments'
 
@@ -15,7 +16,7 @@ const route = 'POST /api/comments'
  */
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
-		const body = await request.json()
+		const body: CreateCommentRequest = await request.json()
 		const { content, postId } = body
 
 		const comment = await createNewComment(postId, content)

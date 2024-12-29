@@ -13,7 +13,7 @@ import {
 import { validateSession } from './session-service'
 import config from '@/app/config'
 
-export async function createNewComment(postId: string, description: string) {
+export async function createNewComment(postId: number, description: string) {
 	// Retrieve user session
 	const session = await validateSession()
 

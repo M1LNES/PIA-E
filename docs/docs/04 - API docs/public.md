@@ -226,9 +226,9 @@ The response contains an object where each key is a category name with the count
 
 ```json
 {
-  "category1": 5,
-  "category2": 3,
-  "category3": 0
+  "Omni Cast": 5,
+  "Omni Studio": 3,
+  "Omni API": 0
 }
 ```
 

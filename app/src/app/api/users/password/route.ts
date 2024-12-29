@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { AppError } from '../../utils/errors'
 import { changePassword } from '../../service/user-service'
+import { ChangePasswordRequest } from '@/dto/post-bodies'
 
 const route = 'PATCH /api/users/password'
 
@@ -14,7 +15,7 @@ const route = 'PATCH /api/users/password'
 export async function PATCH(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the necessary fields
-		const body = await request.json()
+		const body: ChangePasswordRequest = await request.json()
 		const { emailAddress, oldPassword, newPassword, newPasswordConfirm } = body
 
 		await changePassword(

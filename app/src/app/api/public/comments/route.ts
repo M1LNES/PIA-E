@@ -5,6 +5,7 @@ import {
 	getTotalCommentsPublic,
 } from '../../service/comment-service'
 import { AppError } from '../../utils/errors'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 /**
  * API Route: POST /api/public/comments
@@ -24,7 +25,8 @@ const route = '/api/public/comments'
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the email
-		const { emailAddress } = await request.json()
+		const body: InputEmailAddress = await request.json()
+		const { emailAddress } = body
 
 		const commentsByPost = await getCommentsForUser(emailAddress)
 		// Log the successful retrieval of comments by post
@@ -71,7 +73,7 @@ export async function GET(): Promise<NextResponse> {
 		log('debug', `GET ${route}`, 'Fetching total comments...')
 
 		// Fetch the total number of comments from the database
-		const totalComments = <number>await getTotalCommentsPublic()
+		const totalComments = await getTotalCommentsPublic()
 
 		// Log the successful fetch operation
 		log('info', `GET ${route}`, 'Total comments successfully fetched', {

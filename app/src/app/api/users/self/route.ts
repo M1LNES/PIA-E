@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { getSelfInfo } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 const route = 'POST /api/users/self'
 
@@ -17,7 +18,7 @@ const route = 'POST /api/users/self'
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract the email
-		const body = await request.json()
+		const body: InputEmailAddress = await request.json()
 		const { emailAddress } = body
 
 		const user = await getSelfInfo(emailAddress)

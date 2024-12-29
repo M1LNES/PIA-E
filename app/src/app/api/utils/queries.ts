@@ -261,7 +261,7 @@ export async function getUserDetailsById(userId: number) {
  */
 export async function insertComment(
 	author: string,
-	post: string,
+	post: number,
 	description: string
 ): Promise<Comment> {
 	const result = await sql`
@@ -410,7 +410,7 @@ export async function getCommentsByPost(email: string) {
 
 type CategoryPostCountRow = {
 	category_name: string
-	post_count: string
+	post_count: number
 }
 
 /**
@@ -426,7 +426,7 @@ export async function getCategoryPostCounts(): Promise<Record<string, number>> {
 	`
 	const rows = result.rows as CategoryPostCountRow[]
 	const categoryPostCounts = rows.reduce((acc: Record<string, number>, row) => {
-		acc[row.category_name] = parseInt(row.post_count, 10)
+		acc[row.category_name] = row.post_count
 		return acc
 	}, {})
 
@@ -435,7 +435,7 @@ export async function getCategoryPostCounts(): Promise<Record<string, number>> {
 
 type RoleUserCountRow = {
 	role_type: string
-	user_count: string
+	user_count: number
 }
 
 /**
@@ -453,7 +453,7 @@ export async function getRoleUserCounts(): Promise<Record<string, number>> {
 	const rows = result.rows as RoleUserCountRow[]
 	const roleUserCounts = rows.reduce(
 		(acc: Record<string, number>, row: RoleUserCountRow) => {
-			acc[row.role_type] = parseInt(row.user_count, 10)
+			acc[row.role_type] = row.user_count
 			return acc
 		},
 		{}

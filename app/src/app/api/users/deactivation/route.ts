@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { AppError } from '../../utils/errors'
 import { deactivateUser } from '../../service/user-service'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 const route = 'PUT /api/users/deactivation'
 
@@ -18,7 +19,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
 	/* Authorization: Ensure the logged-in user has the appropriate permissions to disable another user */
 	try {
 		// Parse the request body to extract the email of the user to be disabled
-		const body = await request.json()
+		const body: InputEmailAddress = await request.json()
 		const { emailAddress } = body
 
 		// Disable the user by email

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { activateUser } from '../../service/user-service'
 import { AppError } from '../../utils/errors'
+import { InputEmailAddress } from '@/dto/post-bodies'
 
 const route = 'PUT /api/users/activation'
 
@@ -17,7 +18,7 @@ const route = 'PUT /api/users/activation'
 export async function PUT(request: Request): Promise<NextResponse> {
 	// Parse the request body to retrieve the email
 	try {
-		const body = await request.json()
+		const body: InputEmailAddress = await request.json()
 		const { emailAddress } = body
 
 		await activateUser(emailAddress)

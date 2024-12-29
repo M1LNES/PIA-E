@@ -1,3 +1,13 @@
+import {
+	ChangePasswordRequest,
+	ChangeRoleRequest,
+	CreateCategoryRequest,
+	CreateCommentRequest,
+	CreatePostRequest,
+	CreateUserRequest,
+	InputEmailAddress,
+} from '@/dto/post-bodies'
+
 /**
  * Fetches all categories from the API.
  * @returns {Promise<Array>} A promise that resolves to an array of categories.
@@ -66,12 +76,13 @@ export const fetchAllRoles = async () => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const changeUserRole = async (userId: number, roleId: number) => {
+	const reqBody: ChangeRoleRequest = { userId, roleId }
 	const response = await fetch('/api/users/role', {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ userId, roleId }),
+		body: JSON.stringify(reqBody),
 	})
 
 	if (!response.ok) {
@@ -89,12 +100,13 @@ export const changeUserRole = async (userId: number, roleId: number) => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const activateUser = async (email: string) => {
+	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/activation', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ emailAddress: email }),
+		body: JSON.stringify(reqBody),
 	})
 
 	if (!response.ok) {
@@ -112,12 +124,13 @@ export const activateUser = async (email: string) => {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const disableUser = async (email: string) => {
+	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/deactivation', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ emailAddress: email }),
+		body: JSON.stringify(reqBody),
 	})
 
 	if (!response.ok) {
@@ -139,13 +152,7 @@ export const disableUser = async (email: string) => {
  * @returns {Promise<Object>} A promise that resolves to the result of the user creation.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const createNewUser = async (postData: {
-	username: string
-	emailAddress: string
-	selectedRole: number
-	password: string
-	confirmPassword: string
-}) => {
+export const createNewUser = async (postData: CreateUserRequest) => {
 	const response = await fetch('/api/users', {
 		method: 'POST',
 		headers: {
@@ -169,12 +176,13 @@ export const createNewUser = async (postData: {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const createCategory = async (title: string) => {
+	const reqBody: CreateCategoryRequest = { categoryTitle: title }
 	const response = await fetch('/api/categories', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ categoryTitle: title }),
+		body: JSON.stringify(reqBody),
 	})
 
 	if (!response.ok) {
@@ -199,16 +207,17 @@ export const addPost = async (postData: {
 	description: string
 	category: number
 }) => {
+	const bodyReq: CreatePostRequest = {
+		postTitle: postData.title,
+		postDescription: postData.description,
+		postCategory: postData.category,
+	}
 	const response = await fetch('/api/posts', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({
-			postTitle: postData.title,
-			postDescription: postData.description,
-			postCategory: postData.category,
-		}),
+		body: JSON.stringify(bodyReq),
 	})
 
 	if (!response.ok) {
@@ -226,12 +235,13 @@ export const addPost = async (postData: {
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchUserData = async (email: string) => {
+	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/self', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ emailAddress: email }),
+		body: JSON.stringify(reqBody),
 	})
 
 	if (!response.ok) {
@@ -252,12 +262,7 @@ export const fetchUserData = async (email: string) => {
  * @returns {Promise<Object>} A promise that resolves to the result of the password change.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const changePassword = async (postData: {
-	emailAddress: string
-	oldPassword: string
-	newPassword: string
-	newPasswordConfirm: string
-}) => {
+export const changePassword = async (postData: ChangePasswordRequest) => {
 	const response = await fetch('/api/users/password', {
 		method: 'PATCH',
 		headers: {
@@ -305,10 +310,7 @@ export const fetchCommentsByPostId = async (postId: number) => {
  *
  * @throws {Error} If the request fails or the server responds with an error.
  */
-export const addComment = async (postData: {
-	content: string
-	postId: number
-}) => {
+export const addComment = async (postData: CreateCommentRequest) => {
 	const response = await fetch('/api/comments', {
 		method: 'POST',
 		headers: {

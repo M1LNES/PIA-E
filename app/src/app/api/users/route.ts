@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { log } from '@/app/api/utils/logger'
 import { AppError } from '../utils/errors'
 import { createNewUser, getAllUsers } from '../service/user-service'
+import { CreateUserRequest } from '@/dto/post-bodies'
 
 const route = '/api/users'
 
@@ -17,7 +18,7 @@ const route = '/api/users'
 export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		// Parse the request body to extract user details
-		const body = await request.json()
+		const body: CreateUserRequest = await request.json()
 		const { username, emailAddress, selectedRole, password, confirmPassword } =
 			body
 
