@@ -13,7 +13,7 @@ export async function getRolesForUser(): Promise<RoleDomain[]> {
 	const user = await getUserWithPermissions(session.user?.email as string)
 
 	// Check if the user has sufficient permissions
-	if (user.permission < config.pages.manageUsers.minPermission) {
+	if (!user || user.permission < config.pages.manageUsers.minPermission) {
 		throw new AppError(
 			'Not enough permissions!',
 			403,

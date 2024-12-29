@@ -2,6 +2,7 @@ import { sql } from '@vercel/postgres'
 import {
 	Comment,
 	DbCategory,
+	DbPost,
 	DbPostWithDetails,
 	Role,
 	User,
@@ -16,14 +17,19 @@ import {
  */
 export async function getUserWithPermissions(
 	email: string
-): Promise<UserWithPermissions> {
+): Promise<UserWithPermissions | undefined> {
 	const result = await sql`
-    SELECT Users.email, Users.role, Roles.permission 
-    FROM Users 
-    LEFT JOIN Roles ON Users.role = Roles.id 
-    WHERE Users.email = ${email} AND Users.deleted_at IS NULL
-`
-	return <UserWithPermissions>result.rows[0] // Returns undefined if no user is found
+	  SELECT Users.email, Users.role, Roles.permission 
+	  FROM Users 
+	  LEFT JOIN Roles ON Users.role = Roles.id 
+	  WHERE Users.email = ${email} AND Users.deleted_at IS NULL
+	`
+
+	if (result.rows.length === 0) {
+		return undefined
+	}
+
+	return result.rows[0] as UserWithPermissions
 }
 
 /**
@@ -46,11 +52,13 @@ export async function getUserByEmail(email: string): Promise<UserSelfInfo> {
  * @param title - The title of the category to check.
  * @returns The existing category if found, otherwise an empty array.
  */
-export async function checkDuplicateCategory(title: string) {
+export async function checkDuplicateCategory(
+	title: string
+): Promise<DbCategory[]> {
 	const result = await sql`
     SELECT * FROM Category WHERE name = ${title};
   `
-	return result.rows // Returns an array of categories found (empty if none)
+	return result.rows as DbCategory[] // Returns an array of categories found (empty if none)
 }
 
 /**
@@ -58,12 +66,13 @@ export async function checkDuplicateCategory(title: string) {
  * @param title - The title of the category to insert.
  * @returns The newly created category.
  */
-export async function createCategory(title: string) {
+export async function createCategory(title: string): Promise<DbCategory> {
 	const result = await sql`
-    INSERT INTO Category (name)
-    VALUES (${title}) RETURNING *;
-  `
-	return result.rows[0] // Returns the created category
+	  INSERT INTO Category (name)
+	  VALUES (${title}) RETURNING *;
+	`
+	// Typově kontrolováno: vrátíme první řádek, který obsahuje nově vytvořenou kategorii
+	return result.rows[0] as DbCategory
 }
 
 // queries.ts
@@ -140,7 +149,7 @@ export async function disableUserByEmail(email: string) {
  */
 export async function getAllCategories(): Promise<DbCategory[]> {
 	const result = await sql`SELECT * FROM Category;`
-	return <DbCategory[]>result.rows
+	return result.rows as DbCategory[]
 }
 
 /**
@@ -178,7 +187,7 @@ export async function getPostsWithDetails(): Promise<DbPostWithDetails[]> {
 		ORDER BY 
 			Posts.created_at;
 	`
-	return <DbPostWithDetails[]>result.rows // Returns an array of posts with details
+	return result.rows as DbPostWithDetails[] // Returns an array of posts with details
 }
 
 /**
@@ -212,7 +221,7 @@ export async function getCommentsByPostId(postId: number): Promise<Comment[]> {
 		ORDER BY 
 			ThreadComments.created_at ASC
 	`
-	return <Comment[]>result.rows // Returns an array of comments
+	return result.rows as Comment[] // Returns an array of comments
 }
 
 /**
@@ -236,7 +245,9 @@ export async function getUserIdByEmail(email: string) {
  * @param userId - The ID of the user.
  * @returns The user's details and permissions.
  */
-export async function getUserDetailsById(userId: number) {
+export async function getUserDetailsById(
+	userId: number
+): Promise<UserSelfInfo> {
 	const result = await sql`
 		SELECT 
 			Users.id, 
@@ -249,7 +260,7 @@ export async function getUserDetailsById(userId: number) {
 		LEFT JOIN Roles ON Users.role = Roles.id 
 		WHERE Users.id = ${userId} AND deleted_at IS NULL
 	`
-	return result.rows[0] // Return user details
+	return result.rows[0] as UserSelfInfo // Return user details
 }
 
 /**
@@ -295,13 +306,13 @@ export async function insertPost(
 	description: string,
 	category: number,
 	author: string
-) {
+): Promise<DbPost> {
 	const result = await sql`
 		INSERT INTO posts (title, description, category, author)
 		VALUES (${title}, ${description}, ${category}, ${author})
 		RETURNING *;
 	`
-	return result.rows[0] // Return the inserted post
+	return result.rows[0] as DbPost // Return the inserted post
 }
 
 /**

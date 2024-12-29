@@ -20,9 +20,8 @@ export type DbCategory = {
 }
 
 /**
- * Mapuje databázový objekt kategorie na doménový objekt.
- * @param dbCategory Objekt kategorie z databáze.
- * @returns Doménový objekt kategorie.
+ * @param dbCategory Object DbCategory from DB.
+ * @returns Domen object CategoryDomain
  */
 function mapDbCategoryToDomain(dbCategory: DbCategory): CategoryDomain {
 	return {
@@ -76,9 +75,8 @@ export type DbPostWithDetails = {
 }
 
 /**
- * Mapuje objekty z databáze na PostWithDetailsDTO.
- * @param dbPosts - Pole objektů z databáze.
- * @returns Pole objektů PostWithDetailsDTO.
+ * @param dbPosts - Array of DbPostWithDetails from DB.
+ * @returns Array of PostWithDetailsDomain.
  */
 export function mapDbPostsToDTO(
 	dbPosts: DbPostWithDetails[]
@@ -180,4 +178,15 @@ export function mapUserSelfInfoToDomain(
 
 export type TotalCommentsResponse = {
 	totalComments: number
+}
+
+export type DbPost = {
+	id: number
+	title: string
+	author: number
+	category: number
+	description: string
+	created_at: string
+	edited_at: string | null
+	deleted_at: string | null
 }

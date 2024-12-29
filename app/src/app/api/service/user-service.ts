@@ -315,7 +315,7 @@ export async function getAllUsers() {
 	const user = await getUserWithPermissions(session.user?.email as string)
 
 	// Check if the logged-in user has sufficient permissions to manage users
-	if (user?.permission < config.pages.manageUsers.minPermission) {
+	if (!user || user.permission < config.pages.manageUsers.minPermission) {
 		throw new AppError(
 			'Not enough permissions!',
 			403,

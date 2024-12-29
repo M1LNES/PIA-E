@@ -13,7 +13,10 @@ import {
 import { validateSession } from './session-service'
 import config from '@/app/config'
 
-export async function createNewComment(postId: number, description: string) {
+export async function createNewComment(
+	postId: number,
+	description: string
+): Promise<CommentDomain> {
 	// Retrieve user session
 	const session = await validateSession()
 
@@ -72,7 +75,8 @@ export async function getPostCommentById(
 
 	// Retrieve user with permission level and check if sufficient for access
 	const user = await getUserWithPermissions(session.user?.email as string)
-	if (user.permission < config.pages.home.minPermission) {
+
+	if (!user || user.permission < config.pages.home.minPermission) {
 		throw new AppError(
 			'Not enough permissions!',
 			403,

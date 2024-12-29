@@ -28,7 +28,7 @@ export async function createNewPost(
 ): Promise<void> {
 	const session = await validateSession()
 
-	const userId = await getUserIdByEmail(session?.user?.email as string)
+	const userId = await getUserIdByEmail(session.user?.email as string)
 	if (!userId) {
 		throw new AppError(
 			'Not enough permissions!',
