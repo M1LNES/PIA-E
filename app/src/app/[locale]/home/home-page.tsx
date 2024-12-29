@@ -61,7 +61,7 @@ export default function HomePageClient() {
 	const sendTypingNotification = (postId: number) => {
 		if (ably) {
 			const channel = ably.channels.get(`post-comments-${postId}`)
-			channel.publish('typing', { username: user.username, postId })
+			channel.publish('typing', { username: user?.username, postId })
 			setMeTyping(true)
 			setTimeout(() => setMeTyping(false), config.typingDurationForResend)
 		}
@@ -144,7 +144,7 @@ export default function HomePageClient() {
 
 				channel.subscribe('typing', (message) => {
 					const { username } = message.data
-					if (username !== user.username) {
+					if (username !== user?.username) {
 						// Only add if it's not the current user's username
 						setTypingUsers((prev) => {
 							const users = prev[postId] || new Set()
@@ -265,7 +265,8 @@ export default function HomePageClient() {
 									{t('comments.typing')}
 								</div>
 							)}
-							{user.rolePermission >= config.pages.createPost.minPermission && (
+							{(user?.rolePermission || 0) >=
+								config.pages.createPost.minPermission && (
 								<>
 									<textarea
 										className="w-full border border-gray-300 rounded-md p-2 mb-2"

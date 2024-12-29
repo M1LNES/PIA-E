@@ -12,15 +12,26 @@ import {
 	AllPosts,
 	AllRoles,
 	AllUsers,
+	CategoryCreated,
 	CategoryDomain,
+	CommentCreated,
+	PasswordChanged,
+	PostComments,
+	PostCreated,
 	PostWithDetailsDomain,
+	RoleChanged,
 	RoleDomain,
+	UserActivated,
+	UserCreated,
+	UserDeactivated,
 	UserDomain,
+	UserSelf,
+	UserSelfInfoDomain,
 } from '@/dto/types'
 
 /**
  * Fetches all categories from the API.
- * @returns {Promise<Array>} A promise that resolves to an array of categories.
+ * @returns {Promise<CategoryDomain[]>} A promise that resolves to an array of categories.
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllCategories = async (): Promise<CategoryDomain[]> => {
@@ -36,7 +47,7 @@ export const fetchAllCategories = async (): Promise<CategoryDomain[]> => {
 
 /**
  * Fetches all posts from the API.
- * @returns {Promise<Array>} A promise that resolves to an array of posts.
+ * @returns {Promise<PostWithDetailsDomain[]>} A promise that resolves to an array of posts.
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllPosts = async (): Promise<PostWithDetailsDomain[]> => {
@@ -51,7 +62,7 @@ export const fetchAllPosts = async (): Promise<PostWithDetailsDomain[]> => {
 
 /**
  * Fetches all users from the API.
- * @returns {Promise<Array>} A promise that resolves to an array of users.
+ * @returns {Promise<UserDomain[]>} A promise that resolves to an array of users.
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllUsers = async (): Promise<UserDomain[]> => {
@@ -66,7 +77,7 @@ export const fetchAllUsers = async (): Promise<UserDomain[]> => {
 
 /**
  * Fetches all roles from the API.
- * @returns {Promise<Array>} A promise that resolves to an array of roles.
+ * @returns {Promise<RoleDomain[]>} A promise that resolves to an array of roles.
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const fetchAllRoles = async (): Promise<RoleDomain[]> => {
@@ -83,10 +94,13 @@ export const fetchAllRoles = async (): Promise<RoleDomain[]> => {
  * Changes the role of a user.
  * @param {number} userId - The ID of the user to change the role for.
  * @param {number} roleId - The new role ID to assign to the user.
- * @returns {Promise<Object>} A promise that resolves to the result of the role change.
+ * @returns {Promise<RoleChanged>} A promise that resolves to the result of the role change.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const changeUserRole = async (userId: number, roleId: number) => {
+export const changeUserRole = async (
+	userId: number,
+	roleId: number
+): Promise<RoleChanged> => {
 	const reqBody: ChangeRoleRequest = { userId, roleId }
 	const response = await fetch('/api/users/role', {
 		method: 'PATCH',
@@ -100,17 +114,17 @@ export const changeUserRole = async (userId: number, roleId: number) => {
 		throw new Error('Failed to change role')
 	}
 
-	const result = await response.json()
+	const result: RoleChanged = await response.json()
 	return result
 }
 
 /**
  * Activates a user based on their email address.
  * @param {string} email - The email address of the user to activate.
- * @returns {Promise<Object>} A promise that resolves to the result of the activation.
+ * @returns {Promise<UserActivated>} A promise that resolves to the result of the activation.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const activateUser = async (email: string) => {
+export const activateUser = async (email: string): Promise<UserActivated> => {
 	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/activation', {
 		method: 'PUT',
@@ -124,17 +138,17 @@ export const activateUser = async (email: string) => {
 		throw new Error('Failed to activate user')
 	}
 
-	const result = await response.json()
+	const result: UserActivated = await response.json()
 	return result
 }
 
 /**
  * Disables a user based on their email address.
  * @param {string} email - The email address of the user to disable.
- * @returns {Promise<Object>} A promise that resolves to the result of the disabling.
+ * @returns {Promise<UserDeactivated>} A promise that resolves to the result of the disabling.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const disableUser = async (email: string) => {
+export const disableUser = async (email: string): Promise<UserDeactivated> => {
 	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/deactivation', {
 		method: 'PUT',
@@ -148,7 +162,7 @@ export const disableUser = async (email: string) => {
 		throw new Error('Failed to disable user')
 	}
 
-	const result = await response.json()
+	const result: UserDeactivated = await response.json()
 	return result
 }
 
@@ -160,10 +174,12 @@ export const disableUser = async (email: string) => {
  * @param {number} postData.selectedRole - The ID of the role to assign to the user.
  * @param {string} postData.password - The password for the new user.
  * @param {string} postData.confirmPassword - The password confirmation.
- * @returns {Promise<Object>} A promise that resolves to the result of the user creation.
+ * @returns {Promise<UserCreated>} A promise that resolves to the result of the user creation.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const createNewUser = async (postData: CreateUserRequest) => {
+export const createNewUser = async (
+	postData: CreateUserRequest
+): Promise<UserCreated> => {
 	const response = await fetch('/api/users', {
 		method: 'POST',
 		headers: {
@@ -176,17 +192,19 @@ export const createNewUser = async (postData: CreateUserRequest) => {
 		throw new Error('Failed to create new user')
 	}
 
-	const result = await response.json()
+	const result: UserCreated = await response.json()
 	return result
 }
 
 /**
  * Creates a new category with the provided title.
  * @param {string} title - The title of the new category.
- * @returns {Promise<Object>} A promise that resolves to the result of the category creation.
+ * @returns {Promise<CategoryCreated>} A promise that resolves to the result of the category creation.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const createCategory = async (title: string) => {
+export const createCategory = async (
+	title: string
+): Promise<CategoryCreated> => {
 	const reqBody: CreateCategoryRequest = { categoryTitle: title }
 	const response = await fetch('/api/categories', {
 		method: 'POST',
@@ -200,7 +218,7 @@ export const createCategory = async (title: string) => {
 		throw new Error('Failed to create category')
 	}
 
-	const result = await response.json()
+	const result: CategoryCreated = await response.json()
 	return result
 }
 
@@ -210,14 +228,14 @@ export const createCategory = async (title: string) => {
  * @param {string} postData.title - The title of the new post.
  * @param {string} postData.description - The description of the new post.
  * @param {number} postData.category - The ID of the category for the new post.
- * @returns {Promise<Object>} A promise that resolves to the result of the post addition.
+ * @returns {Promise<PostCreated>} A promise that resolves to the result of the post addition.
  * @throws {Error} If the request fails or the response is not ok.
  */
 export const addPost = async (postData: {
 	title: string
 	description: string
 	category: number
-}) => {
+}): Promise<PostCreated> => {
 	const bodyReq: CreatePostRequest = {
 		postTitle: postData.title,
 		postDescription: postData.description,
@@ -235,17 +253,19 @@ export const addPost = async (postData: {
 		throw new Error('Failed to add post')
 	}
 
-	const result = await response.json()
+	const result: PostCreated = await response.json()
 	return result
 }
 
 /**
  * Fetches user data based on the user's email address.
  * @param {string} email - The email address of the user to fetch data for.
- * @returns {Promise<Object>} A promise that resolves to the user's data.
+ * @returns {Promise<UserSelfInfoDomain>} A promise that resolves to the user's data.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchUserData = async (email: string) => {
+export const fetchUserData = async (
+	email: string
+): Promise<UserSelfInfoDomain> => {
 	const reqBody: InputEmailAddress = { emailAddress: email }
 	const response = await fetch('/api/users/self', {
 		method: 'POST',
@@ -259,7 +279,7 @@ export const fetchUserData = async (email: string) => {
 		throw new Error('Failed to fetch userData')
 	}
 
-	const result = await response.json()
+	const result: UserSelf = await response.json()
 	return result.user
 }
 
@@ -270,10 +290,12 @@ export const fetchUserData = async (email: string) => {
  * @param {string} postData.oldPassword - The old password of the user.
  * @param {string} postData.newPassword - The new password to set.
  * @param {string} postData.newPasswordConfirm - Confirmation of the new password.
- * @returns {Promise<Object>} A promise that resolves to the result of the password change.
+ * @returns {Promise<PasswordChanged>} A promise that resolves to the result of the password change.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const changePassword = async (postData: ChangePasswordRequest) => {
+export const changePassword = async (
+	postData: ChangePasswordRequest
+): Promise<PasswordChanged> => {
 	const response = await fetch('/api/users/password', {
 		method: 'PATCH',
 		headers: {
@@ -286,24 +308,26 @@ export const changePassword = async (postData: ChangePasswordRequest) => {
 		throw new Error('Failed to change password')
 	}
 
-	const result = await response.json()
+	const result: PasswordChanged = await response.json()
 	return result
 }
 
 /**
  * Fetches comments for a specific post based on the post ID.
  * @param {number} postId - The ID of the post to fetch comments for.
- * @returns {Promise<Array>} A promise that resolves to an array of comments for the specified post.
+ * @returns {Promise<PostComments>} A promise that resolves to an array of comments for the specified post.
  * @throws {Error} If the request fails or the response is not ok.
  */
-export const fetchCommentsByPostId = async (postId: number) => {
+export const fetchCommentsByPostId = async (
+	postId: number
+): Promise<PostComments> => {
 	const response = await fetch(`/api/comments/${postId}`)
 
 	if (!response.ok) {
 		throw new Error('Failed to fetch comments')
 	}
 
-	const result = await response.json()
+	const result: PostComments = await response.json()
 	return result
 }
 
@@ -317,11 +341,13 @@ export const fetchCommentsByPostId = async (postId: number) => {
  * @param {string} postData.content - The content of the comment being added.
  * @param {number} postData.postId - The ID of the post to which the comment is being added.
  *
- * @returns {Promise<Object>} A promise that resolves with the result of the comment addition.
+ * @returns {Promise<CommentCreated>} A promise that resolves with the result of the comment addition.
  *
  * @throws {Error} If the request fails or the server responds with an error.
  */
-export const addComment = async (postData: CreateCommentRequest) => {
+export const addComment = async (
+	postData: CreateCommentRequest
+): Promise<CommentCreated> => {
 	const response = await fetch('/api/comments', {
 		method: 'POST',
 		headers: {
@@ -334,6 +360,6 @@ export const addComment = async (postData: CreateCommentRequest) => {
 		throw new Error('Failed to add comment')
 	}
 
-	const result = await response.json()
+	const result: CommentCreated = await response.json()
 	return result
 }

@@ -49,7 +49,7 @@ export default function MyAccount() {
 
 		// Prepare data for password change request
 		const postData = {
-			emailAddress: user.userEmail,
+			emailAddress: user?.userEmail || '',
 			oldPassword,
 			newPassword,
 			newPasswordConfirm,
@@ -91,19 +91,19 @@ export default function MyAccount() {
 								<label className="block text-sm font-semibold">
 									{t('username')}
 								</label>
-								<p className="text-gray-700">{user.username}</p>
+								<p className="text-gray-700">{user?.username}</p>
 							</div>
 							<div className="mb-4">
 								<label className="block text-sm font-semibold">
 									{t('email')}
 								</label>
-								<p className="text-gray-700">{user.userEmail}</p>
+								<p className="text-gray-700">{user?.userEmail}</p>
 							</div>
 							<div className="mb-4">
 								<label className="block text-sm font-semibold">
 									{t('role')}
 								</label>
-								<p className="text-gray-700">{user.roleType}</p>
+								<p className="text-gray-700">{user?.roleType}</p>
 							</div>
 						</div>
 

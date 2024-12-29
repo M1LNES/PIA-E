@@ -67,28 +67,30 @@ const Layout = ({ children }: LayoutProps) => {
 
 					{/* Menu Items: Conditional rendering based on user permissions */}
 					<ul>
-						{user.rolePermission >= config.pages.home.minPermission && (
+						{(user?.rolePermission || 0) >= config.pages.home.minPermission && (
 							<li className="mb-2">
 								<Link href="/" className="hover:text-gray-400">
 									{t('home')}
 								</Link>
 							</li>
 						)}
-						{user.rolePermission >= config.pages.myAccount.minPermission && (
+						{(user?.rolePermission || 0) >=
+							config.pages.myAccount.minPermission && (
 							<li className="mb-2">
 								<Link href="/my-account" className="hover:text-gray-400">
 									{t('my-account')}
 								</Link>
 							</li>
 						)}
-						{user.rolePermission >= config.pages.createPost.minPermission && (
+						{(user?.rolePermission || 0) >=
+							config.pages.createPost.minPermission && (
 							<li className="mb-2">
 								<Link href="/create-post" className="hover:text-gray-400">
 									{t('create-post')}
 								</Link>
 							</li>
 						)}
-						{user.rolePermission >=
+						{(user?.rolePermission || 0) >=
 							config.pages.createCategory.minPermission && (
 							<li className="mb-2">
 								<Link href="/create-category" className="hover:text-gray-400">
@@ -96,7 +98,8 @@ const Layout = ({ children }: LayoutProps) => {
 								</Link>
 							</li>
 						)}
-						{user.rolePermission >= config.pages.manageUsers.minPermission && (
+						{(user?.rolePermission || 0) >=
+							config.pages.manageUsers.minPermission && (
 							<li className="mb-2">
 								<Link href="/manage-users" className="hover:text-gray-400">
 									{t('manage-users')}

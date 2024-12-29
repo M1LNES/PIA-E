@@ -59,3 +59,16 @@ export type AllCategories = { categories: CategoryDomain[] }
 export type AllPosts = { posts: PostWithDetailsDomain[] }
 export type AllUsers = { users: UserDomain[] }
 export type AllRoles = { roles: RoleDomain[] }
+export type UserSelf = { user: UserSelfInfoDomain }
+export type RoleChanged = { message: string }
+export type UserActivated = { message: string }
+export type UserDeactivated = { message: string }
+export type UserCreated = { message: string }
+export type CategoryCreated = { message: string }
+export type PostCreated = { message: string }
+export type PasswordChanged = { message: string }
+export type PostComments = CommentDomain[]
+export type CommentCreated = {
+	message: string
+	comment: CommentDomain
+}
