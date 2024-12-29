@@ -1,5 +1,5 @@
 import { CategoryDomain } from '@/dto/types'
-import { mapDbCategoriesToDomain } from '../utils/dtos'
+import { DbCategory, mapDbCategoriesToDomain } from '../utils/dtos'
 import { AppError } from '../utils/errors'
 import {
 	checkDuplicateCategory,
@@ -35,7 +35,7 @@ export async function getCategories(): Promise<CategoryDomain[]> {
 	return mapDbCategoriesToDomain(categories)
 }
 
-export async function createNewCategory(title: string) {
+export async function createNewCategory(title: string): Promise<DbCategory> {
 	const session = await validateSession()
 
 	// Validate presence of title field in request body
@@ -74,6 +74,6 @@ export async function createNewCategory(title: string) {
 	return newCategory
 }
 
-export async function getCategoriesPublic() {
+export async function getCategoriesPublic(): Promise<CategoryDomain[]> {
 	return await mapDbCategoriesToDomain(await getAllCategories())
 }

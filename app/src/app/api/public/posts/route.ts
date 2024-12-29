@@ -24,9 +24,7 @@ export async function GET(): Promise<
 > {
 	try {
 		// Fetch post counts grouped by category
-		const categoryPostCounts = <Record<string, number>>(
-			await getCategoryPostCountsPublic()
-		)
+		const categoryPostCounts = await getCategoryPostCountsPublic()
 
 		// Log the successful retrieval of category post counts
 		log('info', route, 'Category posts count fetched.', categoryPostCounts)

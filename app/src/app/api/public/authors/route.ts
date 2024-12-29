@@ -10,7 +10,7 @@ import { Author } from '../../utils/test-interface'
  * @returns {Promise<NextResponse<Author[]>>} - JSON response containing the list of authors.
  */
 export async function GET(): Promise<NextResponse<Author[]>> {
-	const authors = await getAuthors()
+	const authors = getAuthors()
 	// Log the retrieval of authors
 	log('info', 'GET api/public/authors', 'Authors fetched and returned')
 

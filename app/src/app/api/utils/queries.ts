@@ -196,7 +196,7 @@ export async function getPostsWithDetails(): Promise<DbPostWithDetails[]> {
  */
 export async function getAllRoles(): Promise<Role[]> {
 	const result = await sql`SELECT * FROM Roles;`
-	return <Role[]>result.rows // Returns an array of roles
+	return result.rows as Role[] // Returns an array of roles
 }
 
 /**

@@ -94,7 +94,9 @@ export async function getTotalCommentsPublic(): Promise<number> {
 	return await getTotalComments()
 }
 
-export async function getCommentsForUser(email: string) {
+export async function getCommentsForUser(
+	email: string
+): Promise<Record<string, number>> {
 	// If no email is provided, return a 400 Bad Request response
 	if (!email) {
 		throw new AppError('Email is required', 400, `Email required`)

@@ -1,6 +1,6 @@
 import { Author } from '../utils/test-interface'
 
-export async function getAuthors() {
+export function getAuthors(): Author[] {
 	const authors: Author[] = [
 		{
 			name: 'Skibidi Rizzler',
