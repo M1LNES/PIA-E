@@ -18,6 +18,7 @@ export async function getCategories(): Promise<CategoryDomain[]> {
 
 	// Ensure user has sufficient permissions to fetch categories
 	if (
+		!user ||
 		user.permission < config.pages.createPost.minPermission ||
 		user.permission < config.pages.createCategory.minPermission
 	) {

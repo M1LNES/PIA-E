@@ -6,6 +6,8 @@ import {
 	DbPostWithDetails,
 	Role,
 	User,
+	UserDb,
+	UserDeleted,
 	UserSelfInfo,
 	UserWithPermissions,
 } from './dtos'
@@ -37,14 +39,17 @@ export async function getUserWithPermissions(
  * @param email - The email of the user to fetch.
  * @returns The user data with role and permissions if found, otherwise undefined.
  */
-export async function getUserByEmail(email: string): Promise<UserSelfInfo> {
+export async function getUserByEmail(
+	email: string
+): Promise<UserSelfInfo | undefined> {
 	const result = await sql`
     SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission
     FROM Users
     LEFT JOIN Roles ON Users.role = Roles.id
     WHERE Users.email = ${email} AND Users.deleted_at IS NULL
   `
-	return <UserSelfInfo>result.rows[0] // Returns undefined if no user is found
+	return result.rows[0] ? (result.rows[0] as UserSelfInfo) : undefined
+	// Returns undefined if no user is found
 }
 
 /**
@@ -95,9 +100,9 @@ export async function getUserByEmailAndNotDeleted(email: string) {
  * Fetches all users who are not marked as deleted.
  * @returns An array of users from the database.
  */
-export async function getAllActiveUsers() {
+export async function getAllActiveUsers(): Promise<UserDb[]> {
 	const result = await sql`SELECT * FROM Users WHERE deleted_at IS NULL;`
-	return result.rows // Returns an array of users
+	return result.rows as UserDb[] // Returns an array of users
 }
 
 /**
@@ -110,7 +115,7 @@ export async function getAllUsersWithRoles(): Promise<User[]> {
 		FROM Users
 		LEFT JOIN Roles ON Users.role = Roles.id;
 	`
-	return <User[]>result.rows // Returns an array of users with their roles
+	return result.rows as User[] // Returns an array of users with their roles
 }
 
 /**
@@ -118,14 +123,17 @@ export async function getAllUsersWithRoles(): Promise<User[]> {
  * @param email - The email of the user.
  * @returns The user data with role and permissions if found, otherwise undefined.
  */
-export async function getDeletedUserByEmail(email: string) {
+export async function getDeletedUserByEmail(
+	email: string
+): Promise<UserDeleted | undefined> {
 	const result = await sql`
     SELECT Users.id, Users.username, Users.email, Users.role, Roles.type, Roles.permission 
     FROM Users 
     LEFT JOIN Roles ON Users.role = Roles.id 
     WHERE Users.email = ${email} AND Users.deleted_at IS NOT NULL
   `
-	return result.rows[0] // Returns undefined if no user is found
+	return result.rows[0] ? (result.rows[0] as UserDeleted) : undefined
+	// Returns undefined if no user is found
 }
 
 /**
@@ -133,14 +141,12 @@ export async function getDeletedUserByEmail(email: string) {
  * @param email - The email of the user to be disabled.
  * @returns A promise that resolves to the result of the update operation.
  */
-export async function disableUserByEmail(email: string) {
-	const result = await sql`
+export async function disableUserByEmail(email: string): Promise<void> {
+	await sql`
     UPDATE Users 
     SET deleted_at = NOW() 
-    WHERE email = ${email} 
-    RETURNING *;
+    WHERE email = ${email};
   `
-	return result.rows[0] // Returns the updated user data or undefined if no user was found
 }
 
 /**
@@ -318,13 +324,15 @@ export async function insertPost(
 /**
  * Fetches the permission for a specific role.
  * @param roleId - The role ID.
- * @returns The permission level of the role.
+ * @returns The permission level of the role or undefined if no role is found.
  */
-export async function getRolePermission(roleId: number) {
+export async function getRolePermission(
+	roleId: number
+): Promise<number | undefined> {
 	const result = await sql`
-		SELECT permission FROM Roles WHERE id = ${roleId}
+	  SELECT permission FROM Roles WHERE id = ${roleId}
 	`
-	return result.rows[0]?.permission // Return the permission level
+	return result.rows[0]?.permission // Return the permission level or undefined
 }
 
 /**
@@ -332,18 +340,24 @@ export async function getRolePermission(roleId: number) {
  * @param userId - The ID of the user whose role is being updated.
  * @param roleId - The new role ID to assign to the user.
  */
-export async function updateUserRole(userId: number, roleId: number) {
+export async function updateUserRole(
+	userId: number,
+	roleId: number
+): Promise<void> {
 	await sql`UPDATE Users SET role = ${roleId} WHERE id = ${userId}`
 }
 
 /**
  * Fetches the hashed password of a user based on their email.
  * @param email - The user's email.
- * @returns The hashed password of the user.
+ * @returns The hashed password of the user or undefined if no user is found.
  */
-export async function getHashedPasswordByEmail(email: string) {
-	const result =
-		await sql`SELECT hashed_password FROM Users WHERE email = ${email} AND deleted_at IS NULL`
+export async function getHashedPasswordByEmail(
+	email: string
+): Promise<string | undefined> {
+	const result = await sql`
+	  SELECT hashed_password FROM Users WHERE email = ${email} AND deleted_at IS NULL
+	`
 	return result.rows[0]?.hashed_password // Return the hashed password or undefined
 }
 
@@ -355,7 +369,7 @@ export async function getHashedPasswordByEmail(email: string) {
 export async function updateUserPassword(
 	email: string,
 	newHashedPassword: string
-) {
+): Promise<void> {
 	await sql`UPDATE Users SET hashed_password = ${newHashedPassword} WHERE email = ${email}`
 }
 
@@ -373,7 +387,7 @@ export async function getTotalComments(): Promise<number> {
  * Activates a user by setting deleted_at to NULL.
  * @param email The email of the user to activate.
  */
-export async function activateUserByEmail(email: string) {
+export async function activateUserByEmail(email: string): Promise<void> {
 	await sql`UPDATE Users SET deleted_at = NULL WHERE email = ${email}`
 }
 
@@ -382,7 +396,7 @@ export async function activateUserByEmail(email: string) {
  * @param email The email to check.
  * @returns True if the email is used, false otherwise.
  */
-export async function isEmailUsed(email: string) {
+export async function isEmailUsed(email: string): Promise<boolean> {
 	const result = await sql`SELECT email FROM Users WHERE email = ${email}`
 	return result.rows.length > 0
 }
@@ -399,8 +413,8 @@ export async function createUser(
 	role: number,
 	email: string,
 	hashedPassword: string
-) {
-	await sql`INSERT INTO Users (username, role, email, hashed_password) VALUES (${username}, ${role}, ${email}, ${hashedPassword}) RETURNING *`
+): Promise<void> {
+	await sql`INSERT INTO Users (username, role, email, hashed_password) VALUES (${username}, ${role}, ${email}, ${hashedPassword})`
 }
 
 /**
@@ -408,7 +422,9 @@ export async function createUser(
  * @param email The email of the user to filter comments.
  * @returns An array of objects containing post IDs and comment counts.
  */
-export async function getCommentsByPost(email: string) {
+export async function getCommentsByPost(
+	email: string
+): Promise<{ post: number; comment_count: number }[]> {
 	const result = await sql`
         SELECT post, COUNT(*) as comment_count
         FROM ThreadComments
@@ -416,7 +432,7 @@ export async function getCommentsByPost(email: string) {
         WHERE Users.email = ${email}
         GROUP BY post;
     `
-	return result.rows // Return the rows directly
+	return result.rows as { post: number; comment_count: number }[] // Return the rows directly
 }
 
 type CategoryPostCountRow = {

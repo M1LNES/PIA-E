@@ -19,12 +19,13 @@ import {
 import { validateSession } from './session-service'
 import bcrypt from 'bcrypt'
 import { mapUserSelfInfoToDomain, mapUsersToDomains } from '../utils/dtos'
+import { UserSelfInfoDomain } from '@/dto/types'
 
 export async function getRoleUserCountsPublic() {
 	return await await getRoleUserCounts()
 }
 
-export async function activateUser(email: string) {
+export async function activateUser(email: string): Promise<void> {
 	const session = await validateSession()
 
 	// Check if the email is provided; return a 400 Bad Request response if not
@@ -45,6 +46,7 @@ export async function activateUser(email: string) {
 
 	// Check if the user has the necessary permissions or if the target user has higher permissions
 	if (
+		!user ||
 		user.permission < config.pages.manageUsers.minPermission || // Check if the user has the required permission
 		(deletedUser && deletedUser.permission >= user.permission) // Check if the deleted user has higher permissions
 	) {
@@ -58,7 +60,8 @@ export async function activateUser(email: string) {
 	// Reactivate the user with the provided email
 	await activateUserByEmail(email)
 }
-export async function deactivateUser(email: string) {
+
+export async function deactivateUser(email: string): Promise<void> {
 	const session = await validateSession()
 
 	// Validate the email field is provided in the request
@@ -95,11 +98,11 @@ export async function changePassword(
 	oldPassword: string,
 	newPassword: string,
 	newPasswordConfirm: string
-) {
+): Promise<void> {
 	const session = await validateSession()
 
 	/* Authorization: Ensure the request is coming from the logged-in user */
-	if (email !== session?.user?.email) {
+	if (email !== session.user?.email) {
 		throw new AppError(
 			'Not enough permissions!',
 			403,
@@ -157,7 +160,10 @@ export async function changePassword(
 	await updateUserPassword(email, newHashedPassword)
 }
 
-export async function changeRole(userId: number, roleId: number) {
+export async function changeRole(
+	userId: number,
+	roleId: number
+): Promise<void> {
 	const session = await validateSession()
 
 	// Validate the required fields (userId and roleId) are present
@@ -204,7 +210,7 @@ export async function changeRole(userId: number, roleId: number) {
 	await updateUserRole(userId, roleId)
 }
 
-export async function getSelfInfo(email: string) {
+export async function getSelfInfo(email: string): Promise<UserSelfInfoDomain> {
 	const session = await validateSession()
 
 	// If no email is provided, return a bad request response
@@ -228,6 +234,13 @@ export async function getSelfInfo(email: string) {
 	// Fetch user information from the database by email
 	const user = await getUserByEmail(email)
 
+	if (!user)
+		throw new AppError(
+			'Not enough permissions!',
+			403,
+			`User ${session.user?.email} does not have enough permissions.`
+		)
+
 	return await mapUserSelfInfoToDomain(user)
 }
 
@@ -237,7 +250,7 @@ export async function createNewUser(
 	selectedRole: number,
 	password: string,
 	confirmPassword: string
-) {
+): Promise<void> {
 	const session = await validateSession()
 
 	if (
@@ -279,9 +292,17 @@ export async function createNewUser(
 		getRolePermission(selectedRole), // Get the permissions for the selected role
 	])
 
+	if (!rolePermission)
+		throw new AppError(
+			'Invalid role',
+			400,
+			`User ${session.user?.email} tried to create user with invalid role - roleID:${selectedRole}`
+		)
+
 	// Check if the current user has sufficient permissions to create users
 	// and if the selected role is not higher than the current user's role
 	if (
+		!user ||
 		user.permission < config.pages.manageUsers.minPermission || // Check if the user has the required permission
 		user.permission <= rolePermission // Check if the selected role has lower or equal permissions to the user's role
 	) {

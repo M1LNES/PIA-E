@@ -190,3 +190,22 @@ export type DbPost = {
 	edited_at: string | null
 	deleted_at: string | null
 }
+
+export type UserDeleted = {
+	id: number
+	username: string
+	email: string
+	role: number
+	type: string
+	permission: number
+}
+
+export type UserDb = {
+	id: number
+	username: string
+	role: number
+	created_at: string
+	email: string
+	hashed_password: string
+	deleted_at: string | null
+}
