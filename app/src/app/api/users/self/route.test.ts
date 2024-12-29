@@ -87,6 +87,31 @@ describe('POST /api/users/self', () => {
 		})
 	})
 
+	it('should return 403 if user was not found', async () => {
+		const mockSession = { user: { email: 'user@example.com' } }
+
+		const mockBody: InputEmailAddress = { emailAddress: mockSession.user.email }
+		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(undefined)
+
+		await testApiHandler({
+			appHandler: appHandler as unknown as {
+				[key: string]: (req: NextRequest) => AppHandlerType
+			},
+			test: async ({ fetch }) => {
+				const response = await fetch({
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(mockBody), // Email mismatch
+				})
+				const result = await response.json()
+
+				expect(response.status).toBe(403)
+				expect(result.error).toBe('Not enough permissions!')
+			},
+		})
+	})
+
 	it('should return 200 with user data if email matches session', async () => {
 		const mockSession = { user: { email: 'user@example.com' } }
 		const mockUser: UserSelfInfo = {

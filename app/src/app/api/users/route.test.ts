@@ -79,6 +79,46 @@ describe('POST /api/users', () => {
 		})
 	})
 
+	it('should return 400 if role permission is invalid', async () => {
+		const mockSession = { user: { email: 'admin@example.com' } }
+		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
+		const mockUser: UserSelfInfo = {
+			permission: 100,
+			email: 'karel@nevim.cz',
+			id: 30,
+			role: 3,
+			type: 'aas',
+			username: 'karel janecek',
+		}
+		const mockBody: CreateUserRequest = {
+			username: 'newuser',
+			emailAddress: 'newuser@example.com',
+			selectedRole: 1000,
+			password: 'password123',
+			confirmPassword: 'password123',
+		}
+		;(getServerSession as jest.Mock).mockResolvedValue(mockSession)
+		;(queries.getUserByEmail as jest.Mock).mockResolvedValue(mockUser)
+		;(queries.getRolePermission as jest.Mock).mockResolvedValue(null)
+		await testApiHandler({
+			appHandler: appHandler as unknown as {
+				[key: string]: (req: NextRequest) => AppHandlerType
+			},
+			test: async ({ fetch }) => {
+				const response = await fetch({
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(mockBody), // Missing fields
+				})
+
+				const result = await response.json()
+
+				expect(response.status).toBe(400)
+				expect(result.error).toBe('Invalid role')
+			},
+		})
+	})
+
 	it('should return 409 if email is already used', async () => {
 		const mockSession = { user: { email: 'admin@example.com' } }
 		const mockUser: UserSelfInfo = {
